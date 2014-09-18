@@ -28,18 +28,12 @@ public class GalleryView extends BetterViewAnimator {
 
     @Inject
     Picasso picasso;
-    @Inject
-    GalleryDatabase galleryDatabase;
-
-    private Section section = Section.HOT;
-    private Subscription request;
 
     private final GalleryAdapter adapter;
 
     public GalleryView(Context context, AttributeSet attrs) {
         super(context, attrs);
         Injector.inject(context, this);
-
         adapter = new GalleryAdapter(context, picasso);
     }
 
@@ -47,26 +41,10 @@ public class GalleryView extends BetterViewAnimator {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-
         galleryView.setAdapter(adapter);
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-
-        request = galleryDatabase.loadGallery(section, new EndlessObserver<List<Image>>() {
-            @Override
-            public void onNext(List<Image> images) {
-                adapter.replaceWith(images);
-                setDisplayedChildId(R.id.gallery_grid);
-            }
-        });
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        request.unsubscribe();
-        super.onDetachedFromWindow();
+    public GalleryAdapter getAdapter() {
+        return adapter;
     }
 }

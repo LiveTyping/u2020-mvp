@@ -31,7 +31,15 @@ public abstract class U2020Activity extends Activity implements U2020InjectionSe
 
         ViewGroup container = appContainer.get(this);
         getLayoutInflater().inflate(layoutId(), container);
-        onInflate(container);
+        if (savedInstanceState != null) {
+            presenter().onRestore(savedInstanceState);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        presenter().onSave(outState);
     }
 
     @Override
@@ -52,9 +60,7 @@ public abstract class U2020Activity extends Activity implements U2020InjectionSe
         return super.getSystemService(name);
     }
 
-    protected void onInflate(ViewGroup container){}
-
     protected abstract Object[] modules();
-
     protected abstract @LayoutRes int layoutId();
+    protected abstract ActivityPresenter<? extends Activity> presenter();
 }
