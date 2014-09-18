@@ -42,7 +42,7 @@ import com.jakewharton.u2020.data.prefs.BooleanPreference;
 import com.jakewharton.u2020.data.prefs.IntPreference;
 import com.jakewharton.u2020.data.prefs.StringPreference;
 import com.jakewharton.u2020.ui.AppContainer;
-import com.jakewharton.u2020.ui.MainActivity;
+import com.jakewharton.u2020.ui.gallery.GalleryActivity;
 import com.jakewharton.u2020.util.Strings;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Picasso;
@@ -687,7 +687,7 @@ public class DebugAppContainer implements AppContainer {
         Timber.d("Setting network endpoint to %s", endpoint);
         networkEndpoint.set(endpoint);
 
-        Intent newApp = new Intent(app, MainActivity.class);
+        Intent newApp = new Intent(app, GalleryActivity.class);
         newApp.setFlags(FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
         app.startActivity(newApp);
         U2020App.get(app).buildObjectGraphAndInject();

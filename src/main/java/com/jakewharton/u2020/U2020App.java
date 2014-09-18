@@ -12,7 +12,7 @@ import timber.log.Timber;
 
 import static timber.log.Timber.DebugTree;
 
-public class U2020App extends Application {
+public class U2020App extends Application implements U2020InjectionService {
     private ObjectGraph objectGraph;
 
     @Inject
@@ -39,11 +39,22 @@ public class U2020App extends Application {
         objectGraph.inject(this);
     }
 
-    public void inject(Object o) {
-        objectGraph.inject(o);
+    public ObjectGraph plus(Object... modules) {
+        return objectGraph.plus(modules);
+    }
+
+    public <T> T inject(T o) {
+        return objectGraph.inject(o);
     }
 
     public static U2020App get(Context context) {
         return (U2020App) context.getApplicationContext();
+    }
+
+    @Override
+    public Object getSystemService(String name) {
+        if (Injector.isValidSystemService(name))
+            return this;
+        return super.getSystemService(name);
     }
 }

@@ -12,7 +12,7 @@
         android:theme="@style/Theme.U2020"
         android:name=".U2020App">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.gallery.GalleryActivity"
             android:label="@string/launcher_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
