@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jakewharton.u2020.R;
-import com.jakewharton.u2020.data.api.model.Image;
+import com.jakewharton.u2020.data.api.model.response.Image;
 import com.jakewharton.u2020.ui.misc.BindableAdapter;
 import com.squareup.picasso.Picasso;
 

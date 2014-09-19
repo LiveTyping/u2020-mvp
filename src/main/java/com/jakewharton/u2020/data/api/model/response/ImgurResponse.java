@@ -1,4 +1,4 @@
-package com.jakewharton.u2020.data.api.model;
+package com.jakewharton.u2020.data.api.model.response;
 
 public abstract class ImgurResponse {
     public final int status;

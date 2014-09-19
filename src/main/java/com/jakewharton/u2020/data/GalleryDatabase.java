@@ -1,9 +1,9 @@
 package com.jakewharton.u2020.data;
 
 import com.jakewharton.u2020.data.api.GalleryService;
-import com.jakewharton.u2020.data.api.Section;
-import com.jakewharton.u2020.data.api.Sort;
-import com.jakewharton.u2020.data.api.model.Image;
+import com.jakewharton.u2020.data.api.model.request.Section;
+import com.jakewharton.u2020.data.api.model.request.Sort;
+import com.jakewharton.u2020.data.api.model.response.Image;
 import com.jakewharton.u2020.data.api.transforms.GalleryToImageList;
 import com.jakewharton.u2020.data.rx.EndObserver;
 

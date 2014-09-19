@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.res.AssetManager;
 import android.graphics.BitmapFactory;
 
+import com.jakewharton.u2020.data.api.model.response.Image;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -38,7 +40,8 @@ public final class MockImageLoader {
 
         String id = filename.substring(0, filename.lastIndexOf('.'));
         String link = "mock:///" + path;
-        return new ImageBuilder(id, link, id /* default title == id */, width, height);
+        return new ImageBuilder(id, link, id /* default title == id */, id /* default description == id */,
+                width, height);
     }
 
     public static class ImageBuilder {
@@ -47,20 +50,27 @@ public final class MockImageLoader {
         private final int width;
         private final int height;
         private String title;
+        private String description;
         private long datetime = System.currentTimeMillis();
         private int views;
         private boolean isAlbum;
 
-        private ImageBuilder(String id, String link, String title, int width, int height) {
+        private ImageBuilder(String id, String link, String title, String description, int width, int height) {
             this.id = id;
             this.link = link;
             this.title = title;
+            this.description = description;
             this.width = width;
             this.height = height;
         }
 
         public ImageBuilder title(String title) {
             this.title = title;
+            return this;
+        }
+
+        public ImageBuilder description(String description) {
+            this.description = description;
             return this;
         }
 
@@ -80,7 +90,7 @@ public final class MockImageLoader {
         }
 
         public Image build() {
-            return new Image(id, link, title, width, height, datetime, views, isAlbum);
+            return new Image(id, link, title, description, width, height, datetime, views, isAlbum);
         }
     }
 }

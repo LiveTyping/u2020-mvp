@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 
 import com.jakewharton.u2020.data.ApiEndpoint;
 import com.jakewharton.u2020.data.IsMockMode;
+import com.jakewharton.u2020.data.api.model.MockImageService;
+import com.jakewharton.u2020.data.api.model.response.Image;
 import com.jakewharton.u2020.data.prefs.StringPreference;
 
 import javax.inject.Singleton;
@@ -45,5 +47,15 @@ public final class DebugApiModule {
             return mockRestAdapter.create(GalleryService.class, mockService);
         }
         return restAdapter.create(GalleryService.class);
+    }
+
+    @Provides
+    @Singleton
+    ImageService provideImageService(RestAdapter restAdapter, MockRestAdapter mockRestAdapter,
+                                         @IsMockMode boolean isMockMode, MockImageService mockService) {
+        if (isMockMode) {
+            return mockRestAdapter.create(ImageService.class, mockService);
+        }
+        return restAdapter.create(ImageService.class);
     }
 }

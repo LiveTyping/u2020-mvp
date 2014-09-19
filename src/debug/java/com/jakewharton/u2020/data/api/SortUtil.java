@@ -1,6 +1,7 @@
 package com.jakewharton.u2020.data.api;
 
-import com.jakewharton.u2020.data.api.model.Image;
+import com.jakewharton.u2020.data.api.model.response.Image;
+import com.jakewharton.u2020.data.api.model.request.Sort;
 
 import java.util.Collections;
 import java.util.Comparator;

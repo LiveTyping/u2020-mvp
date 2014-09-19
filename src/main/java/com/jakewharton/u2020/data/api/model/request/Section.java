@@ -1,4 +1,4 @@
-package com.jakewharton.u2020.data.api;
+package com.jakewharton.u2020.data.api.model.request;
 
 public enum Section {
     HOT("hot"),

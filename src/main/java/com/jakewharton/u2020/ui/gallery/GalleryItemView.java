@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jakewharton.u2020.R;
-import com.jakewharton.u2020.data.api.model.Image;
+import com.jakewharton.u2020.data.api.model.response.Image;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 

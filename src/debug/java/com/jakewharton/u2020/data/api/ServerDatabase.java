@@ -1,7 +1,12 @@
 package com.jakewharton.u2020.data.api;
 
-import com.jakewharton.u2020.data.api.model.Image;
+import android.support.annotation.NonNull;
+import android.util.ArrayMap;
+
+import com.jakewharton.u2020.data.api.model.response.Image;
 import com.jakewharton.u2020.data.api.model.MockImageLoader;
+import com.jakewharton.u2020.data.api.model.request.Section;
+import com.jakewharton.u2020.data.api.model.response.ImageResponse;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -30,6 +35,7 @@ public final class ServerDatabase {
 
     // TODO maybe id->image map and section->id multimap so we can re-use images?
     private final Map<Section, List<Image>> imagesBySection = new LinkedHashMap<>();
+    private final ArrayMap<String, Image>  imagesById = new ArrayMap<>();
 
     private boolean initialized;
 
@@ -82,10 +88,18 @@ public final class ServerDatabase {
                 .title("Wow Retrofit") //
                 .views(3000) //
                 .build());
+
+        for (Image hotImage : hotImages) {
+            imagesById.put(hotImage.id, hotImage);
+        }
     }
 
     public List<Image> getImagesForSection(Section section) {
         initializeMockData();
         return imagesBySection.get(section);
+    }
+
+    public ImageResponse getImageForId(@NonNull String id) {
+        return new ImageResponse(200, true, imagesById.get(id));
     }
 }

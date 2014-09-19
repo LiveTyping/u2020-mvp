@@ -54,4 +54,10 @@ public final class ApiModule {
     GalleryService provideGalleryService(RestAdapter restAdapter) {
         return restAdapter.create(GalleryService.class);
     }
+
+    @Provides
+    @Singleton
+    ImageService provideImageService(RestAdapter restAdapter) {
+        return restAdapter.create(ImageService.class);
+    }
 }

@@ -1,7 +1,7 @@
 package com.jakewharton.u2020.data.api.transforms;
 
-import com.jakewharton.u2020.data.api.model.Gallery;
-import com.jakewharton.u2020.data.api.model.Image;
+import com.jakewharton.u2020.data.api.model.response.Gallery;
+import com.jakewharton.u2020.data.api.model.response.Image;
 
 import java.util.List;
 

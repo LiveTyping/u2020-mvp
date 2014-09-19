@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginRight="-1px"
-        android:listSelector="@android:color/transparent"
+        android:listSelector="@drawable/image_overlay"
         app:item_margin="8dp" />
 
 </com.jakewharton.u2020.ui.gallery.GalleryView>
