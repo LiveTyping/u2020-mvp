@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.jakewharton.u2020.Injector;
@@ -62,5 +63,5 @@ public abstract class U2020Activity extends Activity implements U2020InjectionSe
 
     protected abstract Object[] modules();
     protected abstract @LayoutRes int layoutId();
-    protected abstract ActivityPresenter<? extends Activity> presenter();
+    protected abstract ViewPresenter<? extends View> presenter();
 }

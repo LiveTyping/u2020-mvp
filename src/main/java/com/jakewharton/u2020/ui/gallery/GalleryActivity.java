@@ -1,15 +1,15 @@
 package com.jakewharton.u2020.ui.gallery;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 
 import com.jakewharton.u2020.R;
 import com.jakewharton.u2020.data.GalleryDatabase;
 import com.jakewharton.u2020.data.api.Section;
 import com.jakewharton.u2020.data.api.model.Image;
 import com.jakewharton.u2020.data.rx.EndlessObserver;
-import com.jakewharton.u2020.ui.base.ActivityPresenter;
 import com.jakewharton.u2020.ui.base.U2020Activity;
+import com.jakewharton.u2020.ui.base.ViewPresenter;
 
 import java.util.List;
 
@@ -32,13 +32,18 @@ public class GalleryActivity extends U2020Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.inject(this);
-        presenter.takeView(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        presenter.takeView(view);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        presenter.dropView(this);
+        presenter.dropView(view);
     }
 
     @Override
@@ -54,12 +59,12 @@ public class GalleryActivity extends U2020Activity {
     }
 
     @Override
-    protected ActivityPresenter<? extends Activity> presenter() {
+    protected ViewPresenter<? extends View> presenter() {
         return presenter;
     }
 
     @Singleton
-    public static class Presenter extends ActivityPresenter<GalleryActivity> {
+    public static class Presenter extends ViewPresenter<GalleryView> {
         @Inject
         GalleryDatabase galleryDatabase;
 
@@ -77,8 +82,8 @@ public class GalleryActivity extends U2020Activity {
             request = galleryDatabase.loadGallery(section, new EndlessObserver<List<Image>>() {
                 @Override
                 public void onNext(List<Image> images) {
-                    getView().view.getAdapter().replaceWith(images);
-                    getView().view.setDisplayedChildId(R.id.gallery_grid);
+                    getView().getAdapter().replaceWith(images);
+                    getView().setDisplayedChildId(R.id.gallery_grid);
                 }
             });
         }

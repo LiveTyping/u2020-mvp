@@ -1,10 +1,10 @@
 package com.jakewharton.u2020.ui.base;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
 
-public abstract class ActivityPresenter<V extends Activity> {
+public abstract class ViewPresenter<V extends View> {
     private V view = null;
 
     /**
