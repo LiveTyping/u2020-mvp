@@ -64,6 +64,10 @@ public abstract class U2020Activity extends Activity implements U2020InjectionSe
         return activityGraph.inject(object);
     }
 
+    public ObjectGraph plus(Object... modules) {
+        return activityGraph.plus(modules);
+    }
+
     @Override
     public Object getSystemService(@NonNull String name) {
         if (Injector.isValidSystemService(name))
