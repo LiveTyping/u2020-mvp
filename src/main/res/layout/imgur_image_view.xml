@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.jakewharton.u2020.ui.image.ImgurImageView
+<ru.ltst.u2020mvp.ui.image.ImgurImageView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/imgur_image_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</com.jakewharton.u2020.ui.image.ImgurImageView>
+</ru.ltst.u2020mvp.ui.image.ImgurImageView>

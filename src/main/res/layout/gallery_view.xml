@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.jakewharton.u2020.ui.gallery.GalleryView xmlns:android="http://schemas.android.com/apk/res/android"
+<ru.ltst.u2020mvp.ui.gallery.GalleryView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/gallery_view"
     android:layout_width="match_parent"
@@ -20,4 +20,4 @@
         android:listSelector="@drawable/image_overlay"
         app:item_margin="8dp" />
 
-</com.jakewharton.u2020.ui.gallery.GalleryView>
+</ru.ltst.u2020mvp.ui.gallery.GalleryView>

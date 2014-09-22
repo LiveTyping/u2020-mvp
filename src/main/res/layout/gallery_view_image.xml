@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.jakewharton.u2020.ui.gallery.GalleryItemView
+<ru.ltst.u2020mvp.ui.gallery.GalleryItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,7 +8,7 @@
     android:background="@drawable/gallery_item_background"
     >
 
-    <com.jakewharton.u2020.ui.misc.ForegroundImageView
+    <ru.ltst.u2020mvp.ui.misc.ForegroundImageView
         android:id="@+id/gallery_image_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,4 +27,4 @@
         android:ellipsize="end"
         tools:text="This Is The Title"
         style="@style/Widget.U2020.GalleryImage" />
-</com.jakewharton.u2020.ui.gallery.GalleryItemView>
+</ru.ltst.u2020mvp.ui.gallery.GalleryItemView>
