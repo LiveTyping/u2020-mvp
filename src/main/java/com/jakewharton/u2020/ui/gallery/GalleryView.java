@@ -49,8 +49,7 @@ public class GalleryView extends BetterViewAnimator {
         return Observable.create(new OperatorViewItemClicks<>(galleryView)).map(new ItemClicksToImage(adapter));
     }
 
-    private static class ItemClicksToImage implements Func1<OperatorViewItemClicks.ItemClick, Image>
-    {
+    private static class ItemClicksToImage implements Func1<OperatorViewItemClicks.ItemClick, Image> {
         private GalleryAdapter adapter;
 
         private ItemClicksToImage(GalleryAdapter adapter) {

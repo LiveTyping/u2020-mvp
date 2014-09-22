@@ -58,10 +58,8 @@ public class ImgurImageActivity extends U2020Activity {
 
 
     @Override
-    protected Object[] modules() {
-        return new Object[]{
-            new ImgurImageModule(imageId)
-        };
+    protected Object module() {
+        return new ImgurImageModule(imageId);
     }
 
     @Override

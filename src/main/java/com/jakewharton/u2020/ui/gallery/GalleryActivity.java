@@ -52,10 +52,8 @@ public class GalleryActivity extends U2020Activity {
     }
 
     @Override
-    protected Object[] modules() {
-        return new Object[]{
-            new GalleryModule()
-        };
+    protected Object module() {
+        return new GalleryModule();
     }
 
     @Override

@@ -12,6 +12,8 @@ import com.jakewharton.u2020.U2020App;
 import com.jakewharton.u2020.U2020InjectionService;
 import com.jakewharton.u2020.ui.AppContainer;
 
+import java.util.Collection;
+
 import javax.inject.Inject;
 
 import dagger.ObjectGraph;
@@ -27,7 +29,15 @@ public abstract class U2020Activity extends Activity implements U2020InjectionSe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         U2020App app = U2020App.get(this);
-        activityGraph = app.plus(modules());
+        Object modules = module();
+        if (modules == null) {
+            activityGraph = app.plus();
+        } else if (modules instanceof Collection) {
+            Collection c = (Collection) modules;
+            activityGraph = app.plus(c.toArray(new Object[c.size()]));
+        } else {
+            activityGraph = app.plus(modules);
+        }
         activityGraph.inject(this);
 
         ViewGroup container = appContainer.get(this);
@@ -61,7 +71,7 @@ public abstract class U2020Activity extends Activity implements U2020InjectionSe
         return super.getSystemService(name);
     }
 
-    protected abstract Object[] modules();
+    protected abstract Object module();
     protected abstract @LayoutRes int layoutId();
     protected abstract ViewPresenter<? extends View> presenter();
 }
