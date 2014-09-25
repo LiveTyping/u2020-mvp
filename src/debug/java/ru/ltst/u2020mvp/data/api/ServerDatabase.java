@@ -1,7 +1,7 @@
 package ru.ltst.u2020mvp.data.api;
 
 import android.support.annotation.NonNull;
-import android.util.ArrayMap;
+import android.support.v4.util.ArrayMap;
 
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.data.api.model.MockImageLoader;
@@ -35,7 +35,7 @@ public final class ServerDatabase {
 
     // TODO maybe id->image map and section->id multimap so we can re-use images?
     private final Map<Section, List<Image>> imagesBySection = new LinkedHashMap<>();
-    private final ArrayMap<String, Image>  imagesById = new ArrayMap<>();
+    private final ArrayMap<String, Image> imagesById = new ArrayMap<>();
 
     private boolean initialized;
 
