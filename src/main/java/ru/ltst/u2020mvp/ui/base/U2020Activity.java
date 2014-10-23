@@ -1,24 +1,23 @@
 package ru.ltst.u2020mvp.ui.base;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
-
-import ru.ltst.u2020mvp.Injector;
-import ru.ltst.u2020mvp.U2020App;
-import ru.ltst.u2020mvp.U2020InjectionService;
-import ru.ltst.u2020mvp.ui.AppContainer;
 
 import java.util.Collection;
 
 import javax.inject.Inject;
 
 import dagger.ObjectGraph;
+import ru.ltst.u2020mvp.Injector;
+import ru.ltst.u2020mvp.U2020App;
+import ru.ltst.u2020mvp.U2020InjectionService;
+import ru.ltst.u2020mvp.ui.AppContainer;
 
-public abstract class U2020Activity extends Activity implements U2020InjectionService {
+public abstract class U2020Activity extends FragmentActivity implements U2020InjectionService {
 
     private ObjectGraph activityGraph;
 

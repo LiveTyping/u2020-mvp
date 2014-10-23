@@ -3,11 +3,23 @@
 
     <style name="None"></style>
 
-    <style name="Theme.U2020" parent="android:Theme.Holo.NoActionBar">
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowActionBarOverlay">true</item>
+    <style name="Theme.U2020" parent="Theme.U2020.Base"/>
+
+    <style name="Theme.U2020.Base" parent="Theme.AppCompat.Light">
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="colorPrimary">@color/primary_color</item>
+
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
+
+        <!-- colorAccent is used as the default value for colorControlActivated,
+             which is used to tint widgets -->
+        <item name="colorAccent">@color/accent_material_dark</item>
+
         <item name="android:windowBackground">@drawable/content_background</item>
         <item name="android:progressBarStyle">@style/Widget.U2020.ProgressBar</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
     </style>
 
     <style name="Widget.U2020.ProgressBar" parent="None">
