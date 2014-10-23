@@ -104,7 +104,8 @@ public class GalleryActivity extends U2020Activity {
                     @Override
                     public void call(Pair<Image, GalleryItemView> image) {
                         Timber.d("Image clicked with id = %s", image.first.id);
-                        ActivityScreen screen = new ImgurImageActivity.Screen(image.first.id, image.second);
+                        ActivityScreen screen = new ImgurImageActivity.Screen(image.first.id);
+                        screen.attachTransitionView(image.second);
                         screenSwitcher.open(screen);
                     }
                 }

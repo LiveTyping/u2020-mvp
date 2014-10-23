@@ -15,6 +15,20 @@ public abstract class ActivityScreen implements Screen {
 
     private static final String BF_TRANSITION_VIEW = "ImgurImageActivity.transitionView";
 
+    @Nullable
+    private View transitionView;
+
+    public void attachTransitionView(@Nullable View view) {
+        transitionView = view;
+    }
+
+    @Nullable
+    protected View detachTransitionView() {
+        View view = transitionView;
+        transitionView = null;
+        return view;
+    }
+
     @NonNull
     protected final Intent intent(Context context) {
         Intent intent = new Intent(context, activityClass());
@@ -23,16 +37,11 @@ public abstract class ActivityScreen implements Screen {
     }
 
     protected final Bundle activityOptions(Activity activity) {
-        View transitionView = transitionView();
+        View transitionView = detachTransitionView();
         if (transitionView == null) {
             return null;
         }
         return ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transitionView, BF_TRANSITION_VIEW).toBundle();
-    }
-
-    @Nullable
-    protected View transitionView() {
-        return null;
     }
 
     protected abstract void configureIntent(@NonNull Intent intent);

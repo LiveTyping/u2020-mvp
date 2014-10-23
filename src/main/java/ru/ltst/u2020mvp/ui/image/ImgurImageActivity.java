@@ -120,11 +120,9 @@ public class ImgurImageActivity extends U2020Activity {
         private static final String BF_IMAGE_ID = "ImgurImageActivity.imageId";
 
         private final String imageId;
-        private View transitionView;
 
-        public Screen(String imageId, View transitionView) {
+        public Screen(String imageId) {
             this.imageId = imageId;
-            this.transitionView = transitionView;
         }
 
         @Override
@@ -135,14 +133,6 @@ public class ImgurImageActivity extends U2020Activity {
         @Override
         protected Class<? extends Activity> activityClass() {
             return ImgurImageActivity.class;
-        }
-
-        @Nullable
-        @Override
-        protected View transitionView() {
-            View view = transitionView;
-            transitionView = null;
-            return view;
         }
     }
 }
