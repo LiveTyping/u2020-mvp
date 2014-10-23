@@ -1,5 +1,6 @@
 package ru.ltst.u2020mvp.ui.image;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,19 +17,13 @@ import javax.inject.Singleton;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import ru.ltst.u2020mvp.ui.navigation.ActivityScreen;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
 import timber.log.Timber;
 
 public class ImgurImageActivity extends U2020Activity {
-    private static final String BF_IMAGE_ID = "ImgurImageActivity.imageId";
-
-    public static Intent activityIntent(Context context, @NonNull String imageId) {
-        Intent intent = new Intent(context, ImgurImageActivity.class);
-        intent.putExtra(BF_IMAGE_ID, imageId);
-        return intent;
-    }
 
     @Inject Presenter presenter;
 
@@ -38,9 +33,14 @@ public class ImgurImageActivity extends U2020Activity {
     private @NonNull String imageId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        imageId = getIntent().getStringExtra(BF_IMAGE_ID);
         super.onCreate(savedInstanceState);
         ButterKnife.inject(this);
+    }
+
+    @Override
+    protected void onExtractParams(@NonNull Bundle params) {
+        super.onExtractParams(params);
+        imageId = getIntent().getStringExtra(Screen.BF_IMAGE_ID);
     }
 
     @Override
@@ -108,6 +108,27 @@ public class ImgurImageActivity extends U2020Activity {
         protected void onDestroy() {
             super.onDestroy();
             subscription.unsubscribe();
+        }
+    }
+
+    public static class Screen extends ActivityScreen {
+
+        private static final String BF_IMAGE_ID = "ImgurImageActivity.imageId";
+
+        private final String imageId;
+
+        public Screen(String imageId) {
+            this.imageId = imageId;
+        }
+
+        @Override
+        protected void configureIntent(@NonNull Intent intent) {
+            intent.putExtra(BF_IMAGE_ID, imageId);
+        }
+
+        @Override
+        protected Class<? extends Activity> activityClass() {
+            return ImgurImageActivity.class;
         }
     }
 }

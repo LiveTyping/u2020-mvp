@@ -1,5 +1,6 @@
 package ru.ltst.u2020mvp.ui.gallery;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import javax.inject.Singleton;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import ru.ltst.u2020mvp.ui.navigation.NoParamsActivityScreen;
+import ru.ltst.u2020mvp.ui.navigation.ScreenSwitcher;
 import rx.Subscription;
 import rx.functions.Action1;
 import timber.log.Timber;
@@ -69,16 +72,17 @@ public class GalleryActivity extends U2020Activity {
     @Singleton
     public static class Presenter extends ViewPresenter<GalleryView> {
 
-        @Inject
-        GalleryDatabase galleryDatabase;
+        private final GalleryDatabase galleryDatabase;
+        private final ScreenSwitcher screenSwitcher;
 
         private Section section = Section.HOT;
         private Subscription request;
         private Subscription clicks;
 
         @Inject
-        public Presenter(GalleryDatabase galleryDatabase) {
+        public Presenter(GalleryDatabase galleryDatabase, ScreenSwitcher screenSwitcher) {
             this.galleryDatabase = galleryDatabase;
+            this.screenSwitcher = screenSwitcher;
         }
 
         @Override
@@ -96,9 +100,7 @@ public class GalleryActivity extends U2020Activity {
                     @Override
                     public void call(Image image) {
                         Timber.d("Image clicked with id = %s", image.id);
-                        Context context = getView().getContext();
-                        Intent intent = ImgurImageActivity.activityIntent(context, image.id);
-                        context.startActivity(intent);
+                        screenSwitcher.open(new ImgurImageActivity.Screen(image.id));
                     }
                 }
             );
@@ -109,6 +111,13 @@ public class GalleryActivity extends U2020Activity {
             super.onDestroy();
             request.unsubscribe();
             clicks.unsubscribe();
+        }
+    }
+
+    public static class Screen extends NoParamsActivityScreen {
+        @Override
+        protected Class<? extends Activity> activityClass() {
+            return GalleryActivity.class;
         }
     }
 }

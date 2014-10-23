@@ -16,6 +16,7 @@ import ru.ltst.u2020mvp.Injector;
 import ru.ltst.u2020mvp.U2020App;
 import ru.ltst.u2020mvp.U2020InjectionService;
 import ru.ltst.u2020mvp.ui.AppContainer;
+import ru.ltst.u2020mvp.ui.navigation.ActivityScreenSwitcher;
 
 public abstract class U2020Activity extends FragmentActivity implements U2020InjectionService {
 
@@ -23,9 +24,15 @@ public abstract class U2020Activity extends FragmentActivity implements U2020Inj
 
     @Inject
     AppContainer appContainer;
+    @Inject
+    ActivityScreenSwitcher activityScreenSwitcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Bundle params = getIntent().getExtras();
+        if (params != null) {
+            onExtractParams(params);
+        }
         super.onCreate(savedInstanceState);
         U2020App app = U2020App.get(this);
         Object modules = module();
@@ -44,6 +51,18 @@ public abstract class U2020Activity extends FragmentActivity implements U2020Inj
         if (savedInstanceState != null) {
             presenter().onRestore(savedInstanceState);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        activityScreenSwitcher.attach(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        activityScreenSwitcher.detach();
     }
 
     @Override
@@ -72,6 +91,10 @@ public abstract class U2020Activity extends FragmentActivity implements U2020Inj
         if (Injector.isValidSystemService(name))
             return this;
         return super.getSystemService(name);
+    }
+
+    protected void onExtractParams(@NonNull Bundle params) {
+        // default no implemetation
     }
 
     protected abstract Object module();
