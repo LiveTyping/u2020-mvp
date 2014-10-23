@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 
 import java.security.InvalidParameterException;
 
@@ -25,8 +27,7 @@ public class ActivityScreenSwitcher implements ScreenSwitcher {
         if (screen instanceof ActivityScreen) {
             ActivityScreen activityScreen = ((ActivityScreen) screen);
             Intent intent = activityScreen.intent(activity);
-            
-            activity.startActivity(intent);
+            ActivityCompat.startActivity(activity, intent, activityScreen.activityOptions(activity));
         } else {
             throw new InvalidParameterException("Only ActivityScreen objects allowed");
         }

@@ -1,6 +1,7 @@
 package ru.ltst.u2020mvp.ui.gallery;
 
 import android.content.Context;
+import android.support.v4.util.Pair;
 import android.util.AttributeSet;
 import android.widget.AbsListView;
 
@@ -12,6 +13,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ru.ltst.u2020mvp.Injector;
 import ru.ltst.u2020mvp.R;
+import ru.ltst.u2020mvp.data.api.model.response.Gallery;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.ui.misc.BetterViewAnimator;
 import rx.Observable;
@@ -45,11 +47,11 @@ public class GalleryView extends BetterViewAnimator {
         return adapter;
     }
 
-    public Observable<Image> observeImageClicks() {
+    public Observable<Pair<Image, GalleryItemView>> observeImageClicks() {
         return ViewObservable.itemClicks(galleryView).map(new OnItemClickEventToImage(adapter));
     }
 
-    private static class OnItemClickEventToImage implements Func1<OnItemClickEvent, Image> {
+    private static class OnItemClickEventToImage implements Func1<OnItemClickEvent, Pair<Image, GalleryItemView>> {
         private GalleryAdapter adapter;
 
         private OnItemClickEventToImage(GalleryAdapter adapter) {
@@ -57,8 +59,10 @@ public class GalleryView extends BetterViewAnimator {
         }
 
         @Override
-        public Image call(OnItemClickEvent onItemClickEvent) {
-            return adapter.getItem(onItemClickEvent.position);
+        public Pair<Image, GalleryItemView> call(OnItemClickEvent onItemClickEvent) {
+            Image image = adapter.getItem(onItemClickEvent.position);
+            GalleryItemView view = (GalleryItemView) onItemClickEvent.view;
+            return new Pair<>(image, view);
         }
     }
 }

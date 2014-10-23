@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.view.View;
 
 import ru.ltst.u2020mvp.R;
@@ -17,6 +19,7 @@ import javax.inject.Singleton;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import ru.ltst.u2020mvp.ui.gallery.GalleryItemView;
 import ru.ltst.u2020mvp.ui.navigation.ActivityScreen;
 import rx.Observable;
 import rx.Subscription;
@@ -35,6 +38,7 @@ public class ImgurImageActivity extends U2020Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.inject(this);
+        ActivityScreen.setTransitionView(view);
     }
 
     @Override
@@ -116,9 +120,11 @@ public class ImgurImageActivity extends U2020Activity {
         private static final String BF_IMAGE_ID = "ImgurImageActivity.imageId";
 
         private final String imageId;
+        private View transitionView;
 
-        public Screen(String imageId) {
+        public Screen(String imageId, View transitionView) {
             this.imageId = imageId;
+            this.transitionView = transitionView;
         }
 
         @Override
@@ -129,6 +135,14 @@ public class ImgurImageActivity extends U2020Activity {
         @Override
         protected Class<? extends Activity> activityClass() {
             return ImgurImageActivity.class;
+        }
+
+        @Nullable
+        @Override
+        protected View transitionView() {
+            View view = transitionView;
+            transitionView = null;
+            return view;
         }
     }
 }

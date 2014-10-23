@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.view.View;
 
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.data.GalleryDatabase;
 import ru.ltst.u2020mvp.data.api.model.request.Section;
+import ru.ltst.u2020mvp.data.api.model.response.Gallery;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.data.rx.EndlessObserver;
 import ru.ltst.u2020mvp.ui.base.U2020Activity;
@@ -22,6 +25,7 @@ import javax.inject.Singleton;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import ru.ltst.u2020mvp.ui.navigation.ActivityScreen;
 import ru.ltst.u2020mvp.ui.navigation.NoParamsActivityScreen;
 import ru.ltst.u2020mvp.ui.navigation.ScreenSwitcher;
 import rx.Subscription;
@@ -96,11 +100,12 @@ public class GalleryActivity extends U2020Activity {
                 }
             });
             clicks = getView().observeImageClicks().subscribe(
-                new Action1<Image>() {
+                new Action1<Pair<Image, GalleryItemView>>() {
                     @Override
-                    public void call(Image image) {
-                        Timber.d("Image clicked with id = %s", image.id);
-                        screenSwitcher.open(new ImgurImageActivity.Screen(image.id));
+                    public void call(Pair<Image, GalleryItemView> image) {
+                        Timber.d("Image clicked with id = %s", image.first.id);
+                        ActivityScreen screen = new ImgurImageActivity.Screen(image.first.id, image.second);
+                        screenSwitcher.open(screen);
                     }
                 }
             );
