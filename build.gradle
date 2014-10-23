@@ -82,10 +82,32 @@ android {
         testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
     }
 
+    signingConfigs {
+        debug {
+            storeFile file("distribution/debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+        release {
+            storeFile file("distribution/debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix '.dev'
             versionNameSuffix '-dev'
+            debuggable true
+            signingConfig signingConfigs.debug
+        }
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), file('proguard-project.txt')
+            signingConfig signingConfigs.release
         }
     }
 
