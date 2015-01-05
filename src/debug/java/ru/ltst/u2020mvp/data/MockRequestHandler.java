@@ -1,11 +1,16 @@
 package ru.ltst.u2020mvp.data;
 
+
 import android.content.res.AssetManager;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.SystemClock;
 import android.util.LruCache;
 
+import com.squareup.picasso.RequestHandler;
 import com.squareup.picasso.Downloader;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Request;
 
 import java.io.IOException;
 
@@ -17,7 +22,7 @@ import retrofit.MockRestAdapter;
  * <p/>
  * Images <em>must</em> be in the form {@code mock:///path/to/asset.png}.
  */
-public final class MockDownloader implements Downloader {
+public final class MockRequestHandler extends RequestHandler {
     private final MockRestAdapter mockRestAdapter;
     private final AssetManager assetManager;
 
@@ -32,33 +37,35 @@ public final class MockDownloader implements Downloader {
                 }
             };
 
-    public MockDownloader(MockRestAdapter mockRestAdapter, AssetManager assetManager) {
+    public MockRequestHandler(MockRestAdapter mockRestAdapter, AssetManager assetManager) {
         this.mockRestAdapter = mockRestAdapter;
         this.assetManager = assetManager;
     }
 
     @Override
-    public Response load(Uri uri, boolean localCacheOnly) throws IOException {
-        if (!"mock".equals(uri.getScheme())) {
-            throw new RuntimeException("Attempted to download non-mock image ("
-                    + uri
-                    + ") using the mock downloader. Mock URLs must use scheme 'mock'.");
-        }
+    public boolean canHandleRequest(Request data) {
+        return "mock".equals(data.uri.getScheme());
+    }
 
-        String imagePath = uri.getPath().substring(1); // Grab only the path sans leading slash.
+    @Override
+    public Result load(Request data) throws IOException {
+        String imagePath = data.uri.getPath().substring(1); // Grab only the path sans leading slash.
 
         // Check the disk cache for the image. A non-null return value indicates a hit.
         boolean cacheHit = emulatedDiskCache.get(imagePath) != null;
 
         // If there's a hit, grab the image stream and return it.
         if (cacheHit) {
-            return new Response(assetManager.open(imagePath), true);
+            return new Result(loadBitmap(imagePath), Picasso.LoadedFrom.DISK);
         }
 
-        // If we are not allowed to hit the network and the cache missed return a big fat nothing.
-        if (localCacheOnly) {
-            return null;
-        }
+    /*
+    // If we are not allowed to hit the network and the cache missed return a big fat nothing.
+    if (data.loadFromLocalCacheOnly) {
+      // todo: package protected
+      return null;
+    }
+    */
 
         // If we got this far there was a cache miss and hitting the network is required. See if we need
         // to fake an network error.
@@ -70,11 +77,15 @@ public final class MockDownloader implements Downloader {
         // We aren't throwing a network error so fake a round trip delay.
         SystemClock.sleep(mockRestAdapter.calculateDelayForCall());
 
-        // Since we cache missed, load the file size and put it in the LRU.
+        // Since we cache missed put it in the LRU.
         long size = assetManager.openFd(imagePath).getLength();
         emulatedDiskCache.put(imagePath, size);
 
         // Grab the image stream and return it.
-        return new Response(assetManager.open(imagePath), false);
+        return new Result(loadBitmap(imagePath), Picasso.LoadedFrom.NETWORK);
+    }
+
+    Bitmap loadBitmap(String imagePath) throws IOException {
+        return BitmapFactory.decodeStream(assetManager.open(imagePath));
     }
 }

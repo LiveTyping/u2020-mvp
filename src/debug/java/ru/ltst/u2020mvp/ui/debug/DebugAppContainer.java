@@ -134,12 +134,10 @@ public class DebugAppContainer implements AppContainer {
     @InjectView(R.id.debug_drawer_layout)
     DrawerLayout drawerLayout;
     @InjectView(R.id.debug_content)
-    ViewGroup content;
+    ScalpelFrameLayout content;
 
     @InjectView(R.id.madge_container)
     MadgeFrameLayout madgeFrameLayout;
-    @InjectView(R.id.debug_content)
-    ScalpelFrameLayout scalpelFrameLayout;
 
     @InjectView(R.id.debug_contextual_title)
     View contextualTitleView;
@@ -478,7 +476,7 @@ public class DebugAppContainer implements AppContainer {
         });
 
         boolean scalpel = scalpelEnabled.get();
-        scalpelFrameLayout.setLayerInteractionEnabled(scalpel);
+        content.setLayerInteractionEnabled(scalpel);
         uiScalpelView.setChecked(scalpel);
         uiScalpelWireframeView.setEnabled(scalpel);
         uiScalpelView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -486,20 +484,20 @@ public class DebugAppContainer implements AppContainer {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Timber.d("Setting scalpel interaction enabled to " + isChecked);
                 scalpelEnabled.set(isChecked);
-                scalpelFrameLayout.setLayerInteractionEnabled(isChecked);
+                content.setLayerInteractionEnabled(isChecked);
                 uiScalpelWireframeView.setEnabled(isChecked);
             }
         });
 
         boolean wireframe = scalpelWireframeEnabled.get();
-        scalpelFrameLayout.setDrawViews(!wireframe);
+        content.setDrawViews(!wireframe);
         uiScalpelWireframeView.setChecked(wireframe);
         uiScalpelWireframeView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Timber.d("Setting scalpel wireframe enabled to " + isChecked);
                 scalpelWireframeEnabled.set(isChecked);
-                scalpelFrameLayout.setDrawViews(!isChecked);
+                content.setDrawViews(!isChecked);
             }
         });
     }
