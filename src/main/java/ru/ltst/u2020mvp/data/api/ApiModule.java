@@ -7,15 +7,11 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import retrofit.Endpoint;
-import retrofit.Endpoints;
 import retrofit.RestAdapter;
 import retrofit.client.Client;
 import retrofit.client.OkClient;
 
-@Module(
-        complete = false,
-        library = true
-)
+@Module
 public final class ApiModule {
     public static final String PRODUCTION_API_URL = "https://api.imgur.com/3/";
     private static final String CLIENT_ID = "3436c108ccc17d3";
@@ -25,12 +21,6 @@ public final class ApiModule {
     @ClientId
     String provideClientId() {
         return CLIENT_ID;
-    }
-
-    @Provides
-    @Singleton
-    Endpoint provideEndpoint() {
-        return Endpoints.newFixedEndpoint(PRODUCTION_API_URL);
     }
 
     @Provides
@@ -47,17 +37,5 @@ public final class ApiModule {
                 .setEndpoint(endpoint) //
                 .setRequestInterceptor(headers) //
                 .build();
-    }
-
-    @Provides
-    @Singleton
-    GalleryService provideGalleryService(RestAdapter restAdapter) {
-        return restAdapter.create(GalleryService.class);
-    }
-
-    @Provides
-    @Singleton
-    ImageService provideImageService(RestAdapter restAdapter) {
-        return restAdapter.create(ImageService.class);
     }
 }

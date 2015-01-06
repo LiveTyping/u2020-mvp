@@ -1,32 +1,29 @@
 package ru.ltst.u2020mvp.ui.image;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
 import android.view.View;
 
 import ru.ltst.u2020mvp.R;
+import ru.ltst.u2020mvp.U2020Component;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
+import ru.ltst.u2020mvp.ui.base.HasComponent;
 import ru.ltst.u2020mvp.ui.base.U2020Activity;
 import ru.ltst.u2020mvp.ui.base.ViewPresenter;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import ru.ltst.u2020mvp.ui.gallery.GalleryItemView;
 import ru.ltst.u2020mvp.ui.navigation.ActivityScreen;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
 import timber.log.Timber;
 
-public class ImgurImageActivity extends U2020Activity {
+public class ImgurImageActivity extends U2020Activity<ImgurImageComponent> implements HasComponent<ImgurImageComponent> {
 
     @Inject Presenter presenter;
 
@@ -34,11 +31,17 @@ public class ImgurImageActivity extends U2020Activity {
     ImgurImageView view;
 
     private @NonNull String imageId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.inject(this);
-        ActivityScreen.setTransitionView(view);
+        ActivityScreen.setTransitionView(this.view);
+    }
+
+    @Override
+    protected void doInject(ImgurImageComponent imgurImageComponent) {
+        imgurImageComponent.inject(this);
     }
 
     @Override
@@ -59,10 +62,11 @@ public class ImgurImageActivity extends U2020Activity {
         presenter.dropView(view);
     }
 
-
     @Override
-    protected Object module() {
-        return new ImgurImageModule(imageId);
+    protected ImgurImageComponent component(U2020Component component) {
+        return Dagger_ImgurImageComponent.builder().
+                u2020Component(component).
+                imgurImageModule(new ImgurImageModule(imageId)).build();
     }
 
     @Override
@@ -75,7 +79,7 @@ public class ImgurImageActivity extends U2020Activity {
         return presenter;
     }
 
-    @Singleton
+    @ImgurImageScope
     public static class Presenter extends ViewPresenter<ImgurImageView> {
 
         private final Observable<Image> imageObservable;

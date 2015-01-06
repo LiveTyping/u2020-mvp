@@ -1,30 +1,26 @@
 package ru.ltst.u2020mvp.ui.gallery;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.view.View;
-
-import ru.ltst.u2020mvp.R;
-import ru.ltst.u2020mvp.data.GalleryDatabase;
-import ru.ltst.u2020mvp.data.api.model.request.Section;
-import ru.ltst.u2020mvp.data.api.model.response.Gallery;
-import ru.ltst.u2020mvp.data.api.model.response.Image;
-import ru.ltst.u2020mvp.data.rx.EndlessObserver;
-import ru.ltst.u2020mvp.ui.base.U2020Activity;
-import ru.ltst.u2020mvp.ui.base.ViewPresenter;
-import ru.ltst.u2020mvp.ui.image.ImgurImageActivity;
 
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import ru.ltst.u2020mvp.R;
+import ru.ltst.u2020mvp.U2020Component;
+import ru.ltst.u2020mvp.data.GalleryDatabase;
+import ru.ltst.u2020mvp.data.api.model.request.Section;
+import ru.ltst.u2020mvp.data.api.model.response.Image;
+import ru.ltst.u2020mvp.data.rx.EndlessObserver;
+import ru.ltst.u2020mvp.ui.base.HasComponent;
+import ru.ltst.u2020mvp.ui.base.U2020Activity;
+import ru.ltst.u2020mvp.ui.base.ViewPresenter;
+import ru.ltst.u2020mvp.ui.image.ImgurImageActivity;
 import ru.ltst.u2020mvp.ui.navigation.ActivityScreen;
 import ru.ltst.u2020mvp.ui.navigation.NoParamsActivityScreen;
 import ru.ltst.u2020mvp.ui.navigation.ScreenSwitcher;
@@ -32,7 +28,7 @@ import rx.Subscription;
 import rx.functions.Action1;
 import timber.log.Timber;
 
-public class GalleryActivity extends U2020Activity {
+public class GalleryActivity extends U2020Activity<GalleryComponent> implements HasComponent<GalleryComponent> {
 
     @Inject
     Presenter presenter;
@@ -44,6 +40,11 @@ public class GalleryActivity extends U2020Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.inject(this);
+    }
+
+    @Override
+    protected void doInject(GalleryComponent galleryComponent) {
+        galleryComponent.inject(this);
     }
 
     @Override
@@ -59,8 +60,10 @@ public class GalleryActivity extends U2020Activity {
     }
 
     @Override
-    protected Object module() {
-        return new GalleryModule();
+    protected GalleryComponent component(U2020Component component) {
+        return Dagger_GalleryComponent.builder().
+                u2020Component(component).
+                galleryModule(new GalleryModule()).build();
     }
 
     @Override
@@ -73,7 +76,7 @@ public class GalleryActivity extends U2020Activity {
         return presenter;
     }
 
-    @Singleton
+    @GalleryScope
     public static class Presenter extends ViewPresenter<GalleryView> {
 
         private final GalleryDatabase galleryDatabase;

@@ -8,12 +8,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-@Module(
-        injects = DebugAppContainer.class,
-        complete = false,
-        library = true,
-        overrides = true
-)
+@Module(includes = UiModule.class)
 public class DebugUiModule {
     @Provides
     @Singleton

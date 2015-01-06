@@ -1,11 +1,12 @@
 buildscript {
-  repositories {
-    mavenCentral()
-  }
-  dependencies {
-    classpath 'com.android.tools.build:gradle:1.0.0'
-    classpath 'com.stanfy.spoon:spoon-gradle-plugin:0.14.1'
-  }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.stanfy.spoon:spoon-gradle-plugin:0.14.1'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+    }
 }
 
 // Manifest version information!
@@ -16,9 +17,11 @@ def versionBuild = 0 // bump for dogfood builds, public betas, etc.
 
 apply plugin: 'com.android.application'
 apply plugin: 'spoon'
+apply plugin: 'com.neenbedankt.android-apt'
 
 repositories {
     mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 dependencies {
@@ -26,8 +29,9 @@ dependencies {
     compile 'com.android.support:support-annotations:21.0.3'
     compile "com.android.support:appcompat-v7:21.0.3"
 
-    compile 'com.squareup.dagger:dagger:1.2.2'
-    provided 'com.squareup.dagger:dagger-compiler:1.2.2'
+    compile 'com.google.dagger:dagger:2.0-SNAPSHOT'
+    apt 'com.google.dagger:dagger-compiler:2.0-SNAPSHOT'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
 
     compile 'com.squareup.okhttp:okhttp:2.2.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'

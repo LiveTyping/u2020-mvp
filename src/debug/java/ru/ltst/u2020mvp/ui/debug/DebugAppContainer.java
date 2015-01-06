@@ -688,6 +688,6 @@ public class DebugAppContainer implements AppContainer {
         Intent newApp = new Intent(app, GalleryActivity.class);
         newApp.setFlags(FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
         app.startActivity(newApp);
-        U2020App.get(app).buildObjectGraphAndInject();
+        U2020App.get(app).buildComponentAndInject();
     }
 }

@@ -2,11 +2,6 @@ package ru.ltst.u2020mvp.data.api;
 
 import android.content.SharedPreferences;
 
-import ru.ltst.u2020mvp.data.ApiEndpoint;
-import ru.ltst.u2020mvp.data.IsMockMode;
-import ru.ltst.u2020mvp.data.api.model.MockImageService;
-import ru.ltst.u2020mvp.data.prefs.StringPreference;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -16,12 +11,12 @@ import retrofit.Endpoints;
 import retrofit.MockRestAdapter;
 import retrofit.RestAdapter;
 import retrofit.android.AndroidMockValuePersistence;
+import ru.ltst.u2020mvp.data.ApiEndpoint;
+import ru.ltst.u2020mvp.data.IsMockMode;
+import ru.ltst.u2020mvp.data.api.model.MockImageService;
+import ru.ltst.u2020mvp.data.prefs.StringPreference;
 
-@Module(
-        complete = false,
-        library = true,
-        overrides = true
-)
+@Module(includes = ApiModule.class)
 public final class DebugApiModule {
 
     @Provides

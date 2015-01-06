@@ -2,23 +2,16 @@ package ru.ltst.u2020mvp.ui.image;
 
 import android.support.annotation.NonNull;
 
+import dagger.Module;
+import dagger.Provides;
 import ru.ltst.u2020mvp.data.api.ImageService;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.data.api.transforms.ImageResponseToImage;
-
-import dagger.Module;
-import dagger.Provides;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-@Module(
-    injects = {
-            ImgurImageActivity.class,
-            ImgurImageView.class
-    },
-    complete = false
-)
+@Module
 public class ImgurImageModule {
     private final @NonNull String imageId;
 

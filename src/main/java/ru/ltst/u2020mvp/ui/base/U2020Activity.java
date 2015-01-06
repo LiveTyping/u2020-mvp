@@ -7,25 +7,21 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Collection;
-
 import javax.inject.Inject;
 
-import dagger.ObjectGraph;
-import ru.ltst.u2020mvp.Injector;
 import ru.ltst.u2020mvp.U2020App;
-import ru.ltst.u2020mvp.U2020InjectionService;
+import ru.ltst.u2020mvp.U2020Component;
 import ru.ltst.u2020mvp.ui.AppContainer;
 import ru.ltst.u2020mvp.ui.navigation.ActivityScreenSwitcher;
 
-public abstract class U2020Activity extends FragmentActivity implements U2020InjectionService {
-
-    private ObjectGraph activityGraph;
+public abstract class U2020Activity<Component> extends FragmentActivity {
 
     @Inject
     AppContainer appContainer;
     @Inject
     ActivityScreenSwitcher activityScreenSwitcher;
+
+    private Component component;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,20 +30,14 @@ public abstract class U2020Activity extends FragmentActivity implements U2020Inj
             onExtractParams(params);
         }
         super.onCreate(savedInstanceState);
+
         U2020App app = U2020App.get(this);
-        Object modules = module();
-        if (modules == null) {
-            activityGraph = app.plus();
-        } else if (modules instanceof Collection) {
-            Collection c = (Collection) modules;
-            activityGraph = app.plus(c.toArray(new Object[c.size()]));
-        } else {
-            activityGraph = app.plus(modules);
-        }
-        activityGraph.inject(this);
+        component = component(app.component());
+        doInject(component);
 
         ViewGroup container = appContainer.get(this);
         getLayoutInflater().inflate(layoutId(), container);
+
         if (savedInstanceState != null) {
             presenter().onRestore(savedInstanceState);
         }
@@ -73,31 +63,20 @@ public abstract class U2020Activity extends FragmentActivity implements U2020Inj
 
     @Override
     protected void onDestroy() {
+        component = null;
         super.onDestroy();
-        activityGraph = null;
-    }
-
-    @Override
-    public <T> T inject(T object) {
-        return activityGraph.inject(object);
-    }
-
-    public ObjectGraph plus(Object... modules) {
-        return activityGraph.plus(modules);
-    }
-
-    @Override
-    public Object getSystemService(@NonNull String name) {
-        if (Injector.isValidSystemService(name))
-            return this;
-        return super.getSystemService(name);
     }
 
     protected void onExtractParams(@NonNull Bundle params) {
         // default no implemetation
     }
 
-    protected abstract Object module();
+    public Component getComponent() {
+        return component;
+    }
+
+    protected abstract void doInject(Component component);
+    protected abstract Component component(U2020Component component);
     protected abstract @LayoutRes int layoutId();
     protected abstract ViewPresenter<? extends View> presenter();
 }

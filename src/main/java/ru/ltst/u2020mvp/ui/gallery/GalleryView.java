@@ -11,9 +11,9 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import ru.ltst.u2020mvp.Injector;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
+import ru.ltst.u2020mvp.ui.base.HasComponent;
 import ru.ltst.u2020mvp.ui.misc.BetterViewAnimator;
 import rx.Observable;
 import rx.android.widget.OnItemClickEvent;
@@ -31,8 +31,8 @@ public class GalleryView extends BetterViewAnimator {
 
     public GalleryView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        Injector.inject(context, this);
-        adapter = new GalleryAdapter(context, picasso);
+        ((HasComponent<Injector>) context).getComponent().inject(this);
+        adapter = new GalleryAdapter(getContext(), picasso);
     }
 
     @Override
@@ -50,8 +50,9 @@ public class GalleryView extends BetterViewAnimator {
         return WidgetObservable.itemClicks(galleryView).map(new OnItemClickEventToImage(adapter));
     }
 
-    private static class OnItemClickEventToImage implements Func1<OnItemClickEvent, Pair<Image, GalleryItemView>> {
-        private GalleryAdapter adapter;
+    private static final class OnItemClickEventToImage implements Func1<OnItemClickEvent, Pair<Image, GalleryItemView>> {
+
+        private final GalleryAdapter adapter;
 
         private OnItemClickEventToImage(GalleryAdapter adapter) {
             this.adapter = adapter;
@@ -63,5 +64,9 @@ public class GalleryView extends BetterViewAnimator {
             GalleryItemView view = (GalleryItemView) onItemClickEvent.view();
             return new Pair<>(image, view);
         }
+    }
+
+    public static interface Injector {
+        void inject(GalleryView view);
     }
 }

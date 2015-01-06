@@ -5,14 +5,13 @@ import android.content.Context;
 
 import javax.inject.Inject;
 
-import dagger.ObjectGraph;
 import ru.ltst.u2020mvp.ui.ActivityHierarchyServer;
 import timber.log.Timber;
 
 import static timber.log.Timber.DebugTree;
 
-public class U2020App extends Application implements U2020InjectionService {
-    private ObjectGraph objectGraph;
+public class U2020App extends Application {
+    private U2020Component component;
 
     @Inject
     ActivityHierarchyServer activityHierarchyServer;
@@ -28,32 +27,21 @@ public class U2020App extends Application implements U2020InjectionService {
             // TODO Timber.plant(new CrashlyticsTree());
         }
 
-        buildObjectGraphAndInject();
+        buildComponentAndInject();
 
         registerActivityLifecycleCallbacks(activityHierarchyServer);
     }
 
-    public void buildObjectGraphAndInject() {
-        objectGraph = ObjectGraph.create(Modules.list(this));
-        objectGraph.inject(this);
+    public void buildComponentAndInject() {
+        component = U2020Component.Initializer.init(this);
+        component.inject(this);
     }
 
-    public ObjectGraph plus(Object... modules) {
-        return objectGraph.plus(modules);
-    }
-
-    public <T> T inject(T o) {
-        return objectGraph.inject(o);
+    public U2020Component component() {
+        return component;
     }
 
     public static U2020App get(Context context) {
         return (U2020App) context.getApplicationContext();
-    }
-
-    @Override
-    public Object getSystemService(String name) {
-        if (Injector.isValidSystemService(name))
-            return this;
-        return super.getSystemService(name);
     }
 }
