@@ -12,7 +12,7 @@ public class ActivityConnector<AttachedObject> {
     @Nullable
     private AttachedObject nextAttachedObject;
 
-    public void attach(@NonNull AttachedObject object) {
+    public final void attach(@NonNull AttachedObject object) {
         if (this.attachedObject != null) {
             nextAttachedObject = object;
             return;
@@ -20,7 +20,7 @@ public class ActivityConnector<AttachedObject> {
         this.attachedObject = object;
     }
 
-    public void detach() {
+    public final void detach() {
         if (nextAttachedObject != null) {
             attachedObject = nextAttachedObject;
             nextAttachedObject = null;

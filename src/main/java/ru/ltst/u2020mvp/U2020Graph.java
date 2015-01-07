@@ -8,6 +8,7 @@ import ru.ltst.u2020mvp.data.api.ImageService;
 import ru.ltst.u2020mvp.ui.AppContainer;
 import ru.ltst.u2020mvp.ui.navigation.ActivityScreenSwitcher;
 import ru.ltst.u2020mvp.ui.navigation.ScreenSwitcher;
+import ru.ltst.u2020mvp.ui.navigation.ToolbarPresenter;
 
 /**
  * A common interface implemented by both the Release and Debug flavored components.
@@ -21,4 +22,5 @@ public interface U2020Graph {
     GalleryDatabase galleryDatabase();
     GalleryService galleryService();
     ImageService imageService();
+    ToolbarPresenter toolbarPresenter();
 }

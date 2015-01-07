@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ru.ltst.u2020mvp.ui.navigation.ActivityScreen;
+import ru.ltst.u2020mvp.ui.navigation.ToolbarPresenter;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -83,11 +84,13 @@ public class ImgurImageActivity extends U2020Activity<ImgurImageComponent> imple
     public static class Presenter extends ViewPresenter<ImgurImageView> {
 
         private final Observable<Image> imageObservable;
+        private final ToolbarPresenter toolbarPresenter;
         private Subscription subscription;
 
         @Inject
-        public Presenter(Observable<Image> imageObservable) {
+        public Presenter(Observable<Image> imageObservable, ToolbarPresenter toolbarPresenter) {
             this.imageObservable = imageObservable;
+            this.toolbarPresenter = toolbarPresenter;
         }
 
         @Override
@@ -101,6 +104,7 @@ public class ImgurImageActivity extends U2020Activity<ImgurImageComponent> imple
                         public void call(Image image) {
                             Timber.d("Image loaded with id %s", image.toString());
                             getView().bindTo(image);
+                            toolbarPresenter.setTitle(image.title);
                         }
                     },
                     new Action1<Throwable>() {

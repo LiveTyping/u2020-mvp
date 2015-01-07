@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gallery_activity_title">Gallery</string>
+    <string name="image_activity_title">Image</string>
+</resources>

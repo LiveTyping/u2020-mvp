@@ -40,6 +40,7 @@ public class GalleryActivity extends U2020Activity<GalleryComponent> implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.inject(this);
+        setTitle(R.string.gallery_activity_title);
     }
 
     @Override

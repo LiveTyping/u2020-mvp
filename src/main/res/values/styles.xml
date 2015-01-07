@@ -5,7 +5,7 @@
 
     <style name="Theme.U2020" parent="Theme.U2020.Base"/>
 
-    <style name="Theme.U2020.Base" parent="Theme.AppCompat.Light">
+    <style name="Theme.U2020.Base" parent="Theme.AppCompat.NoActionBar">
         <!-- colorPrimary is used for the default action bar background -->
         <item name="colorPrimary">@color/primary_color</item>
 
@@ -18,8 +18,6 @@
 
         <item name="android:windowBackground">@drawable/content_background</item>
         <item name="android:progressBarStyle">@style/Widget.U2020.ProgressBar</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
     </style>
 
     <style name="Widget.U2020.ProgressBar" parent="None">

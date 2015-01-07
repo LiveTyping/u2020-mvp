@@ -4,24 +4,33 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.U2020App;
 import ru.ltst.u2020mvp.U2020Component;
 import ru.ltst.u2020mvp.ui.AppContainer;
 import ru.ltst.u2020mvp.ui.navigation.ActivityScreenSwitcher;
+import ru.ltst.u2020mvp.ui.navigation.ToolbarPresenter;
 
-public abstract class U2020Activity<Component> extends FragmentActivity {
+public abstract class U2020Activity<Component> extends ActionBarActivity {
 
     @Inject
     AppContainer appContainer;
     @Inject
     ActivityScreenSwitcher activityScreenSwitcher;
+    @Inject
+    ToolbarPresenter toolbarPresenter;
 
     private Component component;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +45,13 @@ public abstract class U2020Activity<Component> extends FragmentActivity {
         doInject(component);
 
         ViewGroup container = appContainer.get(this);
-        getLayoutInflater().inflate(layoutId(), container);
+
+        final LayoutInflater layoutInflater = getLayoutInflater();
+        layoutInflater.inflate(R.layout.toolbar_container_view, container);
+        toolbar = ButterKnife.findById(this, R.id.top_activity_toolbar);
+        setSupportActionBar(toolbar);
+        ViewGroup contentContainer = ButterKnife.findById(this, R.id.content_container);
+        layoutInflater.inflate(layoutId(), contentContainer);
 
         if (savedInstanceState != null) {
             presenter().onRestore(savedInstanceState);
@@ -47,12 +62,14 @@ public abstract class U2020Activity<Component> extends FragmentActivity {
     protected void onStart() {
         super.onStart();
         activityScreenSwitcher.attach(this);
+        toolbarPresenter.attach(toolbar);
     }
 
     @Override
     protected void onStop() {
-        super.onStop();
         activityScreenSwitcher.detach();
+        toolbarPresenter.detach();
+        super.onStop();
     }
 
     @Override
