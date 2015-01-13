@@ -49,8 +49,10 @@ dependencies {
     compile 'com.etsy.android.grid:library:1.0.5'
 
     // Espresso 2 Dependencies
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
+    androidTestCompile ('com.android.support.test.espresso:espresso-core:2.0') {
+        exclude group: 'javax.inject'
+    }
 }
 
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
@@ -61,7 +63,7 @@ def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    buildToolsVersion "21.1.2"
 
     dexOptions {
     // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
