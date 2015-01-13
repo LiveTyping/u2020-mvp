@@ -1,102 +1,82 @@
 package ru.ltst.u2020mvp.tests;
 
-import android.test.ActivityInstrumentationTestCase2;
+import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.runner.AndroidJUnit4;
 
-import com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers;
-import com.squareup.spoon.Spoon;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import javax.inject.Inject;
-
-import dagger.ObjectGraph;
-import retrofit.MockRestAdapter;
 import ru.ltst.u2020mvp.R;
+import ru.ltst.u2020mvp.tests.util.ActivityRule;
 import ru.ltst.u2020mvp.tests.util.ViewActions;
 import ru.ltst.u2020mvp.ui.gallery.GalleryActivity;
-import ru.ltst.u2020mvp.ui.gallery.GalleryModule;
 
-import static com.google.android.apps.common.testing.ui.espresso.Espresso.onData;
-import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
-import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.click;
-import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.matches;
-import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.isRoot;
-import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withEffectiveVisibility;
-import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.Espresso.onData;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
+import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.Matchers.anything;
 
-public class GalleryActivityTest extends ActivityInstrumentationTestCase2<GalleryActivity> {
+@RunWith(AndroidJUnit4.class)
+public class GalleryActivityTest {
     public static final int WAIT_DELAY = 5000;
 
-    GalleryActivity activity;
-    ObjectGraph graph;
+    @Rule
+    public final ActivityRule<GalleryActivity> main = new ActivityRule<>(GalleryActivity.class);
 
-    @Inject MockRestAdapter mockRestAdapter;
-    @Inject GalleryActivity.Presenter presenter;
+    private GalleryActivity activity;
 
-    public GalleryActivityTest() {
-        super(GalleryActivity.class);
+    // TODO: inject this with dagger2
+//    @Inject MockRestAdapter mockRestAdapter;
+//    @Inject GalleryActivity.Presenter presenter;
+
+    @Before
+    public void setUp() {
+        activity = main.get();
+//        mockRestAdapter.setDelay(0);
+//        mockRestAdapter.setErrorPercentage(0);
+//        mockRestAdapter.setVariancePercentage(0);
     }
 
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        activity = getActivity();
-        graph = TestInjector.inject(activity, this, new Module());
-        mockRestAdapter.setDelay(0);
-        mockRestAdapter.setErrorPercentage(0);
-        mockRestAdapter.setVariancePercentage(0);
+    @After
+    public void tearDown() {
+        activity = null;
     }
 
-    @Override
-    public void tearDown() throws Exception {
-        graph = null;
-        super.tearDown();
-    }
-
-    public void testGalleryLoadData() throws Throwable {
+    @Test
+    public void testGalleryLoadData() {
         assertNotNull(activity);
-        assertNotNull(presenter);
         String tag = "1. Root view visible, progress bar showing";
         onView(isRoot()).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        screenshot(tag);
         tag = "2. Grid shown with images loaded";
         onView(isRoot()).perform(ViewActions.waitAtLeast(WAIT_DELAY));
         onView(withId(R.id.gallery_grid)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        screenshot(tag);
     }
 
-    public void testFirstImageClickOpenImageActivity() throws Throwable {
+    @Test
+    public void testFirstImageClickOpenImageActivity() {
+        assertNotNull(activity);
         String tag = "1. Grid shown with images loaded";
         onView(isRoot()).perform(ViewActions.waitAtLeast(WAIT_DELAY));
-        screenshot(tag);
         tag = "2. Opened imgur image activity with first image";
         onData(anything()).inAdapterView(withId(R.id.gallery_grid)).atPosition(0).perform(click());
-        screenshot(tag);
     }
 
-    public void testListScrolling() throws Throwable {
+    @Test
+    public void testListScrolling() {
+        assertNotNull(activity);
         String tag = "1. Grid shown with images loaded";
         onView(isRoot()).perform(ViewActions.waitAtLeast(WAIT_DELAY));
-        screenshot(tag);
         onView(withId(R.id.gallery_grid)).perform(ViewActions.swipeTop());
         tag = "2. Scrolled to bottom";
-        screenshot(tag);
         tag = "3. Scrolled to top";
         onView(withId(R.id.gallery_grid)).perform(ViewActions.swipeBottom());
-        screenshot(tag);
-    }
-
-    protected void screenshot(String description) throws Throwable {
-        Thread.sleep(100);
-        Spoon.screenshot(activity, description.replaceAll("[^a-zA-Z0-9_-]", "_"));
-    }
-
-    @dagger.Module(
-            injects = GalleryActivityTest.class,
-            addsTo = GalleryModule.class,
-            overrides = true,
-            complete = false
-    )
-    public static class Module {
-
     }
 }

@@ -4,7 +4,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.0.0'
-        classpath 'com.stanfy.spoon:spoon-gradle-plugin:0.14.1'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
     }
 }
@@ -16,7 +15,6 @@ def versionPatch = 0
 def versionBuild = 0 // bump for dogfood builds, public betas, etc.
 
 apply plugin: 'com.android.application'
-apply plugin: 'spoon'
 apply plugin: 'com.neenbedankt.android-apt'
 
 repositories {
@@ -50,11 +48,9 @@ dependencies {
 
     compile 'com.etsy.android.grid:library:1.0.5'
 
-    debugCompile('com.jakewharton.espresso:espresso:1.1-r3') {
-        exclude group: 'com.squareup.dagger'
-    }
-
-    androidTestCompile 'com.squareup.spoon:spoon-client:1.1.1'
+    // Espresso 2 Dependencies
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
+    androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
 }
 
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
@@ -83,7 +79,7 @@ android {
         buildConfigField "String", "BUILD_TIME", "\"${buildTime}\""
 
         testApplicationId "ru.ltst.u2020mvp.tests"
-        testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -126,22 +122,5 @@ android {
 
     packagingOptions {
         exclude 'LICENSE.txt'
-    }
-}
-
-spoon {
-    debug = true
-    noAnimations = true
-
-    if (project.hasProperty('spoonClassName')) {
-        className = project.spoonClassName
-
-        if (project.hasProperty('spoonMethodName')) {
-            methodName = project.spoonMethodName
-        }
-    }
-
-    if (project.hasProperty('spoonTestSize')) {
-        testSize = project.spoonTestSize
     }
 }

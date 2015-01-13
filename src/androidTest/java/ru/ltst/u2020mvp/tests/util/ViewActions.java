@@ -1,23 +1,23 @@
 package ru.ltst.u2020mvp.tests.util;
 
+import android.support.test.espresso.PerformException;
+import android.support.test.espresso.UiController;
+import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.action.GeneralLocation;
+import android.support.test.espresso.action.GeneralSwipeAction;
+import android.support.test.espresso.action.Press;
+import android.support.test.espresso.action.Swipe;
+import android.support.test.espresso.util.HumanReadables;
+import android.support.test.espresso.util.TreeIterables;
 import android.view.View;
 
-import com.google.android.apps.common.testing.ui.espresso.PerformException;
-import com.google.android.apps.common.testing.ui.espresso.UiController;
-import com.google.android.apps.common.testing.ui.espresso.ViewAction;
-import com.google.android.apps.common.testing.ui.espresso.action.GeneralLocation;
-import com.google.android.apps.common.testing.ui.espresso.action.GeneralSwipeAction;
-import com.google.android.apps.common.testing.ui.espresso.action.Press;
-import com.google.android.apps.common.testing.ui.espresso.action.Swipe;
-import com.google.android.apps.common.testing.ui.espresso.util.HumanReadables;
-import com.google.android.apps.common.testing.ui.espresso.util.TreeIterables;
 
 import org.hamcrest.Matcher;
 
 import java.util.concurrent.TimeoutException;
 
-import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.isRoot;
-import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.CoreMatchers.anything;
 
 public class ViewActions {
