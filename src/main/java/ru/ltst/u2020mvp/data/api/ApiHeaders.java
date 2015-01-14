@@ -1,11 +1,11 @@
 package ru.ltst.u2020mvp.data.api;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import retrofit.RequestInterceptor;
+import ru.ltst.u2020mvp.ui.ApplicationScope;
 
-@Singleton
+@ApplicationScope
 public final class ApiHeaders implements RequestInterceptor {
     private static final String AUTHORIZATION_PREFIX = "Client-ID";
 

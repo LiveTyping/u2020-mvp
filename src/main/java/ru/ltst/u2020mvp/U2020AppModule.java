@@ -2,8 +2,6 @@ package ru.ltst.u2020mvp;
 
 import android.app.Application;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 
@@ -16,7 +14,6 @@ public final class U2020AppModule {
     }
 
     @Provides
-    @Singleton
     Application provideApplication() {
         return app;
     }

@@ -3,11 +3,6 @@ package ru.ltst.u2020mvp.data.api;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 
-import ru.ltst.u2020mvp.data.api.model.response.Image;
-import ru.ltst.u2020mvp.data.api.model.MockImageLoader;
-import ru.ltst.u2020mvp.data.api.model.request.Section;
-import ru.ltst.u2020mvp.data.api.model.response.ImageResponse;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,11 +10,15 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
+import ru.ltst.u2020mvp.data.api.model.MockImageLoader;
+import ru.ltst.u2020mvp.data.api.model.request.Section;
+import ru.ltst.u2020mvp.data.api.model.response.Image;
+import ru.ltst.u2020mvp.data.api.model.response.ImageResponse;
+import ru.ltst.u2020mvp.ui.ApplicationScope;
 import timber.log.Timber;
 
-@Singleton
+@ApplicationScope
 public final class ServerDatabase {
     private static final AtomicLong NEXT_ID = new AtomicLong();
 

@@ -9,8 +9,6 @@ import com.squareup.okhttp.OkHttpClient;
 import java.io.File;
 import java.io.IOException;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 import ru.ltst.u2020mvp.data.api.ApiModule;
@@ -23,7 +21,6 @@ public final class DataModule {
     static final int DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
 
     @Provides
-    @Singleton
     SharedPreferences provideSharedPreferences(Application app) {
         return app.getSharedPreferences("u2020", MODE_PRIVATE);
     }

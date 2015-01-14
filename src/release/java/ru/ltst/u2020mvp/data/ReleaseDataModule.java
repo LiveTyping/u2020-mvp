@@ -7,8 +7,6 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 import ru.ltst.u2020mvp.data.api.ReleaseApiModule;
@@ -18,13 +16,11 @@ import timber.log.Timber;
 public final class ReleaseDataModule {
 
     @Provides
-    @Singleton
     OkHttpClient provideOkHttpClient(Application app) {
         return DataModule.createOkHttpClient(app);
     }
 
     @Provides
-    @Singleton
     Picasso providePicasso(Application app, OkHttpClient client) {
         return new Picasso.Builder(app)
                 .downloader(new OkHttpDownloader(client))

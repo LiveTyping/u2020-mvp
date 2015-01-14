@@ -25,25 +25,6 @@ import android.widget.Toast;
 
 import com.jakewharton.madge.MadgeFrameLayout;
 import com.jakewharton.scalpel.ScalpelFrameLayout;
-import ru.ltst.u2020mvp.BuildConfig;
-import ru.ltst.u2020mvp.R;
-import ru.ltst.u2020mvp.U2020App;
-import ru.ltst.u2020mvp.data.AnimationSpeed;
-import ru.ltst.u2020mvp.data.ApiEndpoint;
-import ru.ltst.u2020mvp.data.ApiEndpoints;
-import ru.ltst.u2020mvp.data.NetworkProxy;
-import ru.ltst.u2020mvp.data.PicassoDebugging;
-import ru.ltst.u2020mvp.data.PixelGridEnabled;
-import ru.ltst.u2020mvp.data.PixelRatioEnabled;
-import ru.ltst.u2020mvp.data.ScalpelEnabled;
-import ru.ltst.u2020mvp.data.ScalpelWireframeEnabled;
-import ru.ltst.u2020mvp.data.SeenDebugDrawer;
-import ru.ltst.u2020mvp.data.prefs.BooleanPreference;
-import ru.ltst.u2020mvp.data.prefs.IntPreference;
-import ru.ltst.u2020mvp.data.prefs.StringPreference;
-import ru.ltst.u2020mvp.ui.AppContainer;
-import ru.ltst.u2020mvp.ui.gallery.GalleryActivity;
-import ru.ltst.u2020mvp.util.Strings;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.StatsSnapshot;
@@ -61,13 +42,32 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import retrofit.MockRestAdapter;
 import retrofit.RestAdapter;
+import ru.ltst.u2020mvp.BuildConfig;
+import ru.ltst.u2020mvp.R;
+import ru.ltst.u2020mvp.U2020App;
+import ru.ltst.u2020mvp.data.AnimationSpeed;
+import ru.ltst.u2020mvp.data.ApiEndpoint;
+import ru.ltst.u2020mvp.data.ApiEndpoints;
+import ru.ltst.u2020mvp.data.NetworkProxy;
+import ru.ltst.u2020mvp.data.PicassoDebugging;
+import ru.ltst.u2020mvp.data.PixelGridEnabled;
+import ru.ltst.u2020mvp.data.PixelRatioEnabled;
+import ru.ltst.u2020mvp.data.ScalpelEnabled;
+import ru.ltst.u2020mvp.data.ScalpelWireframeEnabled;
+import ru.ltst.u2020mvp.data.SeenDebugDrawer;
+import ru.ltst.u2020mvp.data.prefs.BooleanPreference;
+import ru.ltst.u2020mvp.data.prefs.IntPreference;
+import ru.ltst.u2020mvp.data.prefs.StringPreference;
+import ru.ltst.u2020mvp.ui.AppContainer;
+import ru.ltst.u2020mvp.ui.ApplicationScope;
+import ru.ltst.u2020mvp.ui.gallery.GalleryActivity;
+import ru.ltst.u2020mvp.util.Strings;
 import timber.log.Timber;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
@@ -82,7 +82,7 @@ import static retrofit.RestAdapter.LogLevel;
  * An {@link AppContainer} for debug builds which wrap the content view with a sliding drawer on
  * the right that holds all of the debug information and settings.
  */
-@Singleton
+@ApplicationScope
 public class DebugAppContainer implements AppContainer {
     private static final DateFormat DATE_DISPLAY_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
 

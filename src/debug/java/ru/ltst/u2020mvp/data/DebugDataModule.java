@@ -4,10 +4,6 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
-import ru.ltst.u2020mvp.data.api.DebugApiModule;
-import ru.ltst.u2020mvp.data.prefs.BooleanPreference;
-import ru.ltst.u2020mvp.data.prefs.IntPreference;
-import ru.ltst.u2020mvp.data.prefs.StringPreference;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
@@ -15,7 +11,6 @@ import com.squareup.picasso.Picasso;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-import javax.inject.Singleton;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
@@ -24,6 +19,10 @@ import javax.net.ssl.X509TrustManager;
 import dagger.Module;
 import dagger.Provides;
 import retrofit.MockRestAdapter;
+import ru.ltst.u2020mvp.data.api.DebugApiModule;
+import ru.ltst.u2020mvp.data.prefs.BooleanPreference;
+import ru.ltst.u2020mvp.data.prefs.IntPreference;
+import ru.ltst.u2020mvp.data.prefs.StringPreference;
 import timber.log.Timber;
 
 @Module(includes = { DataModule.class, DebugApiModule.class})
@@ -37,7 +36,6 @@ public final class DebugDataModule {
     private static final boolean DEFAULT_SEEN_DEBUG_DRAWER = false; // Show debug drawer first time.
 
     @Provides
-    @Singleton
     OkHttpClient provideOkHttpClient(Application app) {
         OkHttpClient client = DataModule.createOkHttpClient(app);
         client.setSslSocketFactory(createBadSslSocketFactory());
@@ -45,42 +43,36 @@ public final class DebugDataModule {
     }
 
     @Provides
-    @Singleton
     @ApiEndpoint
     StringPreference provideEndpointPreference(SharedPreferences preferences) {
         return new StringPreference(preferences, "debug_endpoint", ApiEndpoints.MOCK_MODE.url);
     }
 
     @Provides
-    @Singleton
     @IsMockMode
     boolean provideIsMockMode(@ApiEndpoint StringPreference endpoint) {
         return ApiEndpoints.isMockMode(endpoint.get());
     }
 
     @Provides
-    @Singleton
     @NetworkProxy
     StringPreference provideNetworkProxy(SharedPreferences preferences) {
         return new StringPreference(preferences, "debug_network_proxy");
     }
 
     @Provides
-    @Singleton
     @AnimationSpeed
     IntPreference provideAnimationSpeed(SharedPreferences preferences) {
         return new IntPreference(preferences, "debug_animation_speed", DEFAULT_ANIMATION_SPEED);
     }
 
     @Provides
-    @Singleton
     @PicassoDebugging
     BooleanPreference providePicassoDebugging(SharedPreferences preferences) {
         return new BooleanPreference(preferences, "debug_picasso_debugging", DEFAULT_PICASSO_DEBUGGING);
     }
 
     @Provides
-    @Singleton
     @PixelGridEnabled
     BooleanPreference providePixelGridEnabled(SharedPreferences preferences) {
         return new BooleanPreference(preferences, "debug_pixel_grid_enabled",
@@ -88,7 +80,6 @@ public final class DebugDataModule {
     }
 
     @Provides
-    @Singleton
     @PixelRatioEnabled
     BooleanPreference providePixelRatioEnabled(SharedPreferences preferences) {
         return new BooleanPreference(preferences, "debug_pixel_ratio_enabled",
@@ -96,21 +87,18 @@ public final class DebugDataModule {
     }
 
     @Provides
-    @Singleton
     @SeenDebugDrawer
     BooleanPreference provideSeenDebugDrawer(SharedPreferences preferences) {
         return new BooleanPreference(preferences, "debug_seen_debug_drawer", DEFAULT_SEEN_DEBUG_DRAWER);
     }
 
     @Provides
-    @Singleton
     @ScalpelEnabled
     BooleanPreference provideScalpelEnabled(SharedPreferences preferences) {
         return new BooleanPreference(preferences, "debug_scalpel_enabled", DEFAULT_SCALPEL_ENABLED);
     }
 
     @Provides
-    @Singleton
     @ScalpelWireframeEnabled
     BooleanPreference provideScalpelWireframeEnabled(SharedPreferences preferences) {
         return new BooleanPreference(preferences, "debug_scalpel_wireframe_drawer",
@@ -118,7 +106,6 @@ public final class DebugDataModule {
     }
 
     @Provides
-    @Singleton
     Picasso providePicasso(OkHttpClient client, MockRestAdapter mockRestAdapter,
                            @IsMockMode boolean isMockMode, Application app) {
         Picasso.Builder builder = new Picasso.Builder(app).downloader(new OkHttpDownloader(client));

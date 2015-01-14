@@ -2,8 +2,6 @@ package ru.ltst.u2020mvp.data.api;
 
 import com.squareup.okhttp.OkHttpClient;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 import retrofit.Endpoint;
@@ -17,20 +15,17 @@ public final class ApiModule {
     private static final String CLIENT_ID = "3436c108ccc17d3";
 
     @Provides
-    @Singleton
     @ClientId
     String provideClientId() {
         return CLIENT_ID;
     }
 
     @Provides
-    @Singleton
     Client provideClient(OkHttpClient client) {
         return new OkClient(client);
     }
 
     @Provides
-    @Singleton
     RestAdapter provideRestAdapter(Endpoint endpoint, Client client, ApiHeaders headers) {
         return new RestAdapter.Builder() //
                 .setClient(client) //

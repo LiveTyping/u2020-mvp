@@ -4,12 +4,12 @@ import android.app.Application;
 import android.content.res.AssetManager;
 import android.graphics.BitmapFactory;
 
-import ru.ltst.u2020mvp.data.api.model.response.Image;
-
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-@Singleton
+import ru.ltst.u2020mvp.data.api.model.response.Image;
+import ru.ltst.u2020mvp.ui.ApplicationScope;
+
+@ApplicationScope
 public final class MockImageLoader {
     private final AssetManager assetManager;
 

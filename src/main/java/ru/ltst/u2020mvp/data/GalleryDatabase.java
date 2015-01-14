@@ -1,19 +1,18 @@
 package ru.ltst.u2020mvp.data;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
 import ru.ltst.u2020mvp.data.api.GalleryService;
 import ru.ltst.u2020mvp.data.api.model.request.Section;
 import ru.ltst.u2020mvp.data.api.model.request.Sort;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.data.api.transforms.GalleryToImageList;
 import ru.ltst.u2020mvp.data.rx.EndObserver;
-
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import ru.ltst.u2020mvp.ui.ApplicationScope;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
@@ -25,7 +24,7 @@ import rx.subjects.PublishSubject;
 /**
  * Poor-man's in-memory cache of responses. Must be accessed on the main thread.
  */
-@Singleton
+@ApplicationScope
 public class GalleryDatabase {
     private final GalleryService galleryService;
 
