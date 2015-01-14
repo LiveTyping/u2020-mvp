@@ -22,8 +22,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertNotNull;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -50,11 +48,6 @@ public class ImgurImageActivityTest {
     @After
     public void tearDown() {
         activity = null;
-    }
-
-    @Test
-    public void checkPreconditions() {
-        assertThat(activity, notNullValue());
     }
 
     @Test

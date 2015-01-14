@@ -4,128 +4,18 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.0.0'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
     }
 }
 
-// Manifest version information!
-def versionMajor = 1
-def versionMinor = 0
-def versionPatch = 0
-def versionBuild = 0 // bump for dogfood builds, public betas, etc.
-
-apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
-
-repositories {
-    mavenCentral()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-}
-
-dependencies {
-    compile 'com.android.support:support-v4:21.0.3'
-    compile 'com.android.support:support-annotations:21.0.3'
-    compile "com.android.support:appcompat-v7:21.0.3"
-
-    compile 'com.google.dagger:dagger:2.0-SNAPSHOT'
-    apt 'com.google.dagger:dagger-compiler:2.0-SNAPSHOT'
-    provided 'org.glassfish:javax.annotation:10.0-b28'
-
-    compile 'com.squareup.okhttp:okhttp:2.2.0'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
-    compile 'com.squareup.picasso:picasso:2.4.0'
-    compile 'com.squareup.retrofit:retrofit:1.8.0'
-
-    debugCompile 'com.squareup.retrofit:retrofit-mock:1.8.0'
-
-    compile 'com.jakewharton:butterknife:6.0.0'
-    compile 'com.jakewharton.timber:timber:2.5.0'
-    debugCompile 'com.jakewharton.madge:madge:1.1.1'
-    debugCompile 'com.jakewharton.scalpel:scalpel:1.1.2'
-
-    compile 'io.reactivex:rxjava:1.0.4'
-    compile 'io.reactivex:rxandroid:0.24.0'
-
-    compile 'com.etsy.android.grid:library:1.0.5'
-
-    // To use Dagger 2 components in tests
-    androidTestApt 'com.google.dagger:dagger-compiler:2.0-SNAPSHOT'
-
-    // Espresso 2 Dependencies
-    androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
-    androidTestCompile ('com.android.support.test.espresso:espresso-core:2.0') {
-        exclude group: 'javax.inject'
+allprojects {
+    repositories {
+        mavenCentral()
     }
 }
 
-def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
-def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone("UTC"))
-
-def isTravis = "true".equals(System.getenv("TRAVIS"))
-def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
-
-android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
-
-    dexOptions {
-    // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
-        preDexLibraries = preDexEnabled && !isTravis
-    }
-
-    defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 21
-
-        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
-        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
-
-        buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
-        buildConfigField "String", "BUILD_TIME", "\"${buildTime}\""
-
-        testApplicationId "ru.ltst.u2020mvp.tests"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
-
-    signingConfigs {
-        debug {
-            storeFile file("distribution/debug.keystore")
-            storePassword "android"
-            keyAlias "androiddebugkey"
-            keyPassword "android"
-        }
-        release {
-            storeFile file("distribution/debug.keystore")
-            storePassword "android"
-            keyAlias "androiddebugkey"
-            keyPassword "android"
-        }
-    }
-
-    buildTypes {
-        debug {
-            applicationIdSuffix '.dev'
-            versionNameSuffix '-dev'
-            debuggable true
-            signingConfig signingConfigs.debug
-        }
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), file('proguard-project.txt')
-            signingConfig signingConfigs.release
-        }
-    }
-
-    lintOptions {
-        abortOnError false
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
-    }
-
-    packagingOptions {
-        exclude 'LICENSE.txt'
-    }
+ext {
+    compileSdkVersion = 21
+    buildToolsVersion = '21.1.2'
+    minSdkVersion = 14
+    targetSdkVersion = 21
 }
