@@ -8,6 +8,7 @@ import ru.ltst.u2020mvp.U2020Component;
     dependencies = U2020Component.class,
     modules = GalleryModule.class
 )
-public interface GalleryComponent extends GalleryView.Injector{
+public interface GalleryComponent extends GalleryView.Injector {
     void inject(GalleryActivity activity);
+    GalleryActivity.Presenter presenter();
 }
