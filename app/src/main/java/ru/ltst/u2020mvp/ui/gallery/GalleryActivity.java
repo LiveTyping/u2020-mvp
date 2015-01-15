@@ -28,13 +28,15 @@ import rx.Subscription;
 import rx.functions.Action1;
 import timber.log.Timber;
 
-public class GalleryActivity extends U2020Activity<GalleryComponent> implements HasComponent<GalleryComponent> {
+public class GalleryActivity extends U2020Activity implements HasComponent<GalleryComponent> {
 
     @Inject
     Presenter presenter;
 
     @InjectView(R.id.gallery_view)
     GalleryView view;
+
+    private GalleryComponent galleryComponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +46,10 @@ public class GalleryActivity extends U2020Activity<GalleryComponent> implements 
     }
 
     @Override
-    protected void doInject(GalleryComponent galleryComponent) {
+    protected void onCreateComponent(U2020Component u2020Component) {
+        galleryComponent = Dagger_GalleryComponent.builder().
+                u2020Component(u2020Component).
+                galleryModule(new GalleryModule()).build();
         galleryComponent.inject(this);
     }
 
@@ -56,15 +61,14 @@ public class GalleryActivity extends U2020Activity<GalleryComponent> implements 
 
     @Override
     protected void onStop() {
-        super.onStop();
         presenter.dropView(view);
+        super.onStop();
     }
 
     @Override
-    protected GalleryComponent component(U2020Component component) {
-        return Dagger_GalleryComponent.builder().
-                u2020Component(component).
-                galleryModule(new GalleryModule()).build();
+    protected void onDestroy() {
+        galleryComponent = null;
+        super.onDestroy();
     }
 
     @Override
@@ -75,6 +79,11 @@ public class GalleryActivity extends U2020Activity<GalleryComponent> implements 
     @Override
     protected ViewPresenter<? extends View> presenter() {
         return presenter;
+    }
+
+    @Override
+    public GalleryComponent getComponent() {
+        return galleryComponent;
     }
 
     @GalleryScope

@@ -24,7 +24,7 @@ import rx.Subscription;
 import rx.functions.Action1;
 import timber.log.Timber;
 
-public class ImgurImageActivity extends U2020Activity<ImgurImageComponent> implements HasComponent<ImgurImageComponent> {
+public class ImgurImageActivity extends U2020Activity implements HasComponent<ImgurImageComponent> {
 
     @Inject Presenter presenter;
 
@@ -32,6 +32,7 @@ public class ImgurImageActivity extends U2020Activity<ImgurImageComponent> imple
     ImgurImageView view;
 
     private @NonNull String imageId;
+    private ImgurImageComponent imgurImageComponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,10 @@ public class ImgurImageActivity extends U2020Activity<ImgurImageComponent> imple
     }
 
     @Override
-    protected void doInject(ImgurImageComponent imgurImageComponent) {
+    protected void onCreateComponent(U2020Component u2020Component) {
+        imgurImageComponent = Dagger_ImgurImageComponent.builder().
+                u2020Component(u2020Component).
+                imgurImageModule(new ImgurImageModule(imageId)).build();
         imgurImageComponent.inject(this);
     }
 
@@ -59,15 +63,14 @@ public class ImgurImageActivity extends U2020Activity<ImgurImageComponent> imple
 
     @Override
     protected void onStop() {
-        super.onStop();
         presenter.dropView(view);
+        super.onStop();
     }
 
     @Override
-    protected ImgurImageComponent component(U2020Component component) {
-        return Dagger_ImgurImageComponent.builder().
-                u2020Component(component).
-                imgurImageModule(new ImgurImageModule(imageId)).build();
+    protected void onDestroy() {
+        imgurImageComponent = null;
+        super.onDestroy();
     }
 
     @Override
@@ -78,6 +81,12 @@ public class ImgurImageActivity extends U2020Activity<ImgurImageComponent> imple
     @Override
     protected ViewPresenter<? extends View> presenter() {
         return presenter;
+    }
+
+
+    @Override
+    public ImgurImageComponent getComponent() {
+        return imgurImageComponent;
     }
 
     @ImgurImageScope

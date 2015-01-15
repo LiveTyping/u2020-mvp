@@ -19,7 +19,7 @@ import ru.ltst.u2020mvp.ui.AppContainer;
 import ru.ltst.u2020mvp.ui.navigation.ActivityScreenSwitcher;
 import ru.ltst.u2020mvp.ui.navigation.ToolbarPresenter;
 
-public abstract class U2020Activity<Component> extends ActionBarActivity {
+public abstract class U2020Activity extends ActionBarActivity {
 
     @Inject
     AppContainer appContainer;
@@ -28,7 +28,6 @@ public abstract class U2020Activity<Component> extends ActionBarActivity {
     @Inject
     ToolbarPresenter toolbarPresenter;
 
-    private Component component;
     private Toolbar toolbar;
 
     @Override
@@ -40,12 +39,12 @@ public abstract class U2020Activity<Component> extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         U2020App app = U2020App.get(this);
-        component = component(app.component());
-        doInject(component);
-
-        ViewGroup container = appContainer.get(this);
-
+        onCreateComponent(app.component());
+        if (appContainer == null || activityScreenSwitcher == null || toolbarPresenter == null) {
+            throw new IllegalStateException("No injection happened. Add component.inject(this) in onCreateComponent() implementation.");
+        }
         final LayoutInflater layoutInflater = getLayoutInflater();
+        ViewGroup container = appContainer.get(this);
         layoutInflater.inflate(R.layout.toolbar_container_view, container);
         toolbar = ButterKnife.findById(this, R.id.top_activity_toolbar);
         setSupportActionBar(toolbar);
@@ -77,22 +76,17 @@ public abstract class U2020Activity<Component> extends ActionBarActivity {
         presenter().onSave(outState);
     }
 
-    @Override
-    protected void onDestroy() {
-        component = null;
-        super.onDestroy();
-    }
-
     protected void onExtractParams(@NonNull Bundle params) {
         // default no implemetation
     }
 
-    public Component getComponent() {
-        return component;
-    }
-
-    protected abstract void doInject(Component component);
-    protected abstract Component component(U2020Component component);
+    /**
+     * Must be implemented by derived activities. Injection must be performed here.
+     * Otherwise IllegalStateException will be thrown. Derived activity is
+     * responsible to create and store it's component.
+     * @param u2020Component application level component
+     */
+    protected abstract void onCreateComponent(U2020Component u2020Component);
     protected abstract @LayoutRes int layoutId();
     protected abstract ViewPresenter<? extends View> presenter();
 }
