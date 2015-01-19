@@ -12,6 +12,7 @@ import java.io.IOException;
 import dagger.Module;
 import dagger.Provides;
 import ru.ltst.u2020mvp.data.api.ApiModule;
+import ru.ltst.u2020mvp.ui.ApplicationScope;
 import timber.log.Timber;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -21,6 +22,7 @@ public final class DataModule {
     static final int DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
 
     @Provides
+    @ApplicationScope
     SharedPreferences provideSharedPreferences(Application app) {
         return app.getSharedPreferences("u2020", MODE_PRIVATE);
     }

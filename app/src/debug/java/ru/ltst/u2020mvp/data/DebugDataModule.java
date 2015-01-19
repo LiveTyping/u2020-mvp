@@ -23,6 +23,7 @@ import ru.ltst.u2020mvp.data.api.DebugApiModule;
 import ru.ltst.u2020mvp.data.prefs.BooleanPreference;
 import ru.ltst.u2020mvp.data.prefs.IntPreference;
 import ru.ltst.u2020mvp.data.prefs.StringPreference;
+import ru.ltst.u2020mvp.ui.ApplicationScope;
 import timber.log.Timber;
 
 @Module(includes = { DataModule.class, DebugApiModule.class})
@@ -36,6 +37,7 @@ public final class DebugDataModule {
     private static final boolean DEFAULT_SEEN_DEBUG_DRAWER = false; // Show debug drawer first time.
 
     @Provides
+    @ApplicationScope
     OkHttpClient provideOkHttpClient(Application app) {
         OkHttpClient client = DataModule.createOkHttpClient(app);
         client.setSslSocketFactory(createBadSslSocketFactory());
@@ -43,36 +45,42 @@ public final class DebugDataModule {
     }
 
     @Provides
+    @ApplicationScope
     @ApiEndpoint
     StringPreference provideEndpointPreference(SharedPreferences preferences) {
         return new StringPreference(preferences, "debug_endpoint", ApiEndpoints.MOCK_MODE.url);
     }
 
     @Provides
+    @ApplicationScope
     @IsMockMode
     boolean provideIsMockMode(@ApiEndpoint StringPreference endpoint) {
         return ApiEndpoints.isMockMode(endpoint.get());
     }
 
     @Provides
+    @ApplicationScope
     @NetworkProxy
     StringPreference provideNetworkProxy(SharedPreferences preferences) {
         return new StringPreference(preferences, "debug_network_proxy");
     }
 
     @Provides
+    @ApplicationScope
     @AnimationSpeed
     IntPreference provideAnimationSpeed(SharedPreferences preferences) {
         return new IntPreference(preferences, "debug_animation_speed", DEFAULT_ANIMATION_SPEED);
     }
 
     @Provides
+    @ApplicationScope
     @PicassoDebugging
     BooleanPreference providePicassoDebugging(SharedPreferences preferences) {
         return new BooleanPreference(preferences, "debug_picasso_debugging", DEFAULT_PICASSO_DEBUGGING);
     }
 
     @Provides
+    @ApplicationScope
     @PixelGridEnabled
     BooleanPreference providePixelGridEnabled(SharedPreferences preferences) {
         return new BooleanPreference(preferences, "debug_pixel_grid_enabled",
@@ -80,6 +88,7 @@ public final class DebugDataModule {
     }
 
     @Provides
+    @ApplicationScope
     @PixelRatioEnabled
     BooleanPreference providePixelRatioEnabled(SharedPreferences preferences) {
         return new BooleanPreference(preferences, "debug_pixel_ratio_enabled",
@@ -87,18 +96,21 @@ public final class DebugDataModule {
     }
 
     @Provides
+    @ApplicationScope
     @SeenDebugDrawer
     BooleanPreference provideSeenDebugDrawer(SharedPreferences preferences) {
         return new BooleanPreference(preferences, "debug_seen_debug_drawer", DEFAULT_SEEN_DEBUG_DRAWER);
     }
 
     @Provides
+    @ApplicationScope
     @ScalpelEnabled
     BooleanPreference provideScalpelEnabled(SharedPreferences preferences) {
         return new BooleanPreference(preferences, "debug_scalpel_enabled", DEFAULT_SCALPEL_ENABLED);
     }
 
     @Provides
+    @ApplicationScope
     @ScalpelWireframeEnabled
     BooleanPreference provideScalpelWireframeEnabled(SharedPreferences preferences) {
         return new BooleanPreference(preferences, "debug_scalpel_wireframe_drawer",
@@ -106,6 +118,7 @@ public final class DebugDataModule {
     }
 
     @Provides
+    @ApplicationScope
     Picasso providePicasso(OkHttpClient client, MockRestAdapter mockRestAdapter,
                            @IsMockMode boolean isMockMode, Application app) {
         Picasso.Builder builder = new Picasso.Builder(app).downloader(new OkHttpDownloader(client));

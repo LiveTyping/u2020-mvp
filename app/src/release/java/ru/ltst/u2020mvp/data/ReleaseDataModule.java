@@ -10,17 +10,20 @@ import com.squareup.picasso.Picasso;
 import dagger.Module;
 import dagger.Provides;
 import ru.ltst.u2020mvp.data.api.ReleaseApiModule;
+import ru.ltst.u2020mvp.ui.ApplicationScope;
 import timber.log.Timber;
 
 @Module(includes = { DataModule.class, ReleaseApiModule.class })
 public final class ReleaseDataModule {
 
     @Provides
+    @ApplicationScope
     OkHttpClient provideOkHttpClient(Application app) {
         return DataModule.createOkHttpClient(app);
     }
 
     @Provides
+    @ApplicationScope
     Picasso providePicasso(Application app, OkHttpClient client) {
         return new Picasso.Builder(app)
                 .downloader(new OkHttpDownloader(client))

@@ -8,6 +8,7 @@ import retrofit.Endpoint;
 import retrofit.RestAdapter;
 import retrofit.client.Client;
 import retrofit.client.OkClient;
+import ru.ltst.u2020mvp.ui.ApplicationScope;
 
 @Module
 public final class ApiModule {
@@ -16,16 +17,19 @@ public final class ApiModule {
 
     @Provides
     @ClientId
+    @ApplicationScope
     String provideClientId() {
         return CLIENT_ID;
     }
 
     @Provides
+    @ApplicationScope
     Client provideClient(OkHttpClient client) {
         return new OkClient(client);
     }
 
     @Provides
+    @ApplicationScope
     RestAdapter provideRestAdapter(Endpoint endpoint, Client client, ApiHeaders headers) {
         return new RestAdapter.Builder() //
                 .setClient(client) //
