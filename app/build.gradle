@@ -22,9 +22,9 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:21.0.3'
-    compile 'com.android.support:support-annotations:21.0.3'
-    compile "com.android.support:appcompat-v7:21.0.3"
+    compile 'com.android.support:support-v4:22.+'
+    compile 'com.android.support:support-annotations:22.+'
+    compile "com.android.support:appcompat-v7:22.+"
 
     compile 'com.google.dagger:dagger:2.0-SNAPSHOT'
     apt 'com.google.dagger:dagger-compiler:2.0-SNAPSHOT'
@@ -42,7 +42,7 @@ dependencies {
     debugCompile 'com.jakewharton.madge:madge:1.1.1'
     debugCompile 'com.jakewharton.scalpel:scalpel:1.1.2'
 
-    compile 'io.reactivex:rxjava:1.0.4'
+    compile 'io.reactivex:rxjava:1.0.8'
     compile 'io.reactivex:rxandroid:0.24.0'
 
     compile 'com.etsy.android.grid:library:1.0.5'
