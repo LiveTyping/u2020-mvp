@@ -124,7 +124,6 @@ dependencies {
     compile 'io.reactivex:rxjava:1.0.8'
     compile 'io.reactivex:rxandroid:0.24.0'
 
-    compile 'com.etsy.android.grid:library:1.0.5'
     internalCompile 'com.mattprecious.telescope:telescope:1.4.0@aar'
 
     // Espresso 2 Dependencies

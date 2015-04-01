@@ -1,6 +1,7 @@
 package ru.ltst.u2020mvp.ui.gallery.view;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +14,15 @@ import com.squareup.picasso.Picasso;
 import java.util.Collections;
 import java.util.List;
 
-public class GalleryAdapter extends BindableAdapter<Image> {
+public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
     private List<Image> images = Collections.emptyList();
 
     private final Picasso picasso;
+    private final LayoutInflater inflater;
 
     public GalleryAdapter(Context context, Picasso picasso) {
-        super(context);
         this.picasso = picasso;
+        inflater = LayoutInflater.from(context);
     }
 
     public void replaceWith(List<Image> images) {
@@ -29,27 +31,30 @@ public class GalleryAdapter extends BindableAdapter<Image> {
     }
 
     @Override
-    public int getCount() {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        GalleryItemView view = (GalleryItemView) inflater.inflate(R.layout.gallery_view_image, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.bindTo(images.get(position), picasso);
+    }
+
+    @Override
+    public int getItemCount() {
         return images.size();
     }
 
-    @Override
-    public Image getItem(int position) {
-        return images.get(position);
-    }
+    public static final class ViewHolder extends RecyclerView.ViewHolder {
+        public final GalleryItemView itemView;
+        public ViewHolder(GalleryItemView itemView) {
+            super(itemView);
+            this.itemView = itemView;
+        }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View newView(LayoutInflater inflater, int position, ViewGroup container) {
-        return inflater.inflate(R.layout.gallery_view_image, container, false);
-    }
-
-    @Override
-    public void bindView(Image item, int position, View view) {
-        ((GalleryItemView) view).bindTo(item, picasso);
+        public void bindTo(Image image, Picasso picasso) {
+            itemView.bindTo(image, picasso);
+        }
     }
 }
