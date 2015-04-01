@@ -6,19 +6,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.U2020Component;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.ui.base.HasComponent;
 import ru.ltst.u2020mvp.ui.base.U2020Activity;
 import ru.ltst.u2020mvp.ui.base.ViewPresenter;
-
-import javax.inject.Inject;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ru.ltst.u2020mvp.ui.navigation.activity.ActivityScreen;
-import ru.ltst.u2020mvp.ui.navigation.ToolbarPresenter;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -31,7 +29,7 @@ public class ImgurImageActivity extends U2020Activity implements HasComponent<Im
     @InjectView(R.id.imgur_image_view)
     ImgurImageView view;
 
-    private @NonNull String imageId;
+    private String imageId;
     private ImgurImageComponent imgurImageComponent;
 
     @Override
@@ -93,13 +91,11 @@ public class ImgurImageActivity extends U2020Activity implements HasComponent<Im
     public static class Presenter extends ViewPresenter<ImgurImageView> {
 
         private final Observable<Image> imageObservable;
-        private final ToolbarPresenter toolbarPresenter;
         private Subscription subscription;
 
         @Inject
-        public Presenter(Observable<Image> imageObservable, ToolbarPresenter toolbarPresenter) {
+        public Presenter(Observable<Image> imageObservable) {
             this.imageObservable = imageObservable;
-            this.toolbarPresenter = toolbarPresenter;
         }
 
         @Override
@@ -113,7 +109,6 @@ public class ImgurImageActivity extends U2020Activity implements HasComponent<Im
                         public void call(Image image) {
                             Timber.d("Image loaded with id %s", image.toString());
                             getView().bindTo(image);
-                            toolbarPresenter.setTitle(image.title);
                         }
                     },
                     new Action1<Throwable>() {

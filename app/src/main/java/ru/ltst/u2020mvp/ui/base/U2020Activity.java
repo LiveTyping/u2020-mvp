@@ -4,20 +4,16 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
-import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.U2020App;
 import ru.ltst.u2020mvp.U2020Component;
 import ru.ltst.u2020mvp.ui.AppContainer;
 import ru.ltst.u2020mvp.ui.navigation.activity.ActivityScreenSwitcher;
-import ru.ltst.u2020mvp.ui.navigation.ToolbarPresenter;
 
 public abstract class U2020Activity extends ActionBarActivity {
 
@@ -25,10 +21,6 @@ public abstract class U2020Activity extends ActionBarActivity {
     AppContainer appContainer;
     @Inject
     ActivityScreenSwitcher activityScreenSwitcher;
-    @Inject
-    ToolbarPresenter toolbarPresenter;
-
-    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +32,12 @@ public abstract class U2020Activity extends ActionBarActivity {
 
         U2020App app = U2020App.get(this);
         onCreateComponent(app.component());
-        if (appContainer == null || activityScreenSwitcher == null || toolbarPresenter == null) {
+        if (appContainer == null || activityScreenSwitcher == null) {
             throw new IllegalStateException("No injection happened. Add component.inject(this) in onCreateComponent() implementation.");
         }
         final LayoutInflater layoutInflater = getLayoutInflater();
         ViewGroup container = appContainer.get(this);
-        layoutInflater.inflate(R.layout.toolbar_container_view, container);
-        toolbar = ButterKnife.findById(this, R.id.top_activity_toolbar);
-        setSupportActionBar(toolbar);
-        ViewGroup contentContainer = ButterKnife.findById(this, R.id.content_container);
-        layoutInflater.inflate(layoutId(), contentContainer);
+        layoutInflater.inflate(layoutId(), container);
 
         if (savedInstanceState != null) {
             presenter().onRestore(savedInstanceState);
@@ -60,13 +48,11 @@ public abstract class U2020Activity extends ActionBarActivity {
     protected void onStart() {
         super.onStart();
         activityScreenSwitcher.attach(this);
-        toolbarPresenter.attach(toolbar);
     }
 
     @Override
     protected void onStop() {
         activityScreenSwitcher.detach();
-        toolbarPresenter.detach();
         super.onStop();
     }
 

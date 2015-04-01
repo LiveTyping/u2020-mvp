@@ -22,6 +22,7 @@ import ru.ltst.u2020mvp.ui.base.U2020Activity;
 import ru.ltst.u2020mvp.ui.base.ViewPresenter;
 import ru.ltst.u2020mvp.ui.image.ImgurImageActivity;
 import ru.ltst.u2020mvp.ui.navigation.activity.ActivityScreen;
+import ru.ltst.u2020mvp.ui.navigation.activity.ActivityScreenSwitcher;
 import ru.ltst.u2020mvp.ui.navigation.activity.NoParamsActivityScreen;
 import ru.ltst.u2020mvp.ui.navigation.ScreenSwitcher;
 import rx.Subscription;
@@ -90,14 +91,14 @@ public class GalleryActivity extends U2020Activity implements HasComponent<Galle
     public static class Presenter extends ViewPresenter<GalleryView> {
 
         private final GalleryDatabase galleryDatabase;
-        private final ScreenSwitcher screenSwitcher;
+        private final ActivityScreenSwitcher screenSwitcher;
 
         private Section section = Section.HOT;
         private Subscription request;
         private Subscription clicks;
 
         @Inject
-        public Presenter(GalleryDatabase galleryDatabase, ScreenSwitcher screenSwitcher) {
+        public Presenter(GalleryDatabase galleryDatabase, ActivityScreenSwitcher screenSwitcher) {
             this.galleryDatabase = galleryDatabase;
             this.screenSwitcher = screenSwitcher;
         }
