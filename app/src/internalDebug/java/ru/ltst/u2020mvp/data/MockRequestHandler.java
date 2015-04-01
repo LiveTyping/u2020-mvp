@@ -16,6 +16,7 @@ import com.squareup.picasso.Request;
 import java.io.IOException;
 
 import retrofit.MockRestAdapter;
+import ru.ltst.u2020mvp.data.DataModule;
 
 /**
  * A Picasso {@link Downloader} which loads images from assets but attempts to emulate the

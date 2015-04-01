@@ -11,6 +11,8 @@ import retrofit.RestAdapter;
 import retrofit.android.AndroidMockValuePersistence;
 import ru.ltst.u2020mvp.data.ApiEndpoint;
 import ru.ltst.u2020mvp.data.IsMockMode;
+import ru.ltst.u2020mvp.data.api.*;
+import ru.ltst.u2020mvp.data.api.MockGalleryService;
 import ru.ltst.u2020mvp.data.api.model.MockImageService;
 import ru.ltst.u2020mvp.data.prefs.StringPreference;
 import ru.ltst.u2020mvp.ui.ApplicationScope;
@@ -35,7 +37,7 @@ public final class DebugApiModule {
     @Provides
     @ApplicationScope
     GalleryService provideGalleryService(RestAdapter restAdapter, MockRestAdapter mockRestAdapter,
-                                         @IsMockMode boolean isMockMode, MockGalleryService mockService) {
+                                         @IsMockMode boolean isMockMode, ru.ltst.u2020mvp.data.api.MockGalleryService mockService) {
         if (isMockMode) {
             return mockRestAdapter.create(GalleryService.class, mockService);
         }

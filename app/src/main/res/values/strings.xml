@@ -2,4 +2,6 @@
 <resources>
     <string name="gallery_activity_title">Gallery</string>
     <string name="image_activity_title">Image</string>
+
+    <string name="no_intent_handler">There are no applications available to handle this action.</string>
 </resources>

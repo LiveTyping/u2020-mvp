@@ -19,6 +19,9 @@ import javax.net.ssl.X509TrustManager;
 import dagger.Module;
 import dagger.Provides;
 import retrofit.MockRestAdapter;
+import ru.ltst.u2020mvp.data.*;
+import ru.ltst.u2020mvp.data.IsMockMode;
+import ru.ltst.u2020mvp.data.MockRequestHandler;
 import ru.ltst.u2020mvp.data.api.DebugApiModule;
 import ru.ltst.u2020mvp.data.prefs.StringPreference;
 import ru.ltst.u2020mvp.ui.ApplicationScope;
@@ -44,7 +47,7 @@ public final class DebugDataModule {
 
     @Provides
     @ApplicationScope
-    @IsMockMode
+    @ru.ltst.u2020mvp.data.IsMockMode
     boolean provideIsMockMode(@ApiEndpoint StringPreference endpoint) {
         return ApiEndpoints.isMockMode(endpoint.get());
     }
