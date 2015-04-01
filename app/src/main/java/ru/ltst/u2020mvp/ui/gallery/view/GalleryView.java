@@ -84,7 +84,7 @@ public class GalleryView extends BetterViewAnimator implements BaseView {
         }
     }
 
-    public static interface Injector {
+    public interface Injector {
         void inject(GalleryView view);
     }
 }

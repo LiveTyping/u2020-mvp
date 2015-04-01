@@ -10,10 +10,4 @@ public class ReleaseUiModule {
     AppContainer provideAppContainer() {
         return AppContainer.DEFAULT;
     }
-
-    @Provides
-    @ApplicationScope
-    ActivityHierarchyServer provideActivityHierarchyServer() {
-        return ActivityHierarchyServer.NONE;
-    }
 }

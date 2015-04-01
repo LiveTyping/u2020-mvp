@@ -10,10 +10,4 @@ public final class InternalReleaseUiModule {
     AppContainer provideAppContainer(TelescopeAppContainer telescopeAppContainer) {
         return telescopeAppContainer;
     }
-
-    @Provides
-    @ApplicationScope
-    ActivityHierarchyServer provideActivityHierarchyServer() {
-        return ActivityHierarchyServer.NONE;
-    }
 }
