@@ -20,7 +20,7 @@
         android:layout_gravity="center"
         android:text="@string/error_happended_text"/>
 
-    <com.etsy.android.grid.StaggeredGridView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/gallery_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

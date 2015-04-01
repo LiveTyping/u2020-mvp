@@ -2,6 +2,7 @@ package ru.ltst.u2020mvp.ui.gallery.view;
 
 import android.content.Context;
 import android.support.v4.util.Pair;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.widget.AbsListView;
 
@@ -24,7 +25,7 @@ import rx.functions.Func1;
 
 public class GalleryView extends BetterViewAnimator implements BaseView {
     @InjectView(R.id.gallery_grid)
-    AbsListView galleryView;
+    RecyclerView galleryView;
 
     @Inject
     Picasso picasso;
@@ -42,6 +43,7 @@ public class GalleryView extends BetterViewAnimator implements BaseView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
+        galleryView.
         galleryView.setAdapter(adapter);
     }
 

@@ -127,9 +127,6 @@ dependencies {
     compile 'com.etsy.android.grid:library:1.0.5'
     internalCompile 'com.mattprecious.telescope:telescope:1.4.0@aar'
 
-    // To use Dagger 2 components in tests
-    androidTestApt 'com.google.dagger:dagger-compiler:2.0-SNAPSHOT'
-
     // Espresso 2 Dependencies
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
     compile 'com.android.support.test.espresso:espresso-core:2.0'
