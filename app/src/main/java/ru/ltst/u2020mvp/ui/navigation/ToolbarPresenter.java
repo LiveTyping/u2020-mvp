@@ -4,7 +4,9 @@ import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.Toolbar;
 
-public class ToolbarPresenter extends ActivityConnector<Toolbar>{
+import ru.ltst.u2020mvp.ui.navigation.activity.ActivityConnector;
+
+public class ToolbarPresenter extends ActivityConnector<Toolbar> {
 
     public void setMenuItemVisibility(@IdRes int id, boolean visible) {
         Toolbar currentToolbar = getAttachedObject();

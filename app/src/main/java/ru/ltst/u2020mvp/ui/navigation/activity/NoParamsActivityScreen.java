@@ -1,4 +1,4 @@
-package ru.ltst.u2020mvp.ui.navigation;
+package ru.ltst.u2020mvp.ui.navigation.activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;

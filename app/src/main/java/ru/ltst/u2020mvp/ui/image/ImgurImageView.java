@@ -9,6 +9,7 @@ import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 
 import ru.ltst.u2020mvp.data.api.model.response.Image;
+import ru.ltst.u2020mvp.ui.base.ComponentFinder;
 import ru.ltst.u2020mvp.ui.base.HasComponent;
 
 public class ImgurImageView extends ImageView {
@@ -17,7 +18,8 @@ public class ImgurImageView extends ImageView {
 
     public ImgurImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        ((HasComponent<Injector>) context).getComponent().inject(this);
+        ImgurImageComponent component = ComponentFinder.findActivityComponent(context);
+        component.inject(this);
     }
 
     public void bindTo(Image image) {

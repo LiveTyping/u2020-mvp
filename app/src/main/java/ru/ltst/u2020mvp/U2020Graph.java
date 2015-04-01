@@ -6,7 +6,7 @@ import ru.ltst.u2020mvp.data.GalleryDatabase;
 import ru.ltst.u2020mvp.data.api.GalleryService;
 import ru.ltst.u2020mvp.data.api.ImageService;
 import ru.ltst.u2020mvp.ui.AppContainer;
-import ru.ltst.u2020mvp.ui.navigation.ActivityScreenSwitcher;
+import ru.ltst.u2020mvp.ui.navigation.activity.ActivityScreenSwitcher;
 import ru.ltst.u2020mvp.ui.navigation.ScreenSwitcher;
 import ru.ltst.u2020mvp.ui.navigation.ToolbarPresenter;
 

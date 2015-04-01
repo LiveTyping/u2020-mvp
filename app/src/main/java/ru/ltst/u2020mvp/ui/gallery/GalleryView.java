@@ -13,6 +13,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
+import ru.ltst.u2020mvp.ui.base.ComponentFinder;
 import ru.ltst.u2020mvp.ui.base.HasComponent;
 import ru.ltst.u2020mvp.ui.misc.BetterViewAnimator;
 import rx.Observable;
@@ -31,7 +32,8 @@ public class GalleryView extends BetterViewAnimator {
 
     public GalleryView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        ((HasComponent<Injector>) context).getComponent().inject(this);
+        GalleryComponent component = ComponentFinder.findActivityComponent(context);
+        component.inject(this);
         adapter = new GalleryAdapter(getContext(), picasso);
     }
 

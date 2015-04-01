@@ -1,4 +1,4 @@
-package ru.ltst.u2020mvp.ui.navigation;
+package ru.ltst.u2020mvp.ui.navigation.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,9 +10,11 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
 
+import ru.ltst.u2020mvp.ui.navigation.Screen;
+
 public abstract class ActivityScreen implements Screen {
 
-    private static final String BF_TRANSITION_VIEW = "ImgurImageActivity.transitionView";
+    private static final String BF_TRANSITION_VIEW = "ActivityScreen.transitionView";
 
     @Nullable
     private View transitionView;

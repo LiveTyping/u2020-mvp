@@ -16,7 +16,7 @@ import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.U2020App;
 import ru.ltst.u2020mvp.U2020Component;
 import ru.ltst.u2020mvp.ui.AppContainer;
-import ru.ltst.u2020mvp.ui.navigation.ActivityScreenSwitcher;
+import ru.ltst.u2020mvp.ui.navigation.activity.ActivityScreenSwitcher;
 import ru.ltst.u2020mvp.ui.navigation.ToolbarPresenter;
 
 public abstract class U2020Activity extends ActionBarActivity {

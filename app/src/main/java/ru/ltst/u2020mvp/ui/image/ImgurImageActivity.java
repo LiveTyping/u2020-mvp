@@ -17,7 +17,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import ru.ltst.u2020mvp.ui.navigation.ActivityScreen;
+import ru.ltst.u2020mvp.ui.navigation.activity.ActivityScreen;
 import ru.ltst.u2020mvp.ui.navigation.ToolbarPresenter;
 import rx.Observable;
 import rx.Subscription;
