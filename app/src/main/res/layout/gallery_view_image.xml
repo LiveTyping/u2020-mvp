@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ru.ltst.u2020mvp.ui.gallery.GalleryItemView
+<ru.ltst.u2020mvp.ui.gallery.view.GalleryItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -27,4 +27,4 @@
         android:ellipsize="end"
         tools:text="This Is The Title"
         style="@style/Widget.U2020.GalleryImage" />
-</ru.ltst.u2020mvp.ui.gallery.GalleryItemView>
+</ru.ltst.u2020mvp.ui.gallery.view.GalleryItemView>

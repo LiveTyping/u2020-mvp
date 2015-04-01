@@ -1,4 +1,4 @@
-package ru.ltst.u2020mvp.ui.gallery;
+package ru.ltst.u2020mvp.ui.gallery.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

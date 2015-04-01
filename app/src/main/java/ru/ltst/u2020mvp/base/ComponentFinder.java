@@ -1,4 +1,4 @@
-package ru.ltst.u2020mvp.ui.base;
+package ru.ltst.u2020mvp.base;
 
 import android.content.Context;
 

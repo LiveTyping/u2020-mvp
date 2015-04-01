@@ -1,11 +1,10 @@
-package ru.ltst.u2020mvp.ui.base;
+package ru.ltst.u2020mvp.base.mvp;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import javax.inject.Inject;
@@ -13,9 +12,9 @@ import javax.inject.Inject;
 import ru.ltst.u2020mvp.U2020App;
 import ru.ltst.u2020mvp.U2020Component;
 import ru.ltst.u2020mvp.ui.AppContainer;
-import ru.ltst.u2020mvp.ui.navigation.activity.ActivityScreenSwitcher;
+import ru.ltst.u2020mvp.base.navigation.activity.ActivityScreenSwitcher;
 
-public abstract class U2020Activity extends ActionBarActivity {
+public abstract class BaseActivity extends ActionBarActivity {
 
     @Inject
     AppContainer appContainer;
@@ -74,5 +73,5 @@ public abstract class U2020Activity extends ActionBarActivity {
      */
     protected abstract void onCreateComponent(U2020Component u2020Component);
     protected abstract @LayoutRes int layoutId();
-    protected abstract ViewPresenter<? extends View> presenter();
+    protected abstract BasePresenter<? extends BaseView> presenter();
 }

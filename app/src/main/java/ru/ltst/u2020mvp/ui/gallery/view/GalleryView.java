@@ -1,4 +1,4 @@
-package ru.ltst.u2020mvp.ui.gallery;
+package ru.ltst.u2020mvp.ui.gallery.view;
 
 import android.content.Context;
 import android.support.v4.util.Pair;
@@ -12,16 +12,17 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ru.ltst.u2020mvp.R;
+import ru.ltst.u2020mvp.base.mvp.BaseView;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
-import ru.ltst.u2020mvp.ui.base.ComponentFinder;
-import ru.ltst.u2020mvp.ui.base.HasComponent;
+import ru.ltst.u2020mvp.base.ComponentFinder;
+import ru.ltst.u2020mvp.ui.gallery.GalleryComponent;
 import ru.ltst.u2020mvp.ui.misc.BetterViewAnimator;
 import rx.Observable;
 import rx.android.widget.OnItemClickEvent;
 import rx.android.widget.WidgetObservable;
 import rx.functions.Func1;
 
-public class GalleryView extends BetterViewAnimator {
+public class GalleryView extends BetterViewAnimator implements BaseView {
     @InjectView(R.id.gallery_grid)
     AbsListView galleryView;
 
@@ -50,6 +51,21 @@ public class GalleryView extends BetterViewAnimator {
 
     public Observable<Pair<Image, GalleryItemView>> observeImageClicks() {
         return WidgetObservable.itemClicks(galleryView).map(new OnItemClickEventToImage(adapter));
+    }
+
+    @Override
+    public void showLoading() {
+        setDisplayedChildId(R.id.gallery_progress);
+    }
+
+    @Override
+    public void showContent() {
+        setDisplayedChildId(R.id.gallery_grid);
+    }
+
+    @Override
+    public void showError(Throwable throwable) {
+        setDisplayedChildId(R.id.gallery_error_view);
     }
 
     private static final class OnItemClickEventToImage implements Func1<OnItemClickEvent, Pair<Image, GalleryItemView>> {

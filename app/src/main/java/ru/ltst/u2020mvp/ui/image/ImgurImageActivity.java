@@ -13,16 +13,16 @@ import butterknife.InjectView;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.U2020Component;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
-import ru.ltst.u2020mvp.ui.base.HasComponent;
-import ru.ltst.u2020mvp.ui.base.U2020Activity;
-import ru.ltst.u2020mvp.ui.base.ViewPresenter;
-import ru.ltst.u2020mvp.ui.navigation.activity.ActivityScreen;
+import ru.ltst.u2020mvp.base.HasComponent;
+import ru.ltst.u2020mvp.base.mvp.BaseActivity;
+import ru.ltst.u2020mvp.base.mvp.BasePresenter;
+import ru.ltst.u2020mvp.base.navigation.activity.ActivityScreen;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
 import timber.log.Timber;
 
-public class ImgurImageActivity extends U2020Activity implements HasComponent<ImgurImageComponent> {
+public class ImgurImageActivity extends BaseActivity implements HasComponent<ImgurImageComponent> {
 
     @Inject Presenter presenter;
 
@@ -77,7 +77,7 @@ public class ImgurImageActivity extends U2020Activity implements HasComponent<Im
     }
 
     @Override
-    protected ViewPresenter<? extends View> presenter() {
+    protected BasePresenter<? extends View> presenter() {
         return presenter;
     }
 
@@ -88,7 +88,7 @@ public class ImgurImageActivity extends U2020Activity implements HasComponent<Im
     }
 
     @ImgurImageScope
-    public static class Presenter extends ViewPresenter<ImgurImageView> {
+    public static class Presenter extends BasePresenter<ImgurImageView> {
 
         private final Observable<Image> imageObservable;
         private Subscription subscription;
@@ -102,6 +102,7 @@ public class ImgurImageActivity extends U2020Activity implements HasComponent<Im
         protected void onLoad() {
             super.onLoad();
             Timber.d("Loading image");
+            getView().showLoading();
             subscription = imageObservable.
                 subscribe(
                     new Action1<Image>() {
@@ -109,6 +110,7 @@ public class ImgurImageActivity extends U2020Activity implements HasComponent<Im
                         public void call(Image image) {
                             Timber.d("Image loaded with id %s", image.toString());
                             getView().bindTo(image);
+                            getView().showContent();
                         }
                     },
                     new Action1<Throwable>() {

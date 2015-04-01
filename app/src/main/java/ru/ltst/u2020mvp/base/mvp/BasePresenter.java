@@ -1,11 +1,12 @@
-package ru.ltst.u2020mvp.ui.base;
+package ru.ltst.u2020mvp.base.mvp;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.View;
 
-public abstract class ViewPresenter<V extends View> {
-    private V view = null;
+import java.lang.ref.WeakReference;
+
+public abstract class BasePresenter<V extends BaseView> {
+    private WeakReference<V> view = null;
 
     /**
      * Load has been called for the current {@link #view}.
@@ -16,17 +17,17 @@ public abstract class ViewPresenter<V extends View> {
         if (view == null) throw new NullPointerException("new view must not be null");
 
         if (this.view != view) {
-            if (this.view != null) dropView(this.view);
+            if (this.view != null) dropView(this.view.get());
 
-            this.view = view;
-            if (getView() != null && !loaded) {
+            this.view = new WeakReference<>(view);
+            if (!loaded) {
                 loaded = true;
                 onLoad();
             }
         }
     }
 
-    public void dropView(V view) {
+    public final void dropView(V view) {
         if (view == null) throw new NullPointerException("dropped view must not be null");
         if (view == this.view) {
             loaded = false;
@@ -36,7 +37,8 @@ public abstract class ViewPresenter<V extends View> {
     }
 
     protected final V getView() {
-        return view;
+        if (view == null) throw new NullPointerException("getView called when view is null. Ensure takeView(View view) is called first.");
+        return view.get();
     }
 
     protected void onLoad() {

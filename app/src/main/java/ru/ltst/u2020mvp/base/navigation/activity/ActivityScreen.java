@@ -1,4 +1,4 @@
-package ru.ltst.u2020mvp.ui.navigation.activity;
+package ru.ltst.u2020mvp.base.navigation.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
 
-import ru.ltst.u2020mvp.ui.navigation.Screen;
+import ru.ltst.u2020mvp.base.navigation.Screen;
 
 public abstract class ActivityScreen implements Screen {
 

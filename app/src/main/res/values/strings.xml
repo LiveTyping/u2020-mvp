@@ -4,4 +4,5 @@
     <string name="image_activity_title">Image</string>
 
     <string name="no_intent_handler">There are no applications available to handle this action.</string>
+    <string name="error_happended_text">Oops! Error happened.</string>
 </resources>
