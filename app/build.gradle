@@ -132,8 +132,9 @@ dependencies {
 
     // Espresso 2 Dependencies
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
-    androidTestCompile ('com.android.support.test.espresso:espresso-core:2.0') {
-        exclude group: 'javax.inject'
+    compile 'com.android.support.test.espresso:espresso-core:2.0'
+    compile ('com.android.support.test.espresso:espresso-contrib:2.0') {
+        exclude module: 'support-annotations'
     }
 }
 
