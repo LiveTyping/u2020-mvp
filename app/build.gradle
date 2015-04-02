@@ -21,58 +21,14 @@ repositories {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
-dependencies {
-    compile 'com.android.support:support-v4:22.+'
-    compile 'com.android.support:support-annotations:22.+'
-    compile "com.android.support:appcompat-v7:22.+"
-
-    compile 'com.google.dagger:dagger:2.0-SNAPSHOT'
-    apt 'com.google.dagger:dagger-compiler:2.0-SNAPSHOT'
-    provided 'org.glassfish:javax.annotation:10.0-b28'
-
-    compile 'com.squareup.okhttp:okhttp:2.2.0'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
-    compile 'com.squareup.picasso:picasso:2.4.0'
-    compile 'com.squareup.retrofit:retrofit:1.8.0'
-
-    debugCompile 'com.squareup.retrofit:retrofit-mock:1.8.0'
-
-    compile 'com.jakewharton:butterknife:6.0.0'
-    compile 'com.jakewharton.timber:timber:2.5.0'
-    debugCompile 'com.jakewharton.madge:madge:1.1.1'
-    debugCompile 'com.jakewharton.scalpel:scalpel:1.1.2'
-
-    compile 'io.reactivex:rxjava:1.0.8'
-    compile 'io.reactivex:rxandroid:0.24.0'
-
-    compile 'com.etsy.android.grid:library:1.0.5'
-
-    // To use Dagger 2 components in tests
-    androidTestApt 'com.google.dagger:dagger-compiler:2.0-SNAPSHOT'
-
-    // Espresso 2 Dependencies
-    androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
-    androidTestCompile ('com.android.support.test.espresso:espresso-core:2.0') {
-        exclude group: 'javax.inject'
-    }
-}
-
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 def date = new Date()
 def buildTime = date.format("dd.MM.yy", TimeZone.getTimeZone("UTC"))
 def buildTimeInternal = date.format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone("UTC"))
 
-def isTravis = "true".equals(System.getenv("TRAVIS"))
-def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
-
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
-
-    dexOptions {
-        // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
-        preDexLibraries = preDexEnabled && !isTravis
-    }
 
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
@@ -117,8 +73,19 @@ android {
         }
     }
 
+    productFlavors {
+        internal {
+            applicationId 'ru.ltst.u2020mvp.internal'
+        }
+        production {
+            applicationId 'ru.ltst.u2020mvp'
+        }
+    }
+
+
     lintOptions {
-        abortOnError false
+        textReport true
+        textOutput 'stdout'
     }
 
     compileOptions {
@@ -131,9 +98,45 @@ android {
     }
 }
 
+// TODO remove eventually: http://b.android.com/162285
+configurations {
+    internalDebugCompile
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:22.0.0'
+    compile 'com.android.support:support-annotations:22.0.0'
+    compile "com.android.support:appcompat-v7:22.0.0"
+    compile 'com.android.support:recyclerview-v7:22.0.0'
+
+    compile 'com.google.dagger:dagger:2.0-SNAPSHOT'
+    apt 'com.google.dagger:dagger-compiler:2.0-SNAPSHOT'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    compile 'com.squareup.okhttp:okhttp:2.3.0'
+    compile 'com.squareup.picasso:picasso:2.5.0'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    internalDebugCompile 'com.squareup.retrofit:retrofit-mock:1.9.0'
+
+    compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.jakewharton.timber:timber:2.7.1'
+
+    compile 'io.reactivex:rxjava:1.0.8'
+    compile 'io.reactivex:rxandroid:0.24.0'
+
+    internalCompile 'com.mattprecious.telescope:telescope:1.4.0@aar'
+
+    // Espresso 2 Dependencies
+    androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
+    compile 'com.android.support.test.espresso:espresso-core:2.0'
+    compile ('com.android.support.test.espresso:espresso-contrib:2.0') {
+        exclude module: 'support-annotations'
+    }
+}
+
 // change apk name
 android.applicationVariants.all { variant ->
-    variant.outputs.each { output ->
+    for (output in variant.outputs) {
         def outputFile = output.outputFile
         if (outputFile != null && outputFile.name.endsWith('.apk')) {
             def fileName = "u2020-mvp-${output.name}-${buildTime}.apk"

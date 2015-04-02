@@ -6,32 +6,30 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import ru.ltst.u2020mvp.R;
-import ru.ltst.u2020mvp.U2020Component;
-import ru.ltst.u2020mvp.data.api.model.response.Image;
-import ru.ltst.u2020mvp.ui.base.HasComponent;
-import ru.ltst.u2020mvp.ui.base.U2020Activity;
-import ru.ltst.u2020mvp.ui.base.ViewPresenter;
-
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import ru.ltst.u2020mvp.ui.navigation.ActivityScreen;
-import ru.ltst.u2020mvp.ui.navigation.ToolbarPresenter;
+import ru.ltst.u2020mvp.R;
+import ru.ltst.u2020mvp.U2020Component;
+import ru.ltst.u2020mvp.data.api.model.response.Image;
+import ru.ltst.u2020mvp.base.HasComponent;
+import ru.ltst.u2020mvp.base.mvp.BaseActivity;
+import ru.ltst.u2020mvp.base.mvp.BasePresenter;
+import ru.ltst.u2020mvp.base.navigation.activity.ActivityScreen;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
 import timber.log.Timber;
 
-public class ImgurImageActivity extends U2020Activity implements HasComponent<ImgurImageComponent> {
+public class ImgurImageActivity extends BaseActivity implements HasComponent<ImgurImageComponent> {
 
     @Inject Presenter presenter;
 
     @InjectView(R.id.imgur_image_view)
     ImgurImageView view;
 
-    private @NonNull String imageId;
+    private String imageId;
     private ImgurImageComponent imgurImageComponent;
 
     @Override
@@ -56,21 +54,14 @@ public class ImgurImageActivity extends U2020Activity implements HasComponent<Im
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        presenter.takeView(view);
-    }
-
-    @Override
-    protected void onStop() {
-        presenter.dropView(view);
-        super.onStop();
-    }
-
-    @Override
     protected void onDestroy() {
         imgurImageComponent = null;
         super.onDestroy();
+    }
+
+    @Override
+    protected int viewId() {
+        return R.id.imgur_image_view;
     }
 
     @Override
@@ -79,7 +70,7 @@ public class ImgurImageActivity extends U2020Activity implements HasComponent<Im
     }
 
     @Override
-    protected ViewPresenter<? extends View> presenter() {
+    protected BasePresenter<? extends View> presenter() {
         return presenter;
     }
 
@@ -90,22 +81,21 @@ public class ImgurImageActivity extends U2020Activity implements HasComponent<Im
     }
 
     @ImgurImageScope
-    public static class Presenter extends ViewPresenter<ImgurImageView> {
+    public static class Presenter extends BasePresenter<ImgurImageView> {
 
         private final Observable<Image> imageObservable;
-        private final ToolbarPresenter toolbarPresenter;
         private Subscription subscription;
 
         @Inject
-        public Presenter(Observable<Image> imageObservable, ToolbarPresenter toolbarPresenter) {
+        public Presenter(Observable<Image> imageObservable) {
             this.imageObservable = imageObservable;
-            this.toolbarPresenter = toolbarPresenter;
         }
 
         @Override
         protected void onLoad() {
             super.onLoad();
             Timber.d("Loading image");
+            getView().showLoading();
             subscription = imageObservable.
                 subscribe(
                     new Action1<Image>() {
@@ -113,7 +103,7 @@ public class ImgurImageActivity extends U2020Activity implements HasComponent<Im
                         public void call(Image image) {
                             Timber.d("Image loaded with id %s", image.toString());
                             getView().bindTo(image);
-                            toolbarPresenter.setTitle(image.title);
+                            getView().showContent();
                         }
                     },
                     new Action1<Throwable>() {

@@ -7,15 +7,14 @@ import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.io.File;
-import java.io.IOException;
 
 import dagger.Module;
 import dagger.Provides;
 import ru.ltst.u2020mvp.data.api.ApiModule;
 import ru.ltst.u2020mvp.ui.ApplicationScope;
-import timber.log.Timber;
 
 import static android.content.Context.MODE_PRIVATE;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Module(includes = ApiModule.class)
 public final class DataModule {
@@ -29,15 +28,14 @@ public final class DataModule {
 
     static OkHttpClient createOkHttpClient(Application app) {
         OkHttpClient client = new OkHttpClient();
+        client.setConnectTimeout(10, SECONDS);
+        client.setReadTimeout(10, SECONDS);
+        client.setWriteTimeout(10, SECONDS);
 
         // Install an HTTP cache in the application cache directory.
-        try {
-            File cacheDir = new File(app.getCacheDir(), "http");
-            Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
-            client.setCache(cache);
-        } catch (IOException e) {
-            Timber.e(e, "Unable to install disk cache.");
-        }
+        File cacheDir = new File(app.getCacheDir(), "http");
+        Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
+        client.setCache(cache);
 
         return client;
     }
