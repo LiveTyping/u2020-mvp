@@ -33,7 +33,6 @@ public class Registry {
         @Override
         @SuppressWarnings("unchecked")
         public void onActivityStopped(Activity activity) {
-            super.onActivityStopped(activity);
             final Entry entry = registers.get(getKey(activity));
             if (entry != null) {
                 final BaseView view = ButterKnife.findById(activity, entry.viewId);
