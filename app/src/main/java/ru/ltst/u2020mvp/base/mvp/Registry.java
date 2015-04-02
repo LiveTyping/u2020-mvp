@@ -1,13 +1,18 @@
 package ru.ltst.u2020mvp.base.mvp;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import ru.ltst.u2020mvp.ui.ActivityHierarchyServer;
+
+import static ru.ltst.u2020mvp.util.Strings.COLON;
+import static ru.ltst.u2020mvp.util.Strings.DOT;
 
 public class Registry {
     private static final HashMap<String, Entry> registers = new HashMap<>();
@@ -59,7 +64,34 @@ public class Registry {
     }
 
     private static String getKey(Activity activity) {
-        return activity.getClass().getName();
+        StringBuilder builder = new StringBuilder();
+        builder.append(activity.getClass().getName());
+        final String action = activity.getIntent().getAction();
+        if (action != null) {
+            builder.append(DOT).append(action);
+        }
+        final Uri data = activity.getIntent().getData();
+        if (data != null) {
+            builder.append(DOT).append(data.toString());
+        }
+        final Bundle extras = activity.getIntent().getExtras();
+        if (extras != null) {
+            for (String key : extras.keySet()) {
+                Object value = extras.get(key);
+
+                String valueString;
+                if (value.getClass().isArray()) {
+                    valueString = Arrays.toString((Object[]) value);
+                } else {
+                    valueString = value.toString();
+                }
+
+                builder.append(DOT);
+                builder.append(key).append(COLON);
+                builder.append(valueString);
+            }
+        }
+        return builder.toString();
     }
 
     private static class Entry<V extends BaseView> {

@@ -1,6 +1,9 @@
 package ru.ltst.u2020mvp.util;
 
 public final class Strings {
+    public static final String DOT = ".";
+    public static final String COLON = ":";
+
     private Strings() {
         // No instances.
     }
