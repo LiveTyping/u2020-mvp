@@ -54,21 +54,14 @@ public class ImgurImageActivity extends BaseActivity implements HasComponent<Img
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        presenter.takeView(view);
-    }
-
-    @Override
-    protected void onStop() {
-        presenter.dropView(view);
-        super.onStop();
-    }
-
-    @Override
     protected void onDestroy() {
         imgurImageComponent = null;
         super.onDestroy();
+    }
+
+    @Override
+    protected int viewId() {
+        return R.id.imgur_image_view;
     }
 
     @Override

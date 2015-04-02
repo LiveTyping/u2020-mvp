@@ -1,6 +1,7 @@
 package ru.ltst.u2020mvp.base.mvp;
 
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
@@ -32,19 +33,10 @@ public abstract class BaseActivity extends ActionBarActivity {
         if (appContainer == null) {
             throw new IllegalStateException("No injection happened. Add component.inject(this) in onCreateComponent() implementation.");
         }
+        Registry.add(this, viewId(), presenter());
         final LayoutInflater layoutInflater = getLayoutInflater();
         ViewGroup container = appContainer.get(this);
         layoutInflater.inflate(layoutId(), container);
-
-        if (savedInstanceState != null) {
-            presenter().onRestore(savedInstanceState);
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        presenter().onSave(outState);
     }
 
     protected void onExtractParams(@NonNull Bundle params) {
@@ -60,4 +52,5 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected abstract void onCreateComponent(U2020Component u2020Component);
     protected abstract @LayoutRes int layoutId();
     protected abstract BasePresenter<? extends BaseView> presenter();
+    protected abstract @IdRes int viewId();
 }

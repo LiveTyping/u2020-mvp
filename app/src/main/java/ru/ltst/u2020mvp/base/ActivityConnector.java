@@ -1,4 +1,4 @@
-package ru.ltst.u2020mvp.base.navigation.activity;
+package ru.ltst.u2020mvp.base;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

@@ -8,14 +8,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.U2020Component;
+import ru.ltst.u2020mvp.base.HasComponent;
 import ru.ltst.u2020mvp.base.mvp.BaseActivity;
 import ru.ltst.u2020mvp.base.mvp.BasePresenter;
 import ru.ltst.u2020mvp.base.mvp.BaseView;
-import ru.ltst.u2020mvp.base.HasComponent;
+import ru.ltst.u2020mvp.base.navigation.activity.ActivityScreen;
+import ru.ltst.u2020mvp.base.navigation.activity.ActivityScreenSwitcher;
+import ru.ltst.u2020mvp.base.navigation.activity.NoParamsActivityScreen;
 import ru.ltst.u2020mvp.data.GalleryDatabase;
 import ru.ltst.u2020mvp.data.api.model.request.Section;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
@@ -23,9 +24,6 @@ import ru.ltst.u2020mvp.data.rx.EndlessObserver;
 import ru.ltst.u2020mvp.ui.gallery.view.GalleryItemView;
 import ru.ltst.u2020mvp.ui.gallery.view.GalleryView;
 import ru.ltst.u2020mvp.ui.image.ImgurImageActivity;
-import ru.ltst.u2020mvp.base.navigation.activity.ActivityScreen;
-import ru.ltst.u2020mvp.base.navigation.activity.ActivityScreenSwitcher;
-import ru.ltst.u2020mvp.base.navigation.activity.NoParamsActivityScreen;
 import rx.Subscription;
 import rx.functions.Action1;
 import timber.log.Timber;
@@ -35,15 +33,11 @@ public class GalleryActivity extends BaseActivity implements HasComponent<Galler
     @Inject
     Presenter presenter;
 
-    @InjectView(R.id.gallery_view)
-    GalleryView view;
-
     private GalleryComponent galleryComponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.inject(this);
         setTitle(R.string.gallery_activity_title);
     }
 
@@ -56,21 +50,14 @@ public class GalleryActivity extends BaseActivity implements HasComponent<Galler
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        presenter.takeView(view);
-    }
-
-    @Override
-    protected void onStop() {
-        presenter.dropView(view);
-        super.onStop();
-    }
-
-    @Override
     protected void onDestroy() {
         galleryComponent = null;
         super.onDestroy();
+    }
+
+    @Override
+    protected int viewId() {
+        return R.id.gallery_view;
     }
 
     @Override

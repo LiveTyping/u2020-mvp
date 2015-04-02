@@ -6,6 +6,7 @@ import android.support.v4.app.ActivityCompat;
 
 import java.security.InvalidParameterException;
 
+import ru.ltst.u2020mvp.base.ActivityConnector;
 import ru.ltst.u2020mvp.base.navigation.Screen;
 import ru.ltst.u2020mvp.base.navigation.ScreenSwitcher;
 
