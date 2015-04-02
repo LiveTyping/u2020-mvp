@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import ru.ltst.u2020mvp.ui.ActivityHierarchyServer;
+import timber.log.Timber;
 
 import static ru.ltst.u2020mvp.util.Strings.COLON;
 import static ru.ltst.u2020mvp.util.Strings.DOT;
@@ -19,7 +20,9 @@ public class Registry {
     public static final ActivityHierarchyServer.Empty SERVER = new ActivityHierarchyServer.Empty() {
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-            final Entry entry = registers.get(getKey(activity));
+            final String key = getKey(activity);
+            final Entry entry = registers.get(key);
+            Timber.d("%s onActivityCreated", key);
             if (entry != null && savedInstanceState != null) {
                 entry.presenter.onRestore(savedInstanceState);
             }
@@ -28,7 +31,9 @@ public class Registry {
         @Override
         @SuppressWarnings("unchecked")
         public void onActivityStarted(Activity activity) {
-            final Entry entry = registers.get(getKey(activity));
+            final String key = getKey(activity);
+            final Entry entry = registers.get(key);
+            Timber.d("%s onActivityStarted", key);
             if (entry != null) {
                 final BaseView view = ButterKnife.findById(activity, entry.viewId);
                 entry.presenter.takeView(view);
@@ -38,7 +43,9 @@ public class Registry {
         @Override
         @SuppressWarnings("unchecked")
         public void onActivityStopped(Activity activity) {
-            final Entry entry = registers.get(getKey(activity));
+            final String key = getKey(activity);
+            final Entry entry = registers.get(key);
+            Timber.d("%s onActivityStopped", key);
             if (entry != null) {
                 final BaseView view = ButterKnife.findById(activity, entry.viewId);
                 entry.presenter.dropView(view);
@@ -47,7 +54,9 @@ public class Registry {
 
         @Override
         public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-            final Entry entry = registers.get(getKey(activity));
+            final String key = getKey(activity);
+            final Entry entry = registers.get(key);
+            Timber.d("%s onActivitySaveInstanceState", key);
             if (entry != null) {
                 entry.presenter.onSave(outState);
             }
@@ -55,7 +64,9 @@ public class Registry {
 
         @Override
         public void onActivityDestroyed(Activity activity) {
-            registers.remove(getKey(activity));
+            final String key = getKey(activity);
+            Timber.d("%s onActivityDestroyed", key);
+            registers.remove(key);
         }
     };
 
