@@ -19,7 +19,7 @@ import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.base.ComponentFinder;
 import ru.ltst.u2020mvp.ui.gallery.GalleryComponent;
 import ru.ltst.u2020mvp.ui.misc.BetterViewAnimator;
-import ru.ltst.u2020mvp.ui.misc.SpacesItemDecoration;
+import ru.ltst.u2020mvp.ui.misc.GridInsetDecoration;
 import rx.Observable;
 
 public class GalleryView extends BetterViewAnimator implements BaseView {
@@ -46,6 +46,7 @@ public class GalleryView extends BetterViewAnimator implements BaseView {
         final StaggeredGridLayoutManager layout = new StaggeredGridLayoutManager(COLUMNS_COUNT, StaggeredGridLayoutManager.VERTICAL);
         galleryView.setLayoutManager(layout);
         galleryView.setItemAnimator(new DefaultItemAnimator());
+        galleryView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.grid_inset));
         galleryView.setAdapter(adapter);
     }
 
