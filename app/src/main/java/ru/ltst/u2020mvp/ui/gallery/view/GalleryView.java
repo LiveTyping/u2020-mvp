@@ -9,6 +9,9 @@ import android.util.AttributeSet;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -21,9 +24,13 @@ import ru.ltst.u2020mvp.ui.gallery.GalleryComponent;
 import ru.ltst.u2020mvp.ui.misc.BetterViewAnimator;
 import ru.ltst.u2020mvp.ui.misc.GridInsetDecoration;
 import rx.Observable;
+import rx.Subscriber;
+import rx.android.AndroidSubscriptions;
+import rx.functions.Action0;
 
 public class GalleryView extends BetterViewAnimator implements BaseView {
     public static final int COLUMNS_COUNT = 2;
+
     @InjectView(R.id.gallery_grid)
     RecyclerView galleryView;
 
@@ -31,12 +38,34 @@ public class GalleryView extends BetterViewAnimator implements BaseView {
     Picasso picasso;
 
     private final GalleryAdapter adapter;
+    private final List<Subscriber<? super Pair<Image, GalleryItemView>>> clickSubscribers = new ArrayList<>();
+    private final Observable.OnSubscribe<Pair<Image, GalleryItemView>> clickOnSubscribe = new Observable.OnSubscribe<Pair<Image, GalleryItemView>>() {
+        @Override
+        public void call(final Subscriber<? super Pair<Image, GalleryItemView>> subscriber) {
+            clickSubscribers.add(subscriber);
+            subscriber.add(AndroidSubscriptions.unsubscribeInUiThread(new Action0() {
+                @Override
+                public void call() {
+                    clickSubscribers.remove(subscriber);
+                }
+            }));
+        }
+    };
 
     public GalleryView(Context context, AttributeSet attrs) {
         super(context, attrs);
         GalleryComponent component = ComponentFinder.findActivityComponent(context);
         component.inject(this);
         adapter = new GalleryAdapter(getContext(), picasso);
+        adapter.setOnClickListener(new GalleryAdapter.OnClickListener() {
+            @Override
+            public void onImageClicked(Image image, GalleryItemView view) {
+                Pair<Image, GalleryItemView> item = new Pair<>(image, view);
+                for (Subscriber<? super Pair<Image, GalleryItemView>> subscriber : clickSubscribers) {
+                    subscriber.onNext(item);
+                }
+            }
+        });
     }
 
     @Override
@@ -55,8 +84,7 @@ public class GalleryView extends BetterViewAnimator implements BaseView {
     }
 
     public Observable<Pair<Image, GalleryItemView>> observeImageClicks() {
-        return Observable.empty();
-//        return WidgetObservable.itemClicks(galleryView).map(new OnItemClickEventToImage(adapter));
+        return Observable.create(clickOnSubscribe);
     }
 
     @Override
@@ -73,22 +101,6 @@ public class GalleryView extends BetterViewAnimator implements BaseView {
     public void showError(Throwable throwable) {
         setDisplayedChildId(R.id.gallery_error_view);
     }
-//
-//    private static final class OnItemClickEventToImage implements Func1<OnItemClickEvent, Pair<Image, GalleryItemView>> {
-//
-//        private final GalleryAdapter adapter;
-//
-//        private OnItemClickEventToImage(GalleryAdapter adapter) {
-//            this.adapter = adapter;
-//        }
-//
-//        @Override
-//        public Pair<Image, GalleryItemView> call(OnItemClickEvent onItemClickEvent) {
-//            Image image = adapter.(onItemClickEvent.position());
-//            GalleryItemView view = (GalleryItemView) onItemClickEvent.view();
-//            return new Pair<>(image, view);
-//        }
-//    }
 
     public interface Injector {
         void inject(GalleryView view);
