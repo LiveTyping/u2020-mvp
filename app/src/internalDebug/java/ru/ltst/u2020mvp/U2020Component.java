@@ -10,7 +10,7 @@ import ru.ltst.u2020mvp.ui.DebugUiModule;
 */
 @ApplicationScope
 @Component(modules = { U2020AppModule.class, DebugUiModule.class, DebugDataModule.class })
-public interface U2020Component extends DebugU2020Graph {
+public interface U2020Component extends DebugInternalU2020Graph {
     /**
      * An initializer that creates the graph from an application.
      */

@@ -11,7 +11,7 @@ import ru.ltst.u2020mvp.ui.InternalReleaseUiModule;
 @ApplicationScope
 @Component(modules = { U2020AppModule.class, InternalReleaseUiModule.class,
         InternalReleaseDataModule.class })
-public interface U2020Component extends U2020Graph {
+public interface U2020Component extends InternalU2020Graph {
     /**
      * An initializer that creates the graph from an application.
      */

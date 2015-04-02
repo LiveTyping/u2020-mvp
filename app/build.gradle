@@ -116,7 +116,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'com.squareup.picasso:picasso:2.5.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
-    internalCompile 'com.squareup.retrofit:retrofit-mock:1.9.0'
+    internalDebugCompile 'com.squareup.retrofit:retrofit-mock:1.9.0'
 
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.jakewharton.timber:timber:2.7.1'
