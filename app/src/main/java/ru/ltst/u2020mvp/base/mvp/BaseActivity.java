@@ -18,8 +18,6 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Inject
     AppContainer appContainer;
-    @Inject
-    ActivityScreenSwitcher activityScreenSwitcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +29,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         U2020App app = U2020App.get(this);
         onCreateComponent(app.component());
-        if (appContainer == null || activityScreenSwitcher == null) {
+        if (appContainer == null) {
             throw new IllegalStateException("No injection happened. Add component.inject(this) in onCreateComponent() implementation.");
         }
         final LayoutInflater layoutInflater = getLayoutInflater();
@@ -41,18 +39,6 @@ public abstract class BaseActivity extends ActionBarActivity {
         if (savedInstanceState != null) {
             presenter().onRestore(savedInstanceState);
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        activityScreenSwitcher.attach(this);
-    }
-
-    @Override
-    protected void onStop() {
-        activityScreenSwitcher.detach();
-        super.onStop();
     }
 
     @Override

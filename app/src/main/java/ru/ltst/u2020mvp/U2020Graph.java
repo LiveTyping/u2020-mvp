@@ -5,6 +5,7 @@ import com.squareup.picasso.Picasso;
 import ru.ltst.u2020mvp.data.GalleryDatabase;
 import ru.ltst.u2020mvp.data.api.GalleryService;
 import ru.ltst.u2020mvp.data.api.ImageService;
+import ru.ltst.u2020mvp.ui.ActivityHierarchyServer;
 import ru.ltst.u2020mvp.ui.AppContainer;
 import ru.ltst.u2020mvp.base.navigation.activity.ActivityScreenSwitcher;
 
@@ -19,4 +20,5 @@ public interface U2020Graph {
     GalleryDatabase galleryDatabase();
     GalleryService galleryService();
     ImageService imageService();
+    ActivityHierarchyServer activityHierarchyServer();
 }
