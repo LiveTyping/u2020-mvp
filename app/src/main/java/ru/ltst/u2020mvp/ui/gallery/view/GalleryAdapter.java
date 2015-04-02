@@ -51,7 +51,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 if (onClickListener != null) {
-                    onClickListener.onImageClicked(images.get(position), holder.itemView);
+                    onClickListener.onImageClicked(images.get(position), (GalleryItemView) holder.itemView);
                 }
             }
         });
@@ -63,14 +63,12 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     }
 
     public static final class ViewHolder extends RecyclerView.ViewHolder {
-        public final GalleryItemView itemView;
         public ViewHolder(GalleryItemView itemView) {
             super(itemView);
-            this.itemView = itemView;
         }
 
         public void bindTo(Image image, Picasso picasso) {
-            itemView.bindTo(image, picasso);
+            ((GalleryItemView) itemView).bindTo(image, picasso);
         }
     }
 
