@@ -3,6 +3,7 @@ package ru.ltst.u2020mvp.ui.gallery;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.widget.ImageView;
 
 import java.util.List;
 
@@ -109,9 +110,9 @@ public class GalleryActivity extends BaseActivity implements HasComponent<Galler
                 }
             });
             clicks = getView().observeImageClicks().subscribe(
-                new Action1<Pair<Image, GalleryItemView>>() {
+                new Action1<Pair<Image, ImageView>>() {
                     @Override
-                    public void call(Pair<Image, GalleryItemView> image) {
+                    public void call(Pair<Image, ImageView> image) {
                         Timber.d("Image clicked with id = %s", image.first.id);
                         ActivityScreen screen = new ImgurImageActivity.Screen(image.first.id);
                         screen.attachTransitionView(image.second);
@@ -126,6 +127,14 @@ public class GalleryActivity extends BaseActivity implements HasComponent<Galler
             super.onDestroy();
             request.unsubscribe();
             clicks.unsubscribe();
+        }
+
+        public void refresh() {
+            // TODO: implement refreshing
+            final GalleryView view = getView();
+            if (view != null) {
+                view.setRefreshed();
+            }
         }
     }
 
