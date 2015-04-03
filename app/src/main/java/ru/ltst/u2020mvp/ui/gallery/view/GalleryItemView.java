@@ -1,9 +1,12 @@
 package ru.ltst.u2020mvp.ui.gallery.view;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import ru.ltst.u2020mvp.R;
@@ -13,15 +16,13 @@ import com.squareup.picasso.RequestCreator;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import ru.ltst.u2020mvp.ui.misc.AspectRatioImageView;
 
-public class GalleryItemView extends FrameLayout {
+public class GalleryItemView extends CardView {
     @InjectView(R.id.gallery_image_image)
-    ImageView image;
+    AspectRatioImageView image;
     @InjectView(R.id.gallery_image_title)
     TextView title;
-
-    private float aspectRatio = 1;
-    private RequestCreator request;
 
     public GalleryItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -33,30 +34,21 @@ public class GalleryItemView extends FrameLayout {
         ButterKnife.inject(this);
     }
 
-    public void bindTo(Image item, Picasso picasso) {
-        request = picasso.load(item.link);
-        aspectRatio = 1f * item.width / item.height;
-        requestLayout();
+    public void bindTo(final Image item, final Picasso picasso) {
+        float heightRatio = item.height / (float) item.width;
+        image.setHeightRatio(heightRatio);
+        image.requestLayout();
+        image.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                image.getViewTreeObserver().removeOnPreDrawListener(this);
+                final int height = image.getMeasuredHeight();
+                final int width = image.getMeasuredWidth();
+                picasso.load(item.link).resize(width, height).into(image);
+                return true;
+            }
+        });
 
         title.setText(item.title);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int mode = MeasureSpec.getMode(widthMeasureSpec);
-        if (mode != MeasureSpec.EXACTLY) {
-            throw new IllegalStateException("layout_width must be match_parent");
-        }
-
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        // Honor aspect ratio for height but no larger than 2x width.
-        int height = Math.min((int) (width / aspectRatio), width * 2);
-        heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        if (request != null) {
-            request.resize(width, height).centerCrop().into(image);
-            request = null;
-        }
     }
 }
