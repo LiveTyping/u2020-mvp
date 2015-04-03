@@ -26,6 +26,12 @@ public final class DataModule {
         return app.getSharedPreferences("u2020", MODE_PRIVATE);
     }
 
+    @Provides
+    @ApplicationScope
+    Clock provideClock() {
+        return Clock.REAL;
+    }
+
     static OkHttpClient createOkHttpClient(Application app) {
         OkHttpClient client = new OkHttpClient();
         client.setConnectTimeout(10, SECONDS);

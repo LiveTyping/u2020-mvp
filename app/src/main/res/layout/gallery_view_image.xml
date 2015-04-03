@@ -8,12 +8,13 @@
     android:background="@drawable/gallery_item_background"
     >
 
-    <ru.ltst.u2020mvp.ui.misc.ForegroundImageView
+    <ImageView
         android:id="@+id/gallery_image_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="false"
-        tools:src="#f00" />
+        tools:src="#f00"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/gallery_image_title"

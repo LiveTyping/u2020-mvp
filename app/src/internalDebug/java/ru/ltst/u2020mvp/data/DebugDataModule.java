@@ -19,23 +19,49 @@ import javax.net.ssl.X509TrustManager;
 import dagger.Module;
 import dagger.Provides;
 import retrofit.MockRestAdapter;
-import ru.ltst.u2020mvp.data.*;
-import ru.ltst.u2020mvp.data.IsMockMode;
-import ru.ltst.u2020mvp.data.MockRequestHandler;
 import ru.ltst.u2020mvp.data.api.DebugApiModule;
+import ru.ltst.u2020mvp.data.api.LoggingInterceptor;
+import ru.ltst.u2020mvp.data.prefs.BooleanPreference;
+import ru.ltst.u2020mvp.data.prefs.IntPreference;
+import ru.ltst.u2020mvp.data.prefs.NetworkProxyPreference;
+import ru.ltst.u2020mvp.data.prefs.RxSharedPreferences;
 import ru.ltst.u2020mvp.data.prefs.StringPreference;
 import ru.ltst.u2020mvp.ui.ApplicationScope;
+import rx.Observable;
 import timber.log.Timber;
 
-@Module(includes = { DataModule.class, DebugApiModule.class})
+@Module(includes = {DataModule.class, DebugApiModule.class})
 public final class DebugDataModule {
+    private static final int DEFAULT_ANIMATION_SPEED = 1; // 1x (normal) speed.
+    private static final boolean DEFAULT_PICASSO_DEBUGGING = false; // Debug indicators displayed
+    private static final boolean DEFAULT_PIXEL_GRID_ENABLED = false; // No pixel grid overlay.
+    private static final boolean DEFAULT_PIXEL_RATIO_ENABLED = false; // No pixel ratio overlay.
+    private static final boolean DEFAULT_SCALPEL_ENABLED = false; // No crazy 3D view tree.
+    private static final boolean DEFAULT_SCALPEL_WIREFRAME_ENABLED = false; // Draw views by
 
     @Provides
     @ApplicationScope
-    OkHttpClient provideOkHttpClient(Application app) {
+    OkHttpClient provideOkHttpClient(Application app, LoggingInterceptor loggingInterceptor) {
         OkHttpClient client = DataModule.createOkHttpClient(app);
         client.setSslSocketFactory(createBadSslSocketFactory());
+        client.interceptors().add(loggingInterceptor);
         return client;
+    }
+
+    @Provides @ApplicationScope
+    @AnimationSpeed
+    IntPreference provideAnimationSpeed(SharedPreferences preferences) {
+        return new IntPreference(preferences, "debug_animation_speed", DEFAULT_ANIMATION_SPEED);
+    }
+
+    @Provides @ApplicationScope
+    RxSharedPreferences provideRxSharedPreferences(SharedPreferences preferences) {
+        return RxSharedPreferences.create(preferences);
+    }
+
+    @Provides @ApplicationScope
+    NetworkProxyPreference provideNetworkProxy(SharedPreferences preferences) {
+        return new NetworkProxyPreference(preferences, "debug_network_proxy");
     }
 
     @Provides
@@ -67,6 +93,73 @@ public final class DebugDataModule {
             }
         });
         return builder.build();
+    }
+
+    @Provides
+    @ApplicationScope
+    @PicassoDebugging
+    BooleanPreference providePicassoDebugging(SharedPreferences preferences) {
+        return new BooleanPreference(preferences, "debug_picasso_debugging", DEFAULT_PICASSO_DEBUGGING);
+    }
+
+    @Provides
+    @ApplicationScope
+    @PixelGridEnabled
+    BooleanPreference providePixelGridEnabled(SharedPreferences preferences) {
+        return new BooleanPreference(preferences, "debug_pixel_grid_enabled",
+                DEFAULT_PIXEL_GRID_ENABLED);
+    }
+
+    @Provides
+    @ApplicationScope
+    @PixelGridEnabled
+    Observable<Boolean> provideObservablePixelGridEnabled(RxSharedPreferences preferences) {
+        return preferences.getBoolean("debug_pixel_grid_enabled", DEFAULT_PIXEL_GRID_ENABLED);
+    }
+
+    @Provides
+    @ApplicationScope
+    @PixelRatioEnabled
+    BooleanPreference providePixelRatioEnabled(SharedPreferences preferences) {
+        return new BooleanPreference(preferences, "debug_pixel_ratio_enabled",
+                DEFAULT_PIXEL_RATIO_ENABLED);
+    }
+
+    @Provides
+    @ApplicationScope
+    @PixelRatioEnabled
+    Observable<Boolean> provideObservablePixelRatioEnabled(RxSharedPreferences preferences) {
+        return preferences.getBoolean("debug_pixel_ratio_enabled", DEFAULT_PIXEL_RATIO_ENABLED);
+    }
+
+    @Provides
+    @ApplicationScope
+    @ScalpelEnabled
+    BooleanPreference provideScalpelEnabled(SharedPreferences preferences) {
+        return new BooleanPreference(preferences, "debug_scalpel_enabled", DEFAULT_SCALPEL_ENABLED);
+    }
+
+    @Provides
+    @ApplicationScope
+    @ScalpelEnabled
+    Observable<Boolean> provideObservableScalpelEnabled(RxSharedPreferences preferences) {
+        return preferences.getBoolean("debug_scalpel_enabled", DEFAULT_SCALPEL_ENABLED);
+    }
+
+    @Provides
+    @ApplicationScope
+    @ScalpelWireframeEnabled
+    BooleanPreference provideScalpelWireframeEnabled(SharedPreferences preferences) {
+        return new BooleanPreference(preferences, "debug_scalpel_wireframe_drawer",
+                DEFAULT_SCALPEL_WIREFRAME_ENABLED);
+    }
+
+    @Provides
+    @ApplicationScope
+    @ScalpelWireframeEnabled
+    Observable<Boolean> provideObservableScalpelWireframeEnabled(RxSharedPreferences preferences) {
+        return preferences.getBoolean("debug_scalpel_wireframe_drawer",
+                DEFAULT_SCALPEL_WIREFRAME_ENABLED);
     }
 
     private static SSLSocketFactory createBadSslSocketFactory() {

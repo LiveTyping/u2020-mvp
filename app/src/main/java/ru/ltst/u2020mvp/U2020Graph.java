@@ -1,5 +1,6 @@
 package ru.ltst.u2020mvp;
 
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Picasso;
 
 import ru.ltst.u2020mvp.data.GalleryDatabase;
@@ -16,6 +17,7 @@ public interface U2020Graph {
     void inject(U2020App app);
     AppContainer appContainer();
     Picasso picasso();
+    OkHttpClient okHttpClient();
     ActivityScreenSwitcher activityScreenSwitcher();
     GalleryDatabase galleryDatabase();
     GalleryService galleryService();

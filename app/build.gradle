@@ -120,6 +120,8 @@ dependencies {
 
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.jakewharton.timber:timber:2.7.1'
+    internalDebugCompile 'com.jakewharton.madge:madge:1.1.1'
+    internalDebugCompile 'com.jakewharton.scalpel:scalpel:1.1.1'
 
     compile 'io.reactivex:rxjava:1.0.8'
     compile 'io.reactivex:rxandroid:0.24.0'

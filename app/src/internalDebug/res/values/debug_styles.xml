@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <style name="Theme.U2020.Debug" parent="Theme.AppCompat.NoActionBar">
+  </style>
+
+  <style name="Widget.U2020.Debug.Header" parent="None">
+    <item name="android:paddingBottom">2dp</item>
+    <item name="android:textColor">?android:attr/textColorSecondary</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:textSize">13sp</item>
+    <item name="android:layout_marginTop">24dp</item>
+    <item name="android:layout_marginBottom">2dp</item>
+    <item name="android:background">@drawable/debug_header_bg</item>
+  </style>
+
+  <style name="Widget.U2020.Debug.RowWidget" parent="None">
+    <item name="android:minHeight">26dp</item>
+    <item name="android:layout_marginTop">4dp</item>
+  </style>
+  <style name="Widget.U2020.Debug.RowTitle" parent="Widget.U2020.Debug.RowWidget">
+    <item name="android:layout_marginRight">16dp</item>
+    <item name="android:textColor">?android:attr/textColorSecondary</item>
+    <item name="android:textSize">16sp</item>
+  </style>
+  <style name="Widget.U2020.Debug.RowValue" parent="Widget.U2020.Debug.RowWidget">
+    <item name="android:textColor">?android:attr/textColorPrimary</item>
+    <item name="android:textSize">16sp</item>
+  </style>
+
+</resources>
