@@ -5,7 +5,6 @@ import android.content.Context;
 
 import javax.inject.Inject;
 
-import ru.ltst.u2020mvp.data.LumberYard;
 import ru.ltst.u2020mvp.ui.ActivityHierarchyServer;
 import timber.log.Timber;
 
@@ -14,8 +13,6 @@ import static timber.log.Timber.DebugTree;
 public class U2020App extends Application {
     private U2020Component component;
 
-    @Inject
-    LumberYard lumberYard;
     @Inject
     ActivityHierarchyServer activityHierarchyServer;
 
@@ -31,9 +28,6 @@ public class U2020App extends Application {
         }
 
         buildComponentAndInject();
-
-        lumberYard.cleanUp();
-        Timber.plant(lumberYard.tree());
 
         registerActivityLifecycleCallbacks(activityHierarchyServer);
     }
