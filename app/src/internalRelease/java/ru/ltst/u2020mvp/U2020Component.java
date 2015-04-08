@@ -17,7 +17,7 @@ public interface U2020Component extends InternalU2020Graph {
      */
     final class Initializer {
         static U2020Component init(U2020App app) {
-            return Dagger_U2020Component.builder()
+            return DaggerU2020Component.builder()
                     .u2020AppModule(new U2020AppModule(app))
                     .build();
         }

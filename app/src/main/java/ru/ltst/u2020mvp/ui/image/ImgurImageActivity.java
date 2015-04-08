@@ -41,7 +41,7 @@ public class ImgurImageActivity extends BaseActivity implements HasComponent<Img
 
     @Override
     protected void onCreateComponent(U2020Component u2020Component) {
-        imgurImageComponent = Dagger_ImgurImageComponent.builder().
+        imgurImageComponent = DaggerImgurImageComponent.builder().
                 u2020Component(u2020Component).
                 imgurImageModule(new ImgurImageModule(imageId)).build();
         imgurImageComponent.inject(this);
