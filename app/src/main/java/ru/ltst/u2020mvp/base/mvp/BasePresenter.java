@@ -16,24 +16,20 @@ public abstract class BasePresenter<V extends BaseView> {
     public final void takeView(V view) {
         if (view == null) throw new NullPointerException("new view must not be null");
 
-        if (this.view != view) {
-            if (this.view != null) dropView(this.view.get());
+        if (this.view != null) dropView(this.view.get());
 
-            this.view = new WeakReference<>(view);
-            if (!loaded) {
-                loaded = true;
-                onLoad();
-            }
+        this.view = new WeakReference<>(view);
+        if (!loaded) {
+            loaded = true;
+            onLoad();
         }
     }
 
     public final void dropView(V view) {
         if (view == null) throw new NullPointerException("dropped view must not be null");
-        if (view == this.view) {
-            loaded = false;
-            this.view = null;
-            onDestroy();
-        }
+        loaded = false;
+        this.view = null;
+        onDestroy();
     }
 
     protected final V getView() {
