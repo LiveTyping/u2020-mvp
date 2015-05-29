@@ -18,7 +18,6 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 repositories {
     mavenCentral()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
@@ -104,11 +103,11 @@ configurations {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:22.0.0'
-    compile 'com.android.support:support-annotations:22.0.0'
-    compile "com.android.support:appcompat-v7:22.0.0"
-    compile 'com.android.support:recyclerview-v7:22.0.0'
-    compile 'com.android.support:cardview-v7:22.0.0'
+    compile 'com.android.support:support-v4:22.2.0'
+    compile 'com.android.support:support-annotations:22.2.0'
+    compile "com.android.support:appcompat-v7:22.2.0"
+    compile 'com.android.support:recyclerview-v7:22.2.0'
+    compile 'com.android.support:cardview-v7:22.2.0'
 
     compile 'com.google.dagger:dagger:2.0'
     apt 'com.google.dagger:dagger-compiler:2.0'
