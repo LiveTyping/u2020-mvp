@@ -20,7 +20,6 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 repositories {
     mavenCentral()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
@@ -29,12 +28,12 @@ def buildTime = date.format("dd.MM.yy", TimeZone.getTimeZone("UTC"))
 def buildTimeInternal = date.format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone("UTC"))
 
 android {
-    compileSdkVersion COMPILE_SDK_VERSION as int
+    compileSdkVersion COMPILE_SDK_VERSION as String
     buildToolsVersion BUILD_TOOLS_VERSION as String
 
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION as int
-        targetSdkVersion TARGET_SDK_VERSION as int
+        targetSdkVersion TARGET_SDK_VERSION as String
 
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
@@ -105,39 +104,39 @@ configurations {
     internalDebugCompile
 }
 
-    dependencies {
-        compile "com.android.support:support-v4:${SUPPORT_V4_VERSION}"
-        compile "com.android.support:support-annotations:${SUPPORT_V7_VERSION}"
-        compile "com.android.support:appcompat-v7:${SUPPORT_V7_VERSION}"
-        compile "com.android.support:recyclerview-v7:${SUPPORT_V7_VERSION}"
-        compile "com.android.support:cardview-v7:${SUPPORT_V7_VERSION}"
+dependencies {
+    compile "com.android.support:support-v4:${SUPPORT_V4_VERSION}"
+    compile "com.android.support:support-annotations:${SUPPORT_V7_VERSION}"
+    compile "com.android.support:appcompat-v7:${SUPPORT_V7_VERSION}"
+    compile "com.android.support:recyclerview-v7:${SUPPORT_V7_VERSION}"
+    compile "com.android.support:cardview-v7:${SUPPORT_V7_VERSION}"
 
-        compile 'com.google.dagger:dagger:2.0'
-        apt 'com.google.dagger:dagger-compiler:2.0'
-        provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'com.google.dagger:dagger:2.0'
+    apt 'com.google.dagger:dagger-compiler:2.0'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
 
-        compile 'com.squareup.okhttp:okhttp:2.3.0'
-        compile 'com.squareup.picasso:picasso:2.5.0'
-        compile 'com.squareup.retrofit:retrofit:1.9.0'
-        internalDebugCompile 'com.squareup.retrofit:retrofit-mock:1.9.0'
+    compile 'com.squareup.okhttp:okhttp:2.3.0'
+    compile 'com.squareup.picasso:picasso:2.5.0'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    internalDebugCompile 'com.squareup.retrofit:retrofit-mock:1.9.0'
 
-        compile 'com.jakewharton:butterknife:6.1.0'
-        compile 'com.jakewharton.timber:timber:2.7.1'
-        internalDebugCompile 'com.jakewharton.madge:madge:1.1.1'
-        internalDebugCompile 'com.jakewharton.scalpel:scalpel:1.1.1'
+    compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.jakewharton.timber:timber:2.7.1'
+    internalDebugCompile 'com.jakewharton.madge:madge:1.1.1'
+    internalDebugCompile 'com.jakewharton.scalpel:scalpel:1.1.1'
 
-        compile 'io.reactivex:rxjava:1.0.8'
-        compile 'io.reactivex:rxandroid:0.24.0'
+    compile 'io.reactivex:rxjava:1.0.8'
+    compile 'io.reactivex:rxandroid:0.24.0'
 
-        internalCompile 'com.mattprecious.telescope:telescope:1.4.0@aar'
+    internalCompile 'com.mattprecious.telescope:telescope:1.4.0@aar'
 
-        // Espresso 2 Dependencies
-        androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
-        androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
-        androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.0') {
-            exclude module: 'support-annotations'
-        }
+    // Espresso 2 Dependencies
+    androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
+    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.0') {
+        exclude module: 'support-annotations'
     }
+}
 
 // change apk name
 android.applicationVariants.all { variant ->
