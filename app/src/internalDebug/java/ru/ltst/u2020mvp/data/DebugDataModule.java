@@ -26,7 +26,7 @@ import ru.ltst.u2020mvp.data.prefs.IntPreference;
 import ru.ltst.u2020mvp.data.prefs.NetworkProxyPreference;
 import ru.ltst.u2020mvp.data.prefs.RxSharedPreferences;
 import ru.ltst.u2020mvp.data.prefs.StringPreference;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
+import ru.ltst.u2020mvp.ApplicationScope;
 import rx.Observable;
 import timber.log.Timber;
 

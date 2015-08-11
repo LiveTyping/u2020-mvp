@@ -19,7 +19,7 @@ import javax.inject.Inject;
 
 import okio.BufferedSink;
 import okio.Okio;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
+import ru.ltst.u2020mvp.ApplicationScope;
 import rx.Observable;
 import rx.Subscriber;
 import rx.subjects.PublishSubject;

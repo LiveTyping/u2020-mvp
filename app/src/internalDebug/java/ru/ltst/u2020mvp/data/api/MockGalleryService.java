@@ -8,7 +8,7 @@ import ru.ltst.u2020mvp.data.api.model.request.Section;
 import ru.ltst.u2020mvp.data.api.model.request.Sort;
 import ru.ltst.u2020mvp.data.api.model.response.Gallery;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
+import ru.ltst.u2020mvp.ApplicationScope;
 import rx.Observable;
 
 @ApplicationScope

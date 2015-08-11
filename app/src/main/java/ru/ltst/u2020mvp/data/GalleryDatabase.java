@@ -12,7 +12,7 @@ import ru.ltst.u2020mvp.data.api.model.request.Sort;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.data.api.transforms.GalleryToImageList;
 import ru.ltst.u2020mvp.data.rx.EndObserver;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
+import ru.ltst.u2020mvp.ApplicationScope;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;

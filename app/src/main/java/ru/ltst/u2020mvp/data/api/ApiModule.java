@@ -8,7 +8,7 @@ import retrofit.Endpoint;
 import retrofit.RestAdapter;
 import retrofit.client.Client;
 import retrofit.client.OkClient;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
+import ru.ltst.u2020mvp.ApplicationScope;
 
 @Module
 public final class ApiModule {

@@ -15,7 +15,7 @@ import ru.ltst.u2020mvp.data.api.model.MockImageLoader;
 import ru.ltst.u2020mvp.data.api.model.request.Section;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.data.api.model.response.ImageResponse;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
+import ru.ltst.u2020mvp.ApplicationScope;
 import timber.log.Timber;
 
 @ApplicationScope

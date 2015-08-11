@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import ru.ltst.u2020mvp.data.Clock;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
+import ru.ltst.u2020mvp.ApplicationScope;
 import timber.log.Timber;
 
 /**

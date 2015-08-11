@@ -24,7 +24,7 @@ import ru.ltst.u2020mvp.data.ScalpelEnabled;
 import ru.ltst.u2020mvp.data.ScalpelWireframeEnabled;
 import ru.ltst.u2020mvp.ui.ActivityHierarchyServer;
 import ru.ltst.u2020mvp.ui.AppContainer;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
+import ru.ltst.u2020mvp.ApplicationScope;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;

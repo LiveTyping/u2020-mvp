@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import dagger.Module;
 import dagger.Provides;
+import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.base.navigation.activity.ActivityScreenSwitcher;
 import ru.ltst.u2020mvp.ui.annotation.ActivityScreenSwitcherServer;
 
