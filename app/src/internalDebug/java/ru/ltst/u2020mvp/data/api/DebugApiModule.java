@@ -11,11 +11,9 @@ import retrofit.RestAdapter;
 import retrofit.android.AndroidMockValuePersistence;
 import ru.ltst.u2020mvp.data.ApiEndpoint;
 import ru.ltst.u2020mvp.data.IsMockMode;
-import ru.ltst.u2020mvp.data.api.*;
-import ru.ltst.u2020mvp.data.api.MockGalleryService;
 import ru.ltst.u2020mvp.data.api.model.MockImageService;
 import ru.ltst.u2020mvp.data.prefs.StringPreference;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
+import ru.ltst.u2020mvp.ApplicationScope;
 
 @Module(includes = ApiModule.class)
 public final class DebugApiModule {

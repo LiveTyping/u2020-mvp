@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.data.LumberYard;
 import ru.ltst.u2020mvp.ui.bugreport.BugReportLens;

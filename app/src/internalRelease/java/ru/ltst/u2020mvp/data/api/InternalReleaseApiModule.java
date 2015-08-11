@@ -5,7 +5,7 @@ import dagger.Provides;
 import retrofit.Endpoint;
 import retrofit.Endpoints;
 import retrofit.RestAdapter;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
+import ru.ltst.u2020mvp.ApplicationScope;
 
 @Module(includes = ApiModule.class)
 public final class InternalReleaseApiModule {

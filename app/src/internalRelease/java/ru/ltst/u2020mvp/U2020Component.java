@@ -2,7 +2,6 @@ package ru.ltst.u2020mvp;
 
 import dagger.Component;
 import ru.ltst.u2020mvp.data.InternalReleaseDataModule;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
 import ru.ltst.u2020mvp.ui.InternalReleaseUiModule;
 
 /**

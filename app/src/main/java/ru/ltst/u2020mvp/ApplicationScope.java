@@ -1,4 +1,4 @@
-package ru.ltst.u2020mvp.ui;
+package ru.ltst.u2020mvp;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

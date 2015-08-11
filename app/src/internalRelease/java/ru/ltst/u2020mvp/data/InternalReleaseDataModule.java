@@ -10,7 +10,7 @@ import com.squareup.picasso.Picasso;
 import dagger.Module;
 import dagger.Provides;
 import ru.ltst.u2020mvp.data.api.InternalReleaseApiModule;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
+import ru.ltst.u2020mvp.ApplicationScope;
 import timber.log.Timber;
 
 @Module(includes = { DataModule.class, InternalReleaseApiModule.class })

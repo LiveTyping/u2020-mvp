@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 import javax.inject.Inject;
 
 import ru.ltst.u2020mvp.data.api.model.response.Image;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
+import ru.ltst.u2020mvp.ApplicationScope;
 
 @ApplicationScope
 public final class MockImageLoader {

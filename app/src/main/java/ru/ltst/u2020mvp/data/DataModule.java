@@ -11,7 +11,7 @@ import java.io.File;
 import dagger.Module;
 import dagger.Provides;
 import ru.ltst.u2020mvp.data.api.ApiModule;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
+import ru.ltst.u2020mvp.ApplicationScope;
 
 import static android.content.Context.MODE_PRIVATE;
 import static java.util.concurrent.TimeUnit.SECONDS;

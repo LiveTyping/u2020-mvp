@@ -3,7 +3,7 @@ package ru.ltst.u2020mvp.data.api;
 import javax.inject.Inject;
 
 import retrofit.RequestInterceptor;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
+import ru.ltst.u2020mvp.ApplicationScope;
 
 @ApplicationScope
 public final class ApiHeaders implements RequestInterceptor {
