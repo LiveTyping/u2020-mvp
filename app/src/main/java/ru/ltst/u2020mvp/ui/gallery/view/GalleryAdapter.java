@@ -7,13 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import ru.ltst.u2020mvp.R;
-import ru.ltst.u2020mvp.data.api.model.response.Image;
-import ru.ltst.u2020mvp.ui.misc.BindableAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
 import java.util.List;
+
+import ru.ltst.u2020mvp.R;
+import ru.ltst.u2020mvp.data.api.model.response.Image;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
     private List<Image> images = Collections.emptyList();

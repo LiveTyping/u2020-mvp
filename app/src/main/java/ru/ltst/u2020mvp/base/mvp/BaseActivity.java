@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import ru.ltst.u2020mvp.U2020App;
 import ru.ltst.u2020mvp.U2020Component;
 import ru.ltst.u2020mvp.ui.AppContainer;
-import ru.ltst.u2020mvp.base.navigation.activity.ActivityScreenSwitcher;
 
 public abstract class BaseActivity extends ActionBarActivity {
 
