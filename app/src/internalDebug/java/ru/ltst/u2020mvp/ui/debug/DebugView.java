@@ -38,7 +38,7 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 import retrofit.MockRestAdapter;
 import retrofit.RestAdapter;
@@ -70,91 +70,91 @@ import static butterknife.ButterKnife.findById;
 public final class DebugView extends FrameLayout {
     private static final DateFormat DATE_DISPLAY_FORMAT =
             new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.US);
-    @InjectView(R.id.debug_contextual_title)
+    @Bind(R.id.debug_contextual_title)
     View contextualTitleView;
 
-    @InjectView(R.id.debug_contextual_list)
+    @Bind(R.id.debug_contextual_list)
     LinearLayout contextualListView;
-    @InjectView(R.id.debug_network_endpoint)
+    @Bind(R.id.debug_network_endpoint)
     Spinner endpointView;
 
-    @InjectView(R.id.debug_network_endpoint_edit)
+    @Bind(R.id.debug_network_endpoint_edit)
     View endpointEditView;
-    @InjectView(R.id.debug_network_delay)
+    @Bind(R.id.debug_network_delay)
     Spinner networkDelayView;
-    @InjectView(R.id.debug_network_variance)
+    @Bind(R.id.debug_network_variance)
     Spinner networkVarianceView;
-    @InjectView(R.id.debug_network_error)
+    @Bind(R.id.debug_network_error)
     Spinner networkErrorView;
-    @InjectView(R.id.debug_network_proxy)
+    @Bind(R.id.debug_network_proxy)
     Spinner networkProxyView;
-    @InjectView(R.id.debug_network_logging)
+    @Bind(R.id.debug_network_logging)
     Spinner networkLoggingView;
 
-    @InjectView(R.id.debug_ui_animation_speed)
+    @Bind(R.id.debug_ui_animation_speed)
     Spinner uiAnimationSpeedView;
 
-    @InjectView(R.id.debug_ui_pixel_grid)
+    @Bind(R.id.debug_ui_pixel_grid)
     Switch uiPixelGridView;
-    @InjectView(R.id.debug_ui_pixel_ratio)
+    @Bind(R.id.debug_ui_pixel_ratio)
     Switch uiPixelRatioView;
-    @InjectView(R.id.debug_ui_scalpel)
+    @Bind(R.id.debug_ui_scalpel)
     Switch uiScalpelView;
-    @InjectView(R.id.debug_ui_scalpel_wireframe)
+    @Bind(R.id.debug_ui_scalpel_wireframe)
     Switch uiScalpelWireframeView;
-    @InjectView(R.id.debug_build_name)
+    @Bind(R.id.debug_build_name)
     TextView buildNameView;
 
-    @InjectView(R.id.debug_build_code)
+    @Bind(R.id.debug_build_code)
     TextView buildCodeView;
-    @InjectView(R.id.debug_build_sha)
+    @Bind(R.id.debug_build_sha)
     TextView buildShaView;
-    @InjectView(R.id.debug_build_date)
+    @Bind(R.id.debug_build_date)
     TextView buildDateView;
-    @InjectView(R.id.debug_device_make)
+    @Bind(R.id.debug_device_make)
     TextView deviceMakeView;
 
-    @InjectView(R.id.debug_device_model)
+    @Bind(R.id.debug_device_model)
     TextView deviceModelView;
-    @InjectView(R.id.debug_device_resolution)
+    @Bind(R.id.debug_device_resolution)
     TextView deviceResolutionView;
-    @InjectView(R.id.debug_device_density)
+    @Bind(R.id.debug_device_density)
     TextView deviceDensityView;
-    @InjectView(R.id.debug_device_release)
+    @Bind(R.id.debug_device_release)
     TextView deviceReleaseView;
-    @InjectView(R.id.debug_device_api)
+    @Bind(R.id.debug_device_api)
     TextView deviceApiView;
-    @InjectView(R.id.debug_picasso_indicators)
+    @Bind(R.id.debug_picasso_indicators)
     Switch picassoIndicatorView;
 
-    @InjectView(R.id.debug_picasso_cache_size)
+    @Bind(R.id.debug_picasso_cache_size)
     TextView picassoCacheSizeView;
-    @InjectView(R.id.debug_picasso_cache_hit)
+    @Bind(R.id.debug_picasso_cache_hit)
     TextView picassoCacheHitView;
-    @InjectView(R.id.debug_picasso_cache_miss)
+    @Bind(R.id.debug_picasso_cache_miss)
     TextView picassoCacheMissView;
-    @InjectView(R.id.debug_picasso_decoded)
+    @Bind(R.id.debug_picasso_decoded)
     TextView picassoDecodedView;
-    @InjectView(R.id.debug_picasso_decoded_total)
+    @Bind(R.id.debug_picasso_decoded_total)
     TextView picassoDecodedTotalView;
-    @InjectView(R.id.debug_picasso_decoded_avg)
+    @Bind(R.id.debug_picasso_decoded_avg)
     TextView picassoDecodedAvgView;
-    @InjectView(R.id.debug_picasso_transformed)
+    @Bind(R.id.debug_picasso_transformed)
     TextView picassoTransformedView;
-    @InjectView(R.id.debug_picasso_transformed_total)
+    @Bind(R.id.debug_picasso_transformed_total)
     TextView picassoTransformedTotalView;
-    @InjectView(R.id.debug_picasso_transformed_avg)
+    @Bind(R.id.debug_picasso_transformed_avg)
     TextView picassoTransformedAvgView;
-    @InjectView(R.id.debug_okhttp_cache_max_size)
+    @Bind(R.id.debug_okhttp_cache_max_size)
     TextView okHttpCacheMaxSizeView;
 
-    @InjectView(R.id.debug_okhttp_cache_write_error)
+    @Bind(R.id.debug_okhttp_cache_write_error)
     TextView okHttpCacheWriteErrorView;
-    @InjectView(R.id.debug_okhttp_cache_request_count)
+    @Bind(R.id.debug_okhttp_cache_request_count)
     TextView okHttpCacheRequestCountView;
-    @InjectView(R.id.debug_okhttp_cache_network_count)
+    @Bind(R.id.debug_okhttp_cache_network_count)
     TextView okHttpCacheNetworkCountView;
-    @InjectView(R.id.debug_okhttp_cache_hit_count)
+    @Bind(R.id.debug_okhttp_cache_hit_count)
     TextView okHttpCacheHitCountView;
     @Inject
     OkHttpClient client;
@@ -198,7 +198,7 @@ public final class DebugView extends FrameLayout {
 
         // Inflate all of the controls and inject them.
         LayoutInflater.from(context).inflate(R.layout.debug_view_content, this);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         Set<ContextualDebugActions.DebugAction<?>> debugActions = Collections.emptySet();
         contextualDebugActions = new ContextualDebugActions(this, debugActions);

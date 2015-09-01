@@ -19,7 +19,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.base.mvp.BaseView;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
@@ -36,13 +36,13 @@ import rx.functions.Action0;
 public class GalleryView extends LinearLayout implements BaseView {
     public static final int COLUMNS_COUNT = 2;
 
-    @InjectView(R.id.gallery_grid)
+    @Bind(R.id.gallery_grid)
     RecyclerView galleryView;
-    @InjectView(R.id.gallery_animator)
+    @Bind(R.id.gallery_animator)
     BetterViewAnimator animator;
-    @InjectView(R.id.gallery_toolbar)
+    @Bind(R.id.gallery_toolbar)
     Toolbar toolbar;
-    @InjectView(R.id.gallery_swipe_refresh)
+    @Bind(R.id.gallery_swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Inject
@@ -84,7 +84,7 @@ public class GalleryView extends LinearLayout implements BaseView {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         final StaggeredGridLayoutManager layout = new StaggeredGridLayoutManager(COLUMNS_COUNT, StaggeredGridLayoutManager.VERTICAL);
         galleryView.setLayoutManager(layout);
         galleryView.setItemAnimator(new DefaultItemAnimator());

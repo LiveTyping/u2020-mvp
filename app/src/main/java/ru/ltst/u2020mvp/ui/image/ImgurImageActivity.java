@@ -9,7 +9,7 @@ import android.view.View;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.U2020Component;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
@@ -26,7 +26,7 @@ public class ImgurImageActivity extends BaseActivity implements HasComponent<Img
 
     @Inject Presenter presenter;
 
-    @InjectView(R.id.imgur_image_view)
+    @Bind(R.id.imgur_image_view)
     ImgurImageView view;
 
     private String imageId;
@@ -35,7 +35,7 @@ public class ImgurImageActivity extends BaseActivity implements HasComponent<Img
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         ActivityScreen.setTransitionView(this.view);
     }
 

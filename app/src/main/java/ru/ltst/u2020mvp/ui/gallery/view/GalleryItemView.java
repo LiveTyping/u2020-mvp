@@ -15,13 +15,13 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import ru.ltst.u2020mvp.ui.misc.AspectRatioImageView;
 
 public class GalleryItemView extends CardView {
-    @InjectView(R.id.gallery_image_image)
+    @Bind(R.id.gallery_image_image)
     AspectRatioImageView image;
-    @InjectView(R.id.gallery_image_title)
+    @Bind(R.id.gallery_image_title)
     TextView title;
 
     public GalleryItemView(Context context, AttributeSet attrs) {
@@ -31,7 +31,7 @@ public class GalleryItemView extends CardView {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
     public void bindTo(final Image item, final Picasso picasso) {

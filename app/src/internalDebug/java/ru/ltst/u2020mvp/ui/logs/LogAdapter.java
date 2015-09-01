@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.data.LumberYard.Entry;
 import ru.ltst.u2020mvp.ui.misc.BindableAdapter;
@@ -69,16 +69,16 @@ final class LogAdapter extends BindableAdapter<Entry> implements Action1<Entry> 
 
     static final class LogItemViewHolder {
         private final View rootView;
-        @InjectView(R.id.debug_log_level)
+        @Bind(R.id.debug_log_level)
         TextView levelView;
-        @InjectView(R.id.debug_log_tag)
+        @Bind(R.id.debug_log_tag)
         TextView tagView;
-        @InjectView(R.id.debug_log_message)
+        @Bind(R.id.debug_log_message)
         TextView messageView;
 
         public LogItemViewHolder(View rootView) {
             this.rootView = rootView;
-            ButterKnife.inject(this, rootView);
+            ButterKnife.bind(this, rootView);
         }
 
         public void setEntry(Entry entry) {

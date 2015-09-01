@@ -9,19 +9,19 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.ui.misc.EmptyTextWatcher;
 import ru.ltst.u2020mvp.util.Strings;
 
 public final class BugReportView extends LinearLayout {
-    @InjectView(R.id.title)
+    @Bind(R.id.title)
     EditText titleView;
-    @InjectView(R.id.description)
+    @Bind(R.id.description)
     EditText descriptionView;
-    @InjectView(R.id.screenshot)
+    @Bind(R.id.screenshot)
     CheckBox screenshotView;
-    @InjectView(R.id.logs)
+    @Bind(R.id.logs)
     CheckBox logsView;
 
     public interface ReportDetailsListener {
@@ -37,7 +37,7 @@ public final class BugReportView extends LinearLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         titleView.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
