@@ -9,7 +9,7 @@ import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.base.mvp.BaseView;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
@@ -26,13 +26,13 @@ public class ImgurImageView extends BetterViewAnimator implements BaseView {
         component.inject(this);
     }
 
-    @InjectView(R.id.imgur_image_content)
+    @Bind(R.id.imgur_image_content)
     ImageView imageView;
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
     public void bindTo(Image image) {

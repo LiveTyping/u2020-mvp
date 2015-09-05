@@ -8,7 +8,7 @@ import com.mattprecious.telescope.TelescopeLayout;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.data.LumberYard;
@@ -23,13 +23,13 @@ public final class TelescopeAppContainer implements AppContainer {
         this.lumberYard = lumberYard;
     }
 
-    @InjectView(R.id.telescope_container)
+    @Bind(R.id.telescope_container)
     TelescopeLayout telescopeLayout;
 
     @Override
     public ViewGroup get(Activity activity) {
         activity.setContentView(R.layout.internal_activity_frame);
-        ButterKnife.inject(this, activity);
+        ButterKnife.bind(this, activity);
 
         TelescopeLayout.cleanUp(activity); // Clean up any old screenshots.
         telescopeLayout.setLens(new BugReportLens(activity, lumberYard));

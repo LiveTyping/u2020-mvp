@@ -16,7 +16,7 @@ import com.jakewharton.scalpel.ScalpelFrameLayout;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.data.PixelGridEnabled;
 import ru.ltst.u2020mvp.data.PixelRatioEnabled;
@@ -43,10 +43,10 @@ public final class DebugAppContainer implements AppContainer {
     private final Observable<Boolean> scalpelWireframeEnabled;
 
     static class ViewHolder {
-        @InjectView(R.id.debug_drawer_layout) DrawerLayout drawerLayout;
-        @InjectView(R.id.debug_drawer) ViewGroup debugDrawer;
-        @InjectView(R.id.madge_container) MadgeFrameLayout madgeFrameLayout;
-        @InjectView(R.id.debug_content) ScalpelFrameLayout content;
+        @Bind(R.id.debug_drawer_layout) DrawerLayout drawerLayout;
+        @Bind(R.id.debug_drawer) ViewGroup debugDrawer;
+        @Bind(R.id.madge_container) MadgeFrameLayout madgeFrameLayout;
+        @Bind(R.id.debug_content) ScalpelFrameLayout content;
     }
 
     @Inject
@@ -64,7 +64,7 @@ public final class DebugAppContainer implements AppContainer {
     public ViewGroup get(final Activity activity) {
         activity.setContentView(R.layout.debug_activity_frame);
         final ViewHolder viewHolder = new ViewHolder();
-        ButterKnife.inject(viewHolder, activity);
+        ButterKnife.bind(viewHolder, activity);
 
         final Context drawerContext = new ContextThemeWrapper(activity, R.style.Theme_U2020_Debug);
         final DebugView debugView = new DebugView(drawerContext);
