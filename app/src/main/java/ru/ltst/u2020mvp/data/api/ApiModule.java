@@ -1,13 +1,16 @@
 package ru.ltst.u2020mvp.data.api;
 
+import com.squareup.moshi.Moshi;
+import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.Endpoint;
-import retrofit.RestAdapter;
-import retrofit.client.Client;
-import retrofit.client.OkClient;
+import retrofit.MoshiConverterFactory;
+import retrofit.Retrofit;
+import retrofit.RxJavaCallAdapterFactory;
 import ru.ltst.u2020mvp.ApplicationScope;
 
 @Module
@@ -24,17 +27,19 @@ public final class ApiModule {
 
     @Provides
     @ApplicationScope
-    Client provideClient(OkHttpClient client) {
-        return new OkClient(client);
-    }
-
-    @Provides
-    @ApplicationScope
-    RestAdapter provideRestAdapter(Endpoint endpoint, Client client, ApiHeaders headers) {
-        return new RestAdapter.Builder() //
-                .setClient(client) //
-                .setEndpoint(endpoint) //
-                .setRequestInterceptor(headers) //
+    Retrofit provideRetrofit(HttpUrl baseUrl, @Named("Api") OkHttpClient client, Moshi moshi) {
+        return new Retrofit.Builder() //
+                .client(client) //
+                .baseUrl(baseUrl) //
+                .addConverterFactory(MoshiConverterFactory.create(moshi)) //
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create()) //
                 .build();
     }
+
+    static OkHttpClient createApiClient(OkHttpClient client, ApiHeaders apiHeaders) {
+        client = client.clone();
+        client.interceptors().add(apiHeaders);
+        return client;
+    }
+
 }

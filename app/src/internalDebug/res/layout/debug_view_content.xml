@@ -51,7 +51,7 @@
       android:layout_gravity="start|fill_horizontal"
       android:text="Contextual Actions"
       android:visibility="gone"
-      style="@style/Widget.U2020.Debug.Header"
+      style="@style/Widget.U2020.DebugDrawer.Header"
       />
 
   <LinearLayout
@@ -70,13 +70,13 @@
       android:layout_width="0dp"
       android:layout_gravity="start|fill_horizontal"
       android:text="Network"
-      style="@style/Widget.U2020.Debug.Header"
+      style="@style/Widget.U2020.DebugDrawer.Header"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Endpoint"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <LinearLayout
       android:orientation="horizontal"
@@ -104,7 +104,7 @@
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Delay"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <Spinner
       android:id="@+id/debug_network_delay"
@@ -115,7 +115,7 @@
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Variance"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <Spinner
       android:id="@+id/debug_network_variance"
@@ -126,7 +126,7 @@
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Error"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <Spinner
       android:id="@+id/debug_network_error"
@@ -137,7 +137,7 @@
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Proxy"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <Spinner
       android:id="@+id/debug_network_proxy"
@@ -148,7 +148,7 @@
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Logging"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <Spinner
       android:id="@+id/debug_network_logging"
@@ -156,7 +156,38 @@
       android:layout_gravity="start|center_vertical|fill_horizontal"
       />
 
+    <!-- MOCK BEHAVIOR SECTION -->
 
+    <TextView
+        android:layout_columnSpan="2"
+        android:layout_width="0dp"
+        android:layout_gravity="start|fill_horizontal"
+        android:text="Mock Behavior"
+        style="@style/Widget.U2020.DebugDrawer.Header"
+        />
+
+    <TextView
+        android:layout_gravity="start|center_vertical"
+        android:text="Capture intents"
+        style="@style/Widget.U2020.DebugDrawer.RowTitle"
+        />
+    <Switch
+        android:id="@+id/debug_capture_intents"
+        android:layout_gravity="start|center_vertical"
+        style="@style/Widget.U2020.DebugDrawer.RowWidget"
+        />
+
+    <TextView
+        android:layout_gravity="start|center_vertical"
+        android:text="Repositories"
+        style="@style/Widget.U2020.DebugDrawer.RowTitle"
+        />
+    <Spinner
+        android:id="@+id/debug_repositories_response"
+        android:layout_width="0dp"
+        android:layout_gravity="start|center_vertical|fill_horizontal"
+        />
+    
   <!-- USER INTERFACE SECTION -->
 
   <TextView
@@ -164,13 +195,13 @@
       android:layout_width="0dp"
       android:layout_gravity="start|fill_horizontal"
       android:text="User Interface"
-      style="@style/Widget.U2020.Debug.Header"
+      style="@style/Widget.U2020.DebugDrawer.Header"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Animations"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <Spinner
       android:id="@+id/debug_ui_animation_speed"
@@ -181,45 +212,45 @@
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Pixel Grid"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <Switch
       android:id="@+id/debug_ui_pixel_grid"
       android:layout_gravity="start|center_vertical"
-      style="@style/Widget.U2020.Debug.RowWidget"
+      style="@style/Widget.U2020.DebugDrawer.RowWidget"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Pixel Scale"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <Switch
       android:id="@+id/debug_ui_pixel_ratio"
       android:layout_gravity="start|center_vertical"
-      style="@style/Widget.U2020.Debug.RowWidget"
+      style="@style/Widget.U2020.DebugDrawer.RowWidget"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Scalpel"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <Switch
       android:id="@+id/debug_ui_scalpel"
       android:layout_gravity="start|center_vertical"
-      style="@style/Widget.U2020.Debug.RowWidget"
+      style="@style/Widget.U2020.DebugDrawer.RowWidget"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Wireframe"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <Switch
       android:id="@+id/debug_ui_scalpel_wireframe"
       android:layout_gravity="start|center_vertical"
-      style="@style/Widget.U2020.Debug.RowWidget"
+      style="@style/Widget.U2020.DebugDrawer.RowWidget"
       />
 
   <!-- LOGGING SECTION -->
@@ -229,7 +260,7 @@
       android:layout_width="0dp"
       android:layout_gravity="start|fill_horizontal"
       android:text="Logs"
-      style="@style/Widget.U2020.Debug.Header"
+      style="@style/Widget.U2020.DebugDrawer.Header"
       />
   <Button
       android:id="@+id/debug_logs_show"
@@ -247,55 +278,55 @@
       android:layout_width="0dp"
       android:layout_gravity="start|fill_horizontal"
       android:text="Build Information"
-      style="@style/Widget.U2020.Debug.Header"
+      style="@style/Widget.U2020.DebugDrawer.Header"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Name"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_build_name"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Code"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_build_code"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="SHA"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_build_sha"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Date"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_build_date"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <!-- DEVICE INFORMATION SECTION -->
@@ -305,79 +336,79 @@
       android:layout_width="0dp"
       android:layout_gravity="start|fill_horizontal"
       android:text="Device Information"
-      style="@style/Widget.U2020.Debug.Header"
+      style="@style/Widget.U2020.DebugDrawer.Header"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Make"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_device_make"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Model"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_device_model"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Resolution"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_device_resolution"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Density"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_device_density"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Release"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_device_release"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="API"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_device_api"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <!-- PICASSO SECTION -->
@@ -387,126 +418,126 @@
       android:layout_width="0dp"
       android:layout_gravity="start|fill_horizontal"
       android:text="Picasso"
-      style="@style/Widget.U2020.Debug.Header"
+      style="@style/Widget.U2020.DebugDrawer.Header"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Indicators"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <Switch
       android:id="@+id/debug_picasso_indicators"
       android:layout_gravity="start|center_vertical"
-      style="@style/Widget.U2020.Debug.RowWidget"
+      style="@style/Widget.U2020.DebugDrawer.RowWidget"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Cache"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_picasso_cache_size"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="   Hits"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_picasso_cache_hit"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="   Misses"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_picasso_cache_miss"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Decoded"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_picasso_decoded"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="   Total"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_picasso_decoded_total"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="   Average"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_picasso_decoded_avg"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Transformed"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_picasso_transformed"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="   Total"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_picasso_transformed_total"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="   Average"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_picasso_transformed_avg"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <!-- OKHTTP CACHE SECTION -->
@@ -516,67 +547,67 @@
       android:layout_width="0dp"
       android:layout_gravity="start|fill_horizontal"
       android:text="OkHttp Cache"
-      style="@style/Widget.U2020.Debug.Header"
+      style="@style/Widget.U2020.DebugDrawer.Header"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Max Size"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_okhttp_cache_max_size"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Write Errors"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_okhttp_cache_write_error"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="Request Count"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_okhttp_cache_request_count"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="   Network Count"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_okhttp_cache_network_count"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
   <TextView
       android:layout_gravity="start|center_vertical"
       android:text="   Hit Count"
-      style="@style/Widget.U2020.Debug.RowTitle"
+      style="@style/Widget.U2020.DebugDrawer.RowTitle"
       />
   <TextView
       android:id="@+id/debug_okhttp_cache_hit_count"
       android:layout_width="0dp"
       android:layout_gravity="start|center_vertical|fill_horizontal"
-      style="@style/Widget.U2020.Debug.RowValue"
+      style="@style/Widget.U2020.DebugDrawer.RowValue"
       />
 
 </GridLayout>

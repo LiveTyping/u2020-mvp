@@ -1,4 +1,4 @@
-package ru.ltst.u2020mvp.data.api.model;
+package ru.ltst.u2020mvp.data.api.mock;
 
 import android.app.Application;
 import android.content.res.AssetManager;

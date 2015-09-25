@@ -3,6 +3,7 @@ package ru.ltst.u2020mvp.data;
 import android.app.Application;
 import android.content.SharedPreferences;
 
+import com.squareup.moshi.Moshi;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -10,8 +11,8 @@ import java.io.File;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.ltst.u2020mvp.data.api.ApiModule;
 import ru.ltst.u2020mvp.ApplicationScope;
+import ru.ltst.u2020mvp.data.api.ApiModule;
 
 import static android.content.Context.MODE_PRIVATE;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -30,6 +31,20 @@ public final class DataModule {
     @ApplicationScope
     Clock provideClock() {
         return Clock.REAL;
+    }
+
+    @Provides
+    @ApplicationScope
+    IntentFactory provideIntentFactory() {
+        return IntentFactory.REAL;
+    }
+
+    @Provides
+    @ApplicationScope
+    Moshi provideMoshi() {
+        return new Moshi.Builder()
+                .add(new InstantAdapter())
+                .build();
     }
 
     static OkHttpClient createOkHttpClient(Application app) {

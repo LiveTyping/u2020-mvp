@@ -1,9 +1,12 @@
-package ru.ltst.u2020mvp.data.api;
+package ru.ltst.u2020mvp.data.api.mock;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import ru.ltst.u2020mvp.data.api.GalleryService;
+import ru.ltst.u2020mvp.data.api.ServerDatabase;
+import ru.ltst.u2020mvp.data.api.SortUtil;
 import ru.ltst.u2020mvp.data.api.model.request.Section;
 import ru.ltst.u2020mvp.data.api.model.request.Sort;
 import ru.ltst.u2020mvp.data.api.model.response.Gallery;
@@ -12,7 +15,7 @@ import ru.ltst.u2020mvp.ApplicationScope;
 import rx.Observable;
 
 @ApplicationScope
-final class MockGalleryService implements GalleryService {
+public final class MockGalleryService implements GalleryService {
     private static final Gallery BAD_REQUEST = new Gallery(200, false, null);
     private static final int PAGE_SIZE = 50;
 

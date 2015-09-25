@@ -14,44 +14,38 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Request;
 
 import java.io.IOException;
+import retrofit.mock.NetworkBehavior;
 
-import retrofit.MockRestAdapter;
-import ru.ltst.u2020mvp.data.DataModule;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * A Picasso {@link Downloader} which loads images from assets but attempts to emulate the
  * subtleties of a real HTTP client and its disk cache.
- * <p/>
+ * <p>
  * Images <em>must</em> be in the form {@code mock:///path/to/asset.png}.
  */
 public final class MockRequestHandler extends RequestHandler {
-    private final MockRestAdapter mockRestAdapter;
+    private final NetworkBehavior behavior;
     private final AssetManager assetManager;
 
-    /**
-     * Emulate the disk cache by storing the URLs in an LRU using its size as the value.
-     */
+    /** Emulate the disk cache by storing the URLs in an LRU using its size as the value. */
     private final LruCache<String, Long> emulatedDiskCache =
             new LruCache<String, Long>(DataModule.DISK_CACHE_SIZE) {
-                @Override
-                protected int sizeOf(String key, Long value) {
+                @Override protected int sizeOf(String key, Long value) {
                     return (int) Math.min(value.longValue(), Integer.MAX_VALUE);
                 }
             };
 
-    public MockRequestHandler(MockRestAdapter mockRestAdapter, AssetManager assetManager) {
-        this.mockRestAdapter = mockRestAdapter;
+    public MockRequestHandler(NetworkBehavior behavior, AssetManager assetManager) {
+        this.behavior = behavior;
         this.assetManager = assetManager;
     }
 
-    @Override
-    public boolean canHandleRequest(Request data) {
+    @Override public boolean canHandleRequest(Request data) {
         return "mock".equals(data.uri.getScheme());
     }
 
-
-    @Override
-    public Result load(Request request, int networkPolicy) throws IOException {
+    @Override public Result load(Request request, int networkPolicy) throws IOException {
         String imagePath = request.uri.getPath().substring(1); // Grab only the path sans leading slash.
 
         // Check the disk cache for the image. A non-null return value indicates a hit.
@@ -69,13 +63,13 @@ public final class MockRequestHandler extends RequestHandler {
 
         // If we got this far there was a cache miss and hitting the network is required. See if we need
         // to fake an network error.
-        if (mockRestAdapter.calculateIsFailure()) {
-            SystemClock.sleep(mockRestAdapter.calculateDelayForError());
+        if (behavior.calculateIsFailure()) {
+            SystemClock.sleep(behavior.calculateDelay(MILLISECONDS));
             throw new IOException("Fake network error!");
         }
 
         // We aren't throwing a network error so fake a round trip delay.
-        SystemClock.sleep(mockRestAdapter.calculateDelayForCall());
+        SystemClock.sleep(behavior.calculateDelay(MILLISECONDS));
 
         // Since we cache missed put it in the LRU.
         long size = assetManager.openFd(imagePath).getLength();
@@ -89,3 +83,4 @@ public final class MockRequestHandler extends RequestHandler {
         return BitmapFactory.decodeStream(assetManager.open(imagePath));
     }
 }
+

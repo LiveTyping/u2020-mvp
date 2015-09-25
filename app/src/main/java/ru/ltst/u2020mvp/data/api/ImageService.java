@@ -7,6 +7,6 @@ import retrofit.http.Path;
 import rx.Observable;
 
 public interface ImageService {
-    @GET("/image/{id}")
+    @GET("image/{id}")
     Observable<ImageResponse> image(@Path("id") String id);
 }

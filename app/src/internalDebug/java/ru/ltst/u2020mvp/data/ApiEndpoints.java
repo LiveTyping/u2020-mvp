@@ -4,8 +4,7 @@ import ru.ltst.u2020mvp.data.api.ApiModule;
 
 public enum ApiEndpoints {
     PRODUCTION("Production", ApiModule.PRODUCTION_API_URL),
-    // STAGING("Staging", "https://api.staging.imgur.com/3/"),
-    MOCK_MODE("Mock Mode", "mock://"),
+    MOCK_MODE("Mock Mode", "http://localhost/mock"),
     CUSTOM("Custom", null);
 
     public final String name;

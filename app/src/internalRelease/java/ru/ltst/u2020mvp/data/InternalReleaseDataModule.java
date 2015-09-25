@@ -15,6 +15,7 @@ import timber.log.Timber;
 
 @Module(includes = { DataModule.class, InternalReleaseApiModule.class })
 public class InternalReleaseDataModule {
+
     @Provides
     @ApplicationScope
     OkHttpClient provideOkHttpClient(Application app) {

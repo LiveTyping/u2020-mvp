@@ -1,54 +1,85 @@
 package ru.ltst.u2020mvp.data.api;
 
-import android.content.SharedPreferences;
+import com.squareup.okhttp.HttpUrl;
+import com.squareup.okhttp.OkHttpClient;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.Endpoint;
-import retrofit.Endpoints;
-import retrofit.MockRestAdapter;
-import retrofit.RestAdapter;
-import retrofit.android.AndroidMockValuePersistence;
+import retrofit.Retrofit;
+import retrofit.mock.MockRetrofit;
+import retrofit.mock.NetworkBehavior;
+import retrofit.mock.RxJavaBehaviorAdapter;
+import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.data.ApiEndpoint;
 import ru.ltst.u2020mvp.data.IsMockMode;
-import ru.ltst.u2020mvp.data.api.model.MockImageService;
+import ru.ltst.u2020mvp.data.NetworkDelay;
+import ru.ltst.u2020mvp.data.NetworkFailurePercent;
+import ru.ltst.u2020mvp.data.NetworkVariancePercent;
+import ru.ltst.u2020mvp.data.api.mock.MockGalleryService;
+import ru.ltst.u2020mvp.data.api.mock.MockImageService;
+import ru.ltst.u2020mvp.data.prefs.IntPreference;
+import ru.ltst.u2020mvp.data.prefs.LongPreference;
 import ru.ltst.u2020mvp.data.prefs.StringPreference;
-import ru.ltst.u2020mvp.ApplicationScope;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 @Module(includes = ApiModule.class)
 public final class DebugApiModule {
 
     @Provides
     @ApplicationScope
-    Endpoint provideEndpoint(@ApiEndpoint StringPreference apiEndpoint) {
-        return Endpoints.newFixedEndpoint(apiEndpoint.get());
+    HttpUrl provideHttpUrl(@ApiEndpoint StringPreference apiEndpoint) {
+        return HttpUrl.parse(apiEndpoint.get());
     }
 
     @Provides
     @ApplicationScope
-    MockRestAdapter provideMockRestAdapter(RestAdapter restAdapter, SharedPreferences preferences) {
-        MockRestAdapter mockRestAdapter = MockRestAdapter.from(restAdapter);
-        AndroidMockValuePersistence.install(mockRestAdapter, preferences);
-        return mockRestAdapter;
+    @Named("Api")
+    OkHttpClient provideApiClient(OkHttpClient client,
+                                  LoggingInterceptor loggingInterceptor,
+                                  ApiHeaders apiHeaders) {
+        client = ApiModule.createApiClient(client, apiHeaders);
+        client.interceptors().add(loggingInterceptor);
+        return client;
     }
 
     @Provides
     @ApplicationScope
-    GalleryService provideGalleryService(RestAdapter restAdapter, MockRestAdapter mockRestAdapter,
-                                         @IsMockMode boolean isMockMode, ru.ltst.u2020mvp.data.api.MockGalleryService mockService) {
+    NetworkBehavior provideBehavior(@NetworkDelay LongPreference networkDelay,
+                                    @NetworkFailurePercent IntPreference networkFailurePercent,
+                                    @NetworkVariancePercent IntPreference networkVariancePercent) {
+        NetworkBehavior behavior = NetworkBehavior.create();
+        behavior.setDelay(networkDelay.get(), MILLISECONDS);
+        behavior.setFailurePercent(networkFailurePercent.get());
+        behavior.setVariancePercent(networkVariancePercent.get());
+        return behavior;
+    }
+
+    @Provides
+    @ApplicationScope
+    MockRetrofit provideMockRetrofit(NetworkBehavior behavior) {
+        return new MockRetrofit(behavior, RxJavaBehaviorAdapter.create());
+    }
+
+    @Provides
+    @ApplicationScope
+    GalleryService provideGalleryService(Retrofit retrofit, MockRetrofit mockRetrofit,
+                                         @IsMockMode boolean isMockMode, MockGalleryService mockGalleryService) {
         if (isMockMode) {
-            return mockRestAdapter.create(GalleryService.class, mockService);
+            return mockRetrofit.create(GalleryService.class, mockGalleryService);
         }
-        return restAdapter.create(GalleryService.class);
+        return retrofit.create(GalleryService.class);
     }
 
     @Provides
     @ApplicationScope
-    ImageService provideImageService(RestAdapter restAdapter, MockRestAdapter mockRestAdapter,
-                                         @IsMockMode boolean isMockMode, MockImageService mockService) {
+    ImageService provideImageService(Retrofit retrofit, MockRetrofit mockRetrofit,
+                                     @IsMockMode boolean isMockMode, MockImageService mockImageService) {
         if (isMockMode) {
-            return mockRestAdapter.create(ImageService.class, mockService);
+            return mockRetrofit.create(ImageService.class, mockImageService);
         }
-        return restAdapter.create(ImageService.class);
+        return retrofit.create(ImageService.class);
     }
 }

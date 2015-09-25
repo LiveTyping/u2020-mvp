@@ -18,15 +18,16 @@ import javax.net.ssl.X509TrustManager;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.MockRestAdapter;
+import retrofit.mock.NetworkBehavior;
+import ru.ltst.u2020mvp.ApplicationScope;
+import ru.ltst.u2020mvp.IsInstrumentationTest;
 import ru.ltst.u2020mvp.data.api.DebugApiModule;
-import ru.ltst.u2020mvp.data.api.LoggingInterceptor;
 import ru.ltst.u2020mvp.data.prefs.BooleanPreference;
 import ru.ltst.u2020mvp.data.prefs.IntPreference;
+import ru.ltst.u2020mvp.data.prefs.LongPreference;
 import ru.ltst.u2020mvp.data.prefs.NetworkProxyPreference;
 import ru.ltst.u2020mvp.data.prefs.RxSharedPreferences;
 import ru.ltst.u2020mvp.data.prefs.StringPreference;
-import ru.ltst.u2020mvp.ApplicationScope;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -38,30 +39,30 @@ public final class DebugDataModule {
     private static final boolean DEFAULT_PIXEL_RATIO_ENABLED = false; // No pixel ratio overlay.
     private static final boolean DEFAULT_SCALPEL_ENABLED = false; // No crazy 3D view tree.
     private static final boolean DEFAULT_SCALPEL_WIREFRAME_ENABLED = false; // Draw views by
+    private static final boolean DEFAULT_SEEN_DEBUG_DRAWER = false; // Show debug drawer first time.
+    private static final boolean DEFAULT_CAPTURE_INTENTS = true; // Capture external intents.
 
     @Provides
     @ApplicationScope
-    OkHttpClient provideOkHttpClient(Application app, LoggingInterceptor loggingInterceptor) {
-        OkHttpClient client = DataModule.createOkHttpClient(app);
-        client.setSslSocketFactory(createBadSslSocketFactory());
-        client.interceptors().add(loggingInterceptor);
-        return client;
-    }
-
-    @Provides @ApplicationScope
-    @AnimationSpeed
-    IntPreference provideAnimationSpeed(SharedPreferences preferences) {
-        return new IntPreference(preferences, "debug_animation_speed", DEFAULT_ANIMATION_SPEED);
-    }
-
-    @Provides @ApplicationScope
     RxSharedPreferences provideRxSharedPreferences(SharedPreferences preferences) {
         return RxSharedPreferences.create(preferences);
     }
 
-    @Provides @ApplicationScope
-    NetworkProxyPreference provideNetworkProxy(SharedPreferences preferences) {
-        return new NetworkProxyPreference(preferences, "debug_network_proxy");
+    @Provides
+    @ApplicationScope
+    IntentFactory provideIntentFactory(@IsMockMode boolean isMockMode,
+                                       @CaptureIntents BooleanPreference captureIntents) {
+        return new DebugIntentFactory(IntentFactory.REAL, isMockMode, captureIntents);
+    }
+
+    @Provides
+    @ApplicationScope
+    OkHttpClient provideOkHttpClient(Application app,
+                                     NetworkProxyPreference networkProxy) {
+        OkHttpClient client = DataModule.createOkHttpClient(app);
+        client.setSslSocketFactory(createBadSslSocketFactory());
+        client.setProxy(networkProxy.getProxy());
+        return client;
     }
 
     @Provides
@@ -73,26 +74,55 @@ public final class DebugDataModule {
 
     @Provides
     @ApplicationScope
-    @ru.ltst.u2020mvp.data.IsMockMode
-    boolean provideIsMockMode(@ApiEndpoint StringPreference endpoint) {
-        return ApiEndpoints.isMockMode(endpoint.get());
+    @IsMockMode
+    boolean provideIsMockMode(@ApiEndpoint StringPreference endpoint,
+                              @IsInstrumentationTest boolean isInstrumentationTest) {
+        // Running in an instrumentation forces mock mode.
+        return isInstrumentationTest || ApiEndpoints.isMockMode(endpoint.get());
     }
 
     @Provides
     @ApplicationScope
-    Picasso providePicasso(OkHttpClient client, MockRestAdapter mockRestAdapter,
-                           @IsMockMode boolean isMockMode, Application app) {
-        Picasso.Builder builder = new Picasso.Builder(app).downloader(new OkHttpDownloader(client));
-        if (isMockMode) {
-            builder.addRequestHandler(new MockRequestHandler(mockRestAdapter, app.getAssets()));
-        }
-        builder.listener(new Picasso.Listener() {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                Timber.e(exception, "Error while loading image " + uri);
-            }
-        });
-        return builder.build();
+    @NetworkDelay
+    LongPreference provideNetworkDelay(
+            SharedPreferences preferences) {
+        return new LongPreference(preferences, "debug_network_delay", 2000);
+    }
+
+    @Provides
+    @ApplicationScope
+    @NetworkFailurePercent
+    IntPreference provideNetworkFailurePercent(
+            SharedPreferences preferences) {
+        return new IntPreference(preferences, "debug_network_failure_percent", 3);
+    }
+
+    @Provides
+    @ApplicationScope
+    @NetworkVariancePercent
+    IntPreference provideNetworkVariancePercent(
+            SharedPreferences preferences) {
+        return new IntPreference(preferences, "debug_network_variance_percent", 40);
+    }
+
+    @Provides
+    @ApplicationScope
+    NetworkProxyPreference provideNetworkProxy(SharedPreferences preferences) {
+        return new NetworkProxyPreference(preferences, "debug_network_proxy");
+    }
+
+    @Provides
+    @ApplicationScope
+    @CaptureIntents
+    BooleanPreference provideCaptureIntentsPreference(SharedPreferences preferences) {
+        return new BooleanPreference(preferences, "debug_capture_intents", DEFAULT_CAPTURE_INTENTS);
+    }
+
+    @Provides
+    @ApplicationScope
+    @AnimationSpeed
+    IntPreference provideAnimationSpeed(SharedPreferences preferences) {
+        return new IntPreference(preferences, "debug_animation_speed", DEFAULT_ANIMATION_SPEED);
     }
 
     @Provides
@@ -134,6 +164,13 @@ public final class DebugDataModule {
 
     @Provides
     @ApplicationScope
+    @SeenDebugDrawer
+    BooleanPreference provideSeenDebugDrawer(SharedPreferences preferences) {
+        return new BooleanPreference(preferences, "debug_seen_debug_drawer", DEFAULT_SEEN_DEBUG_DRAWER);
+    }
+
+    @Provides
+    @ApplicationScope
     @ScalpelEnabled
     BooleanPreference provideScalpelEnabled(SharedPreferences preferences) {
         return new BooleanPreference(preferences, "debug_scalpel_enabled", DEFAULT_SCALPEL_ENABLED);
@@ -160,6 +197,23 @@ public final class DebugDataModule {
     Observable<Boolean> provideObservableScalpelWireframeEnabled(RxSharedPreferences preferences) {
         return preferences.getBoolean("debug_scalpel_wireframe_drawer",
                 DEFAULT_SCALPEL_WIREFRAME_ENABLED);
+    }
+
+    @Provides
+    @ApplicationScope
+    Picasso providePicasso(OkHttpClient client, NetworkBehavior behavior,
+                           @IsMockMode boolean isMockMode, Application app) {
+        Picasso.Builder builder = new Picasso.Builder(app).downloader(new OkHttpDownloader(client));
+        if (isMockMode) {
+            builder.addRequestHandler(new MockRequestHandler(behavior, app.getAssets()));
+        }
+        builder.listener(new Picasso.Listener() {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                Timber.e(exception, "Error while loading image " + uri);
+            }
+        });
+        return builder.build();
     }
 
     private static SSLSocketFactory createBadSslSocketFactory() {

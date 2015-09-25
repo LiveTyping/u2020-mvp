@@ -1,13 +1,13 @@
 package ru.ltst.u2020mvp.data.api;
 
-import ru.ltst.u2020mvp.data.api.model.response.Image;
-import ru.ltst.u2020mvp.data.api.model.request.Sort;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-final class SortUtil {
+import ru.ltst.u2020mvp.data.api.model.request.Sort;
+import ru.ltst.u2020mvp.data.api.model.response.Image;
+
+final public class SortUtil {
     private static final Comparator<Image> TIME = new Comparator<Image>() {
         @Override
         public int compare(Image lhs, Image rhs) {
@@ -26,7 +26,7 @@ final class SortUtil {
         }
     };
 
-    static void sort(List<Image> images, Sort sort) {
+    static public void sort(List<Image> images, Sort sort) {
         switch (sort) {
             case TIME:
                 Collections.sort(images, TIME);

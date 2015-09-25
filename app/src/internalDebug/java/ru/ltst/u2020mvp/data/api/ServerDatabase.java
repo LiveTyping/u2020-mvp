@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.inject.Inject;
 
-import ru.ltst.u2020mvp.data.api.model.MockImageLoader;
+import ru.ltst.u2020mvp.data.api.mock.MockImageLoader;
 import ru.ltst.u2020mvp.data.api.model.request.Section;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.data.api.model.response.ImageResponse;

@@ -1,31 +1,42 @@
 package ru.ltst.u2020mvp.data.api;
 
+import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
-import retrofit.Endpoint;
-import retrofit.Endpoints;
-import retrofit.RestAdapter;
+
+import retrofit.Retrofit;
+import com.squareup.okhttp.HttpUrl;
+import com.squareup.okhttp.OkHttpClient;
+
 import ru.ltst.u2020mvp.ApplicationScope;
 
 @Module(includes = ApiModule.class)
 public final class InternalReleaseApiModule {
-    private static final String CLIENT_ID = "3436c108ccc17d3";
 
     @Provides
     @ApplicationScope
-    Endpoint provideEndpoint() {
-        return Endpoints.newFixedEndpoint(ApiModule.PRODUCTION_API_URL);
+    HttpUrl provideHttpUrl() {
+        return HttpUrl.parse(ApiModule.PRODUCTION_API_URL);
     }
 
     @Provides
     @ApplicationScope
-    GalleryService provideGalleryService(RestAdapter restAdapter) {
-        return restAdapter.create(GalleryService.class);
+    @Named("Api")
+    OkHttpClient provideApiClient(OkHttpClient client, ApiHeaders apiHeaders) {
+        client = ApiModule.createApiClient(client, apiHeaders);
+        return client;
     }
 
     @Provides
     @ApplicationScope
-    ImageService provideImageService(RestAdapter restAdapter) {
-        return restAdapter.create(ImageService.class);
+    GalleryService provideGalleryService(Retrofit retrofit) {
+        return retrofit.create(GalleryService.class);
+    }
+
+    @Provides
+    @ApplicationScope
+    ImageService provideImageService(Retrofit retrofit) {
+        return retrofit.create(ImageService.class);
     }
 }

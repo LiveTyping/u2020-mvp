@@ -25,11 +25,14 @@ def date = new Date()
 def buildTime = date.format("dd.MM.yy", TimeZone.getTimeZone("UTC"))
 def buildTimeInternal = date.format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone("UTC"))
 
+def packagename = "ru.ltst.u2020mvp"
+
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
     buildToolsVersion BUILD_TOOLS_VERSION as String
 
     defaultConfig {
+
         minSdkVersion MIN_SDK_VERSION as int
         targetSdkVersion TARGET_SDK_VERSION as int
 
@@ -39,7 +42,7 @@ android {
         buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
         buildConfigField "String", "BUILD_TIME", "\"${buildTimeInternal}\""
 
-        testApplicationId "ru.ltst.u2020mvp.tests"
+        testApplicationId "${packagename}.tests"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -67,20 +70,20 @@ android {
         }
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), file('proguard-project.txt')
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), file('proguard-rules.pro')
             signingConfig signingConfigs.release
         }
     }
 
     productFlavors {
         internal {
-            applicationId 'ru.ltst.u2020mvp.internal'
+            applicationId "${packagename}.internal"
+
         }
         production {
-            applicationId 'ru.ltst.u2020mvp'
+            applicationId "${packagename}"
         }
     }
-
 
     lintOptions {
         textReport true
@@ -109,14 +112,18 @@ dependencies {
     compile "com.android.support:recyclerview-v7:${SUPPORT_V7_VERSION}"
     compile "com.android.support:cardview-v7:${SUPPORT_V7_VERSION}"
 
-    compile 'com.google.dagger:dagger:2.0'
-    apt 'com.google.dagger:dagger-compiler:2.0'
+    compile 'com.google.dagger:dagger:2.0.1'
+    apt 'com.google.dagger:dagger-compiler:2.0.1'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'com.squareup.picasso:picasso:2.5.0'
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
-    internalDebugCompile 'com.squareup.retrofit:retrofit-mock:1.9.0'
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
+    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
+    compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta1'
+    compile 'com.squareup.retrofit:converter-moshi:2.0.0-beta1'
+    internalDebugCompile 'com.squareup.retrofit:retrofit-mock:2.0.0-beta1'
+    internalDebugCompile 'com.squareup.retrofit:adapter-rxjava-mock:2.0.0-beta1'
 
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:2.7.1'
@@ -125,6 +132,8 @@ dependencies {
 
     compile 'io.reactivex:rxjava:1.0.8'
     compile 'io.reactivex:rxandroid:0.24.0'
+
+    compile 'com.jakewharton.threetenabp:threetenabp:1.0.1'
 
     internalCompile 'com.mattprecious.telescope:telescope:1.4.0@aar'
 
@@ -141,7 +150,7 @@ android.applicationVariants.all { variant ->
     for (output in variant.outputs) {
         def outputFile = output.outputFile
         if (outputFile != null && outputFile.name.endsWith('.apk')) {
-            def fileName = "u2020-mvp-${output.name}-${buildTime}.apk"
+            def fileName = "u2020-mvp-${output.name}.apk"
             output.outputFile = new File(outputFile.parent, fileName)
         }
     }
