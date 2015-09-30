@@ -1,5 +1,6 @@
 package ru.ltst.u2020mvp.data.api;
 
+import retrofit.Result;
 import retrofit.http.GET;
 import retrofit.http.Path;
 import ru.ltst.u2020mvp.data.api.model.request.Section;
@@ -9,7 +10,7 @@ import rx.Observable;
 
 public interface GalleryService {
     @GET("gallery/{section}/{sort}/{page}")
-    Observable<Gallery> listGallery(@Path("section") Section section,
+    Observable<Result<Gallery>> listGallery(@Path("section") Section section,
                                     @Path("sort") Sort sort,
                                     @Path("page") int page);
 }

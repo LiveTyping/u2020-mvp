@@ -2,6 +2,8 @@ package ru.ltst.u2020mvp.data.api.mock;
 
 import javax.inject.Inject;
 
+import retrofit.Response;
+import retrofit.Result;
 import retrofit.http.Path;
 import ru.ltst.u2020mvp.data.api.ImageService;
 import ru.ltst.u2020mvp.data.api.ServerDatabase;
@@ -18,7 +20,7 @@ public class MockImageService implements ImageService {
     }
 
     @Override
-    public Observable<ImageResponse> image(@Path("id") String id) {
-        return Observable.just(serverDatabase.getImageForId(id));
+    public Observable<Result<ImageResponse>> image(@Path("id") String id) {
+        return Observable.just(Result.response(Response.success(serverDatabase.getImageForId(id))));
     }
 }

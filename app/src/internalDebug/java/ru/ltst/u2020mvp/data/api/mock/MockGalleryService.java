@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import retrofit.Response;
+import retrofit.Result;
 import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.data.api.GalleryService;
 import ru.ltst.u2020mvp.data.api.ServerDatabase;
@@ -38,17 +40,17 @@ public final class MockGalleryService implements GalleryService {
     }
 
     @Override
-    public Observable<Gallery> listGallery(Section section, Sort sort, int page) {
+    public Observable<Result<Gallery>> listGallery(Section section, Sort sort, int page) {
         // Fetch desired section.
         List<Image> images = serverDatabase.getImagesForSection(section);
         if (images == null) {
-            return Observable.just(BAD_REQUEST);
+            return Observable.just(Result.response(Response.success(BAD_REQUEST)));
         }
 
         // Figure out proper list subset.
         int pageStart = (page - 1) * PAGE_SIZE;
         if (pageStart >= images.size() || pageStart < 0) {
-            return Observable.just(BAD_REQUEST);
+            return Observable.just(Result.response(Response.success(BAD_REQUEST)));
         }
         int pageEnd = Math.min(pageStart + PAGE_SIZE, images.size());
 
@@ -56,7 +58,7 @@ public final class MockGalleryService implements GalleryService {
         SortUtil.sort(images, sort);
         images = images.subList(pageStart, pageEnd);
 
-        return Observable.just(new Gallery(200, true, images));
+        return Observable.just(Result.response(Response.success(new Gallery(200, true, images))));
     }
 
     /**
