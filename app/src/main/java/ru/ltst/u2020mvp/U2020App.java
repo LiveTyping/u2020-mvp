@@ -3,8 +3,6 @@ package ru.ltst.u2020mvp;
 import android.app.Application;
 import android.content.Context;
 
-import com.jakewharton.threetenabp.AndroidThreeTen;
-
 import javax.inject.Inject;
 
 import ru.ltst.u2020mvp.ui.ActivityHierarchyServer;
@@ -21,8 +19,6 @@ public class U2020App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        AndroidThreeTen.init(this);
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new DebugTree());

@@ -121,7 +121,6 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
     compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta1'
-    compile 'com.squareup.retrofit:converter-moshi:2.0.0-beta1'
     internalDebugCompile 'com.squareup.retrofit:retrofit-mock:2.0.0-beta1'
     internalDebugCompile 'com.squareup.retrofit:adapter-rxjava-mock:2.0.0-beta1'
 
@@ -132,8 +131,6 @@ dependencies {
 
     compile 'io.reactivex:rxjava:1.0.8'
     compile 'io.reactivex:rxandroid:0.24.0'
-
-    compile 'com.jakewharton.threetenabp:threetenabp:1.0.1'
 
     internalCompile 'com.mattprecious.telescope:telescope:1.4.0@aar'
 

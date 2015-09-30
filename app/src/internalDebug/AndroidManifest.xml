@@ -9,19 +9,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application>
-        <!--<activity-->
-            <!--android:name="ru.ltst.u2020mvp.ui.DebugActivity"-->
-            <!--android:label="U+2020 MVP Dev Settings"-->
-            <!--android:launchMode="singleTask"-->
-            <!--android:theme="@style/Theme.U2020.Debug"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:icon="@drawable/dev_app_icon"-->
-            <!-->-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN"/>-->
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
         <activity
             android:name="ru.ltst.u2020mvp.ui.debug.ProcessPhoenix"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"

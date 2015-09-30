@@ -3,7 +3,7 @@ package ru.ltst.u2020mvp.data;
 import android.app.Application;
 import android.content.SharedPreferences;
 
-import com.squareup.moshi.Moshi;
+import com.google.gson.Gson;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -41,10 +41,8 @@ public final class DataModule {
 
     @Provides
     @ApplicationScope
-    Moshi provideMoshi() {
-        return new Moshi.Builder()
-                .add(new InstantAdapter())
-                .build();
+    Gson provideGson() {
+        return new Gson();
     }
 
     static OkHttpClient createOkHttpClient(Application app) {

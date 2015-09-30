@@ -1,9 +1,14 @@
 package ru.ltst.u2020mvp.data.api.mock;
 
+import android.content.SharedPreferences;
+
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
+import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.data.api.GalleryService;
 import ru.ltst.u2020mvp.data.api.ServerDatabase;
 import ru.ltst.u2020mvp.data.api.SortUtil;
@@ -11,7 +16,7 @@ import ru.ltst.u2020mvp.data.api.model.request.Section;
 import ru.ltst.u2020mvp.data.api.model.request.Sort;
 import ru.ltst.u2020mvp.data.api.model.response.Gallery;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
-import ru.ltst.u2020mvp.ApplicationScope;
+import ru.ltst.u2020mvp.util.EnumPreferences;
 import rx.Observable;
 
 @ApplicationScope
@@ -19,11 +24,17 @@ public final class MockGalleryService implements GalleryService {
     private static final Gallery BAD_REQUEST = new Gallery(200, false, null);
     private static final int PAGE_SIZE = 50;
 
+    private final SharedPreferences preferences;
     private final ServerDatabase serverDatabase;
+    private final Map<Class<? extends Enum<?>>, Enum<?>> responses = new LinkedHashMap<>();
 
     @Inject
-    MockGalleryService(ServerDatabase serverDatabase) {
+    MockGalleryService(ServerDatabase serverDatabase, SharedPreferences preferences) {
         this.serverDatabase = serverDatabase;
+        this.preferences = preferences;
+
+        // Initialize mock responses.
+        loadResponse(MockGalleryResponse.class, MockGalleryResponse.SUCCESS);
     }
 
     @Override
@@ -46,5 +57,23 @@ public final class MockGalleryService implements GalleryService {
         images = images.subList(pageStart, pageEnd);
 
         return Observable.just(new Gallery(200, true, images));
+    }
+
+    /**
+     * Initializes the current response for {@code responseClass} from {@code SharedPreferences}, or
+     * uses {@code defaultValue} if a response was not found.
+     */
+    private <T extends Enum<T>> void loadResponse(Class<T> responseClass, T defaultValue) {
+        responses.put(responseClass, EnumPreferences.getEnumValue(preferences, responseClass, //
+                responseClass.getCanonicalName(), defaultValue));
+    }
+
+    public <T extends Enum<T>> Enum getResponse(Class<T> responseClass) {
+        return responseClass.cast(responses.get(responseClass));
+    }
+
+    public <T extends Enum<T>> void setResponse(Class<T> responseClass, T value) {
+        responses.put(responseClass, value);
+        EnumPreferences.saveEnumValue(preferences, responseClass.getCanonicalName(), value);
     }
 }

@@ -1,8 +1,12 @@
 package ru.ltst.u2020mvp.ui.gallery;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.view.Window;
 import android.widget.ImageView;
 
 import java.util.List;
@@ -22,7 +26,6 @@ import ru.ltst.u2020mvp.data.GalleryDatabase;
 import ru.ltst.u2020mvp.data.api.model.request.Section;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.data.rx.EndlessObserver;
-import ru.ltst.u2020mvp.ui.gallery.view.GalleryItemView;
 import ru.ltst.u2020mvp.ui.gallery.view.GalleryView;
 import ru.ltst.u2020mvp.ui.image.ImgurImageActivity;
 import rx.Subscription;
@@ -40,6 +43,10 @@ public class GalleryActivity extends BaseActivity implements HasComponent<Galler
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(R.string.gallery_activity_title);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Remove the status bar color. The DrawerLayout is responsible for drawing it from now on.
+            setStatusBarColor(getWindow());
+        }
     }
 
     @Override
@@ -76,6 +83,11 @@ public class GalleryActivity extends BaseActivity implements HasComponent<Galler
         return galleryComponent;
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private static void setStatusBarColor(Window window) {
+        window.setStatusBarColor(Color.TRANSPARENT);
+    }
+
     @GalleryScope
     public static class Presenter extends BasePresenter<GalleryView> {
 
@@ -99,8 +111,12 @@ public class GalleryActivity extends BaseActivity implements HasComponent<Galler
             request = galleryDatabase.loadGallery(section, new EndlessObserver<List<Image>>() {
                 @Override
                 public void onNext(List<Image> images) {
-                    getView().getAdapter().replaceWith(images);
-                    getView().showContent();
+                    if (images.size() == 0) {
+                        getView().showEmpty();
+                    } else {
+                        getView().getAdapter().replaceWith(images);
+                        getView().showContent();
+                    }
                 }
 
                 @Override

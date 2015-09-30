@@ -5,4 +5,16 @@
 
     <string name="no_intent_handler">There are no applications available to handle this action.</string>
     <string name="error_happended_text">Oops! Error happened.</string>
+    <string name="empty_text">Empty values!</string>
+
+    <string name="error_title">Oops!</string>
+  <string name="error_message">
+    An error occurred loading the resource.\nPlease try again later.
+  </string>
+    <string name="empty_title">Weird…</string>
+  <string name="empty_message">
+    There doesn\'t seem to be\nanything trending in this timespan.
+  </string>
+    <string name="loading_message">loading</string>
+
 </resources>

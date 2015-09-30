@@ -58,6 +58,7 @@ import ru.ltst.u2020mvp.data.PixelGridEnabled;
 import ru.ltst.u2020mvp.data.PixelRatioEnabled;
 import ru.ltst.u2020mvp.data.ScalpelEnabled;
 import ru.ltst.u2020mvp.data.ScalpelWireframeEnabled;
+import ru.ltst.u2020mvp.data.api.mock.MockGalleryResponse;
 import ru.ltst.u2020mvp.data.api.mock.MockGalleryService;
 import ru.ltst.u2020mvp.data.prefs.BooleanPreference;
 import ru.ltst.u2020mvp.data.prefs.IntPreference;
@@ -353,37 +354,38 @@ public final class DebugView extends FrameLayout {
             }
         });
 
-//        configureResponseSpinner(repositoriesResponseView, MockRepositoriesResponse.class);
+        configureResponseSpinner(repositoriesResponseView, MockGalleryResponse.class);
     }
 
-//    /**
-//     * Populates a {@code Spinner} with the values of an {@code enum} and binds it to the value set
-//     * in
-//     * the mock service.
-//     */
-//    private <T extends Enum<T>> void configureResponseSpinner(Spinner spinner,
-//                                                              final Class<T> responseClass) {
-//        final EnumAdapter<T> adapter = new EnumAdapter<>(getContext(), responseClass);
-//        spinner.setEnabled(isMockMode);
-//        spinner.setAdapter(adapter);
-//        spinner.setSelection(mockGalleryService.getResponse(responseClass).ordinal());
-//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                T selected = adapter.getItem(position);
-//                if (selected != mockGalleryService.getResponse(responseClass)) {
-//                    Timber.d("Setting %s to %s", responseClass.getSimpleName(), selected);
-//                    mockGalleryService.setResponse(responseClass, selected);
-//                } else {
-//                    Timber.d("Ignoring re-selection of %s %s", responseClass.getSimpleName(), selected);
-//                }
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//            }
-//        });
-//    }
+    /**
+     * Populates a {@code Spinner} with the values of an {@code enum} and binds it to the value set
+     * in
+     * the mock service.
+     */
+    private <T extends Enum<T>> void configureResponseSpinner(Spinner spinner,
+                                                              final Class<T> responseClass) {
+        final EnumAdapter<T> adapter = new EnumAdapter<>(getContext(), responseClass);
+        spinner.setEnabled(isMockMode);
+        spinner.setAdapter(adapter);
+        spinner.setSelection(mockGalleryService.getResponse(responseClass).ordinal());
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                T selected = adapter.getItem(position);
+                if (selected != mockGalleryService.getResponse(responseClass)) {
+                    Timber.d("Setting %s to %s", responseClass.getSimpleName(), selected);
+                    mockGalleryService.setResponse(responseClass, selected);
+                    ProcessPhoenix.triggerRebirth(getContext());
+                } else {
+                    Timber.d("Ignoring re-selection of %s %s", responseClass.getSimpleName(), selected);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
 
     private void setupUserInterfaceSection() {
         final AnimationSpeedAdapter speedAdapter = new AnimationSpeedAdapter(getContext());

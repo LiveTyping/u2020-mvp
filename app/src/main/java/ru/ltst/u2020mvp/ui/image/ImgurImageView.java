@@ -50,6 +50,11 @@ public class ImgurImageView extends BetterViewAnimator implements BaseView {
     }
 
     @Override
+    public void showEmpty() {
+        setDisplayedChildId(R.id.imgur_image_empty_view);
+    }
+
+    @Override
     public void showError(Throwable throwable) {
         setDisplayedChildId(R.id.imgur_image_error_view);
     }

@@ -6,8 +6,8 @@ import android.graphics.BitmapFactory;
 
 import javax.inject.Inject;
 
-import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.ApplicationScope;
+import ru.ltst.u2020mvp.data.api.model.response.Image;
 
 @ApplicationScope
 public final class MockImageLoader {
@@ -21,7 +21,7 @@ public final class MockImageLoader {
     /**
      * A filename like {@code abc123.jpg} inside the {@code mock/images/} asset folder.
      */
-    public ImageBuilder newImage(String filename) {
+    private ImageBuilder newImage(String filename) {
         String path = "mock/images/" + filename;
 
         int width;
@@ -42,6 +42,13 @@ public final class MockImageLoader {
         String link = "mock:///" + path;
         return new ImageBuilder(id, link, id /* default title == id */, id /* default description == id */,
                 width, height);
+    }
+
+    public Image newImage(MockImage mockImage) {
+        return newImage(mockImage.image)
+                .title(mockImage.title)
+                .views(mockImage.views)
+                .build();
     }
 
     public static class ImageBuilder {
