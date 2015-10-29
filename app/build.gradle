@@ -88,6 +88,7 @@ android {
     lintOptions {
         textReport true
         textOutput 'stdout'
+        warning 'InvalidPackage'
     }
 
     compileOptions {
@@ -116,13 +117,13 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.1'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile 'com.squareup.okhttp:okhttp:2.3.0'
-    compile 'com.squareup.picasso:picasso:2.5.0'
-    compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
-    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
-    compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta1'
-    internalDebugCompile 'com.squareup.retrofit:retrofit-mock:2.0.0-beta1'
-    internalDebugCompile 'com.squareup.retrofit:adapter-rxjava-mock:2.0.0-beta1'
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
+    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+    compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
+    internalDebugCompile 'com.squareup.retrofit:retrofit-mock:2.0.0-beta2'
+    internalDebugCompile 'com.squareup.retrofit:adapter-rxjava-mock:2.0.0-beta2'
 
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:2.7.1'
