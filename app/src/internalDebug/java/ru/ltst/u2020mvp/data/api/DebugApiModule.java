@@ -2,6 +2,7 @@ package ru.ltst.u2020mvp.data.api;
 
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
 import javax.inject.Named;
 
@@ -22,6 +23,7 @@ import ru.ltst.u2020mvp.data.api.mock.MockImageService;
 import ru.ltst.u2020mvp.data.prefs.IntPreference;
 import ru.ltst.u2020mvp.data.prefs.LongPreference;
 import ru.ltst.u2020mvp.data.prefs.StringPreference;
+import timber.log.Timber;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -36,10 +38,21 @@ public final class DebugApiModule {
 
     @Provides
     @ApplicationScope
+    HttpLoggingInterceptor provideLoggingInterceptor() {
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+            @Override
+            public void log(String message) {
+                Timber.tag("OkHttp").v(message);
+            }
+        });
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+        return loggingInterceptor;
+    }
+
+    @Provides
+    @ApplicationScope
     @Named("Api")
-    OkHttpClient provideApiClient(OkHttpClient client,
-                                  LoggingInterceptor loggingInterceptor,
-                                  ApiHeaders apiHeaders) {
+    OkHttpClient provideApiClient(OkHttpClient client, HttpLoggingInterceptor loggingInterceptor, ApiHeaders apiHeaders) {
         client = ApiModule.createApiClient(client, apiHeaders);
         client.interceptors().add(loggingInterceptor);
         return client;
