@@ -4,16 +4,14 @@ import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.threeten.bp.LocalDateTime;
+
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Deque;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -25,30 +23,24 @@ import rx.Subscriber;
 import rx.subjects.PublishSubject;
 import timber.log.Timber;
 
+import static org.threeten.bp.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
 @ApplicationScope
 public final class LumberYard {
     private static final int BUFFER_SIZE = 200;
-    private static final ThreadLocal<DateFormat> LOG_FILE_FORMAT = new ThreadLocal<DateFormat>() {
-        @Override
-        protected DateFormat initialValue() {
-            return new SimpleDateFormat("yyyy-MM-dd-HHmmss.'log'", Locale.US);
-        }
-    };
 
     private final Application app;
 
     private final Deque<Entry> entries = new ArrayDeque<>(BUFFER_SIZE + 1);
     private final PublishSubject<Entry> entrySubject = PublishSubject.create();
 
-    @Inject
-    public LumberYard(Application app) {
+    @Inject public LumberYard(Application app) {
         this.app = app;
     }
 
     public Timber.Tree tree() {
         return new Timber.DebugTree() {
-            @Override
-            protected void logMessage(int priority, String tag, String message) {
+            @Override protected void log(int priority, String tag, String message, Throwable t) {
                 addEntry(new Entry(priority, tag, message));
             }
         };
@@ -71,20 +63,17 @@ public final class LumberYard {
         return entrySubject;
     }
 
-    /**
-     * Save the current logs to disk.
-     */
+    /**  Save the current logs to disk. */
     public Observable<File> save() {
         return Observable.create(new Observable.OnSubscribe<File>() {
-            @Override
-            public void call(Subscriber<? super File> subscriber) {
+            @Override public void call(Subscriber<? super File> subscriber) {
                 File folder = app.getExternalFilesDir(null);
                 if (folder == null) {
                     subscriber.onError(new IOException("External storage is not mounted."));
                     return;
                 }
 
-                String fileName = LOG_FILE_FORMAT.get().format(new Date());
+                String fileName = ISO_LOCAL_DATE_TIME.format(LocalDateTime.now());
                 File output = new File(folder, fileName);
 
                 BufferedSink sink = null;
@@ -118,8 +107,7 @@ public final class LumberYard {
      */
     public void cleanUp() {
         new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... folders) {
+            @Override protected Void doInBackground(Void... folders) {
                 File folder = app.getExternalFilesDir(null);
                 if (folder != null) {
                     for (File file : folder.listFiles()) {
@@ -148,7 +136,7 @@ public final class LumberYard {
         public String prettyPrint() {
             return String.format("%22s %s %s", tag, displayLevel(),
                     // Indent newlines to match the original indentation.
-                    message.replaceAll("\\n{1}", "\n                         "));
+                    message.replaceAll("\\n", "\n                         "));
         }
 
         public String displayLevel() {

@@ -8,18 +8,17 @@ import android.view.View;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.U2020Component;
-import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.base.HasComponent;
 import ru.ltst.u2020mvp.base.mvp.BaseActivity;
 import ru.ltst.u2020mvp.base.mvp.BasePresenter;
 import ru.ltst.u2020mvp.base.navigation.activity.ActivityScreen;
+import ru.ltst.u2020mvp.data.api.model.response.Image;
 import rx.Observable;
 import rx.Subscription;
-import rx.functions.Action1;
 import timber.log.Timber;
 
 public class ImgurImageActivity extends BaseActivity implements HasComponent<ImgurImageComponent> {
@@ -98,20 +97,14 @@ public class ImgurImageActivity extends BaseActivity implements HasComponent<Img
             getView().showLoading();
             subscription = imageObservable.
                 subscribe(
-                    new Action1<Image>() {
-                        @Override
-                        public void call(Image image) {
+                        image -> {
                             Timber.d("Image loaded with id %s", image.toString());
                             getView().bindTo(image);
                             getView().showContent();
-                        }
-                    },
-                    new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
+                        },
+                        throwable -> {
                             Timber.e(throwable, "Image loading error");
                         }
-                    }
                 );
         }
 

@@ -3,7 +3,6 @@ package ru.ltst.u2020mvp.ui.debug;
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -11,7 +10,6 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -346,12 +344,9 @@ public final class DebugView extends FrameLayout {
     private void setupMockBehaviorSection() {
         captureIntentsView.setEnabled(isMockMode);
         captureIntentsView.setChecked(captureIntents.get());
-        captureIntentsView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Timber.d("Capture intents set to %s", b);
-                captureIntents.set(b);
-            }
+        captureIntentsView.setOnCheckedChangeListener((compoundButton, b) -> {
+            Timber.d("Capture intents set to %s", b);
+            captureIntents.set(b);
         });
 
         configureResponseSpinner(repositoriesResponseView, MockGalleryResponse.class);
@@ -411,52 +406,35 @@ public final class DebugView extends FrameLayout {
             }
         });
         // Ensure the animation speed value is always applied across app restarts.
-        post(new Runnable() {
-            @Override
-            public void run() {
-                applyAnimationSpeed(animationSpeedValue);
-            }
-        });
+        post(() -> applyAnimationSpeed(animationSpeedValue));
 
         boolean gridEnabled = pixelGridEnabled.get();
         uiPixelGridView.setChecked(gridEnabled);
         uiPixelRatioView.setEnabled(gridEnabled);
-        uiPixelGridView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Timber.d("Setting pixel grid overlay enabled to " + isChecked);
-                pixelGridEnabled.set(isChecked);
-                uiPixelRatioView.setEnabled(isChecked);
-            }
+        uiPixelGridView.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Timber.d("Setting pixel grid overlay enabled to " + isChecked);
+            pixelGridEnabled.set(isChecked);
+            uiPixelRatioView.setEnabled(isChecked);
         });
 
         uiPixelRatioView.setChecked(pixelRatioEnabled.get());
-        uiPixelRatioView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Timber.d("Setting pixel scale overlay enabled to " + isChecked);
-                pixelRatioEnabled.set(isChecked);
-            }
+        uiPixelRatioView.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Timber.d("Setting pixel scale overlay enabled to " + isChecked);
+            pixelRatioEnabled.set(isChecked);
         });
 
         uiScalpelView.setChecked(scalpelEnabled.get());
         uiScalpelWireframeView.setEnabled(scalpelEnabled.get());
-        uiScalpelView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Timber.d("Setting scalpel interaction enabled to " + isChecked);
-                scalpelEnabled.set(isChecked);
-                uiScalpelWireframeView.setEnabled(isChecked);
-            }
+        uiScalpelView.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Timber.d("Setting scalpel interaction enabled to " + isChecked);
+            scalpelEnabled.set(isChecked);
+            uiScalpelWireframeView.setEnabled(isChecked);
         });
 
         uiScalpelWireframeView.setChecked(scalpelWireframeEnabled.get());
-        uiScalpelWireframeView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Timber.d("Setting scalpel wireframe enabled to " + isChecked);
-                scalpelWireframeEnabled.set(isChecked);
-            }
+        uiScalpelWireframeView.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Timber.d("Setting scalpel wireframe enabled to " + isChecked);
+            scalpelWireframeEnabled.set(isChecked);
         });
     }
 
@@ -496,12 +474,10 @@ public final class DebugView extends FrameLayout {
         boolean picassoDebuggingValue = picassoDebugging.get();
         picasso.setIndicatorsEnabled(picassoDebuggingValue);
         picassoIndicatorView.setChecked(picassoDebuggingValue);
-        picassoIndicatorView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-          @Override public void onCheckedChanged(CompoundButton button, boolean isChecked) {
-            Timber.d("Setting Picasso debugging to " + isChecked);
-            picasso.setIndicatorsEnabled(isChecked);
-            picassoDebugging.set(isChecked);
-          }
+        picassoIndicatorView.setOnCheckedChangeListener((button, isChecked) -> {
+          Timber.d("Setting Picasso debugging to " + isChecked);
+          picasso.setIndicatorsEnabled(isChecked);
+          picassoDebugging.set(isChecked);
         });
 
         refreshPicassoStats();
@@ -593,46 +569,30 @@ public final class DebugView extends FrameLayout {
           hostView.setSelection(0, host.length()); // Pre-select it for editing.
 
           // Show the keyboard. Post this to the next frame when the dialog has been attached.
-          hostView.post(new Runnable() {
-              @Override
-              public void run() {
-                  Keyboards.showKeyboard(hostView);
-              }
-          });
+          hostView.post(() -> Keyboards.showKeyboard(hostView));
       }
 
       new AlertDialog.Builder(getContext()) //
               .setTitle("Set Network Proxy")
               .setView(view)
-              .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                  @Override
-                  public void onClick(DialogInterface dialog, int i) {
-                      networkProxyView.setSelection(originalSelection);
-                      dialog.cancel();
-                  }
+              .setNegativeButton("Cancel", (dialog, i) -> {
+                  networkProxyView.setSelection(originalSelection);
+                  dialog.cancel();
               })
-              .setPositiveButton("Use", new DialogInterface.OnClickListener() {
-                  @Override
-                  public void onClick(DialogInterface dialog, int i) {
-                      String theHost = hostView.getText().toString();
-                      if (!Strings.isBlank(theHost)) {
-                          networkProxy.set(theHost); // Persist across restarts.
-                          proxyAdapter.notifyDataSetChanged(); // Tell the spinner to update.
-                          networkProxyView.setSelection(ProxyAdapter.PROXY); // And show the proxy.
+              .setPositiveButton("Use", (dialog, i) -> {
+                  String theHost = hostView.getText().toString();
+                  if (!Strings.isBlank(theHost)) {
+                      networkProxy.set(theHost); // Persist across restarts.
+                      proxyAdapter.notifyDataSetChanged(); // Tell the spinner to update.
+                      networkProxyView.setSelection(ProxyAdapter.PROXY); // And show the proxy.
 
-                          Proxy proxy = networkProxy.getProxy();
-                          client.setProxy(proxy);
-                      } else {
-                          networkProxyView.setSelection(originalSelection);
-                      }
-                  }
-              })
-              .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                  @Override
-                  public void onCancel(DialogInterface dialogInterface) {
+                      Proxy proxy = networkProxy.getProxy();
+                      client.setProxy(proxy);
+                  } else {
                       networkProxyView.setSelection(originalSelection);
                   }
               })
+              .setOnCancelListener(dialogInterface -> networkProxyView.setSelection(originalSelection))
               .show();
     }
 
@@ -645,30 +605,19 @@ public final class DebugView extends FrameLayout {
         new AlertDialog.Builder(getContext()) //
             .setTitle("Set Network Endpoint")
             .setView(view)
-            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int i) {
-                    endpointView.setSelection(originalSelection);
-                    dialog.cancel();
-                }
+            .setNegativeButton("Cancel", (dialog, i) -> {
+                endpointView.setSelection(originalSelection);
+                dialog.cancel();
             })
-            .setPositiveButton("Use", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int i) {
-                    String theUrl = url.getText().toString();
-                    if (!Strings.isBlank(theUrl)) {
-                        setEndpointAndRelaunch(theUrl);
-                    } else {
-                        endpointView.setSelection(originalSelection);
-                    }
-                }
-            })
-            .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialogInterface) {
+            .setPositiveButton("Use", (dialog, i) -> {
+                String theUrl = url.getText().toString();
+                if (!Strings.isBlank(theUrl)) {
+                    setEndpointAndRelaunch(theUrl);
+                } else {
                     endpointView.setSelection(originalSelection);
                 }
             })
+            .setOnCancelListener(dialogInterface -> endpointView.setSelection(originalSelection))
             .show();
     }
 

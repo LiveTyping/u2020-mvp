@@ -18,7 +18,6 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
@@ -72,17 +71,9 @@ public class GalleryDatabase {
         galleryService.listGallery(section, Sort.VIRAL, 1)
                 .filter(Results.isSuccess())
                 .map(new GalleryToImageList())
-                .flatMap(new Func1<List<Image>, Observable<Image>>() {
-                    @Override
-                    public Observable<Image> call(List<Image> images) {
-                        return Observable.from(images);
-                    }
-                })
-                .filter(new Func1<Image, Boolean>() {
-                    @Override
-                    public Boolean call(Image image) {
-                        return !image.is_album; // No albums.
-                    }
+                .flatMap(Observable::from)
+                .filter(image -> {
+                    return !image.is_album; // No albums.
                 })
                 .toList()
                 .subscribeOn(Schedulers.io())

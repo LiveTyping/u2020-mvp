@@ -39,12 +39,7 @@ public final class DebugApiModule {
     @Provides
     @ApplicationScope
     HttpLoggingInterceptor provideLoggingInterceptor() {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-            @Override
-            public void log(String message) {
-                Timber.tag("OkHttp").v(message);
-            }
-        });
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(message -> Timber.tag("OkHttp").v(message));
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
         return loggingInterceptor;
     }

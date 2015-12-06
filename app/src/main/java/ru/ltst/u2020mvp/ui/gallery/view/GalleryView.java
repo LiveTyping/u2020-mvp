@@ -20,20 +20,20 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import ru.ltst.u2020mvp.R;
+import ru.ltst.u2020mvp.base.ComponentFinder;
 import ru.ltst.u2020mvp.base.mvp.BaseView;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
-import ru.ltst.u2020mvp.base.ComponentFinder;
 import ru.ltst.u2020mvp.ui.gallery.GalleryActivity;
 import ru.ltst.u2020mvp.ui.gallery.GalleryComponent;
 import ru.ltst.u2020mvp.ui.misc.BetterViewAnimator;
 import ru.ltst.u2020mvp.ui.misc.GridInsetDecoration;
+import ru.ltst.u2020mvp.util.DrawableUtils;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.AndroidSubscriptions;
-import rx.functions.Action0;
 
 public class GalleryView extends LinearLayout implements BaseView {
     public static final int COLUMNS_COUNT = 2;
@@ -49,17 +49,9 @@ public class GalleryView extends LinearLayout implements BaseView {
 
     private final GalleryAdapter adapter;
     private final List<Subscriber<? super Pair<Image, ImageView>>> clickSubscribers = new ArrayList<>();
-    private final Observable.OnSubscribe<Pair<Image, ImageView>> clickOnSubscribe = new Observable.OnSubscribe<Pair<Image, ImageView>>() {
-        @Override
-        public void call(final Subscriber<? super Pair<Image, ImageView>> subscriber) {
-            clickSubscribers.add(subscriber);
-            subscriber.add(AndroidSubscriptions.unsubscribeInUiThread(new Action0() {
-                @Override
-                public void call() {
-                    clickSubscribers.remove(subscriber);
-                }
-            }));
-        }
+    private final Observable.OnSubscribe<Pair<Image, ImageView>> clickOnSubscribe = subscriber -> {
+        clickSubscribers.add(subscriber);
+        subscriber.add(AndroidSubscriptions.unsubscribeInUiThread(() -> clickSubscribers.remove(subscriber)));
     };
 
     public GalleryView(Context context, AttributeSet attrs) {
@@ -87,15 +79,10 @@ public class GalleryView extends LinearLayout implements BaseView {
         galleryView.setItemAnimator(new DefaultItemAnimator());
         galleryView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.grid_inset));
         galleryView.setAdapter(adapter);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                presenter.refresh();
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(() -> presenter.refresh());
 
         AnimationDrawable ellipsis =
-                (AnimationDrawable) getResources().getDrawable(R.drawable.dancing_ellipsis);
+                (AnimationDrawable) DrawableUtils.getDrawable(getContext(), R.drawable.dancing_ellipsis);
         loadingMessageView.setCompoundDrawablesWithIntrinsicBounds(null, null, ellipsis, null);
         ellipsis.start();
 

@@ -1,9 +1,11 @@
 buildscript {
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.3'
     }
 }
 
@@ -15,6 +17,7 @@ def versionBuild = 0 // bump for dogfood builds, public betas, etc.
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
 
 repositories {
     mavenCentral()
@@ -89,11 +92,12 @@ android {
         textReport true
         textOutput 'stdout'
         warning 'InvalidPackage'
+        warning 'ResourceType' //TODO remove eventually with ButterKnife 8.0 release
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     packagingOptions {
@@ -104,6 +108,12 @@ android {
 // TODO remove eventually: http://b.android.com/162285
 configurations {
     internalDebugCompile
+}
+
+configurations.all {
+    resolutionStrategy {
+        force "com.android.support:support-annotations:${SUPPORT_V7_VERSION}"
+    }
 }
 
 dependencies {
@@ -127,14 +137,19 @@ dependencies {
     internalDebugCompile 'com.squareup.retrofit:adapter-rxjava-mock:2.0.0-beta2'
 
     compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.jakewharton.timber:timber:2.7.1'
-    internalDebugCompile 'com.jakewharton.madge:madge:1.1.1'
-    internalDebugCompile 'com.jakewharton.scalpel:scalpel:1.1.1'
+    compile 'com.jakewharton.timber:timber:4.0.1'
+    compile 'com.jakewharton.byteunits:byteunits:0.9.1'
+    internalDebugCompile 'com.jakewharton.madge:madge:1.1.2'
+    internalDebugCompile 'com.jakewharton.scalpel:scalpel:1.1.2'
+    internalDebugCompile 'com.jakewharton:process-phoenix:1.0.2'
+    internalCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
+    productionCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
 
     compile 'io.reactivex:rxjava:1.0.8'
     compile 'io.reactivex:rxandroid:0.24.0'
 
-    internalCompile 'com.mattprecious.telescope:telescope:1.4.0@aar'
+    compile 'com.jakewharton.threetenabp:threetenabp:1.0.2'
+    internalCompile 'com.mattprecious.telescope:telescope:1.5.0@aar'
 
     // Espresso 2 Dependencies
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'

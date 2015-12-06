@@ -5,9 +5,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.util.Pair;
 import android.view.Window;
-import android.widget.ImageView;
 
 import java.util.List;
 
@@ -29,7 +27,6 @@ import ru.ltst.u2020mvp.data.rx.EndlessObserver;
 import ru.ltst.u2020mvp.ui.gallery.view.GalleryView;
 import ru.ltst.u2020mvp.ui.image.ImgurImageActivity;
 import rx.Subscription;
-import rx.functions.Action1;
 import timber.log.Timber;
 
 public class GalleryActivity extends BaseActivity implements HasComponent<GalleryComponent> {
@@ -126,15 +123,12 @@ public class GalleryActivity extends BaseActivity implements HasComponent<Galler
                 }
             });
             clicks = getView().observeImageClicks().subscribe(
-                new Action1<Pair<Image, ImageView>>() {
-                    @Override
-                    public void call(Pair<Image, ImageView> image) {
+                    image -> {
                         Timber.d("Image clicked with id = %s", image.first.id);
                         ActivityScreen screen = new ImgurImageActivity.Screen(image.first.id);
                         screen.attachTransitionView(image.second);
                         screenSwitcher.open(screen);
                     }
-                }
             );
         }
 

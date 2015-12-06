@@ -4,18 +4,14 @@ import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
-
-import butterknife.ButterKnife;
-import butterknife.Bind;
 import ru.ltst.u2020mvp.ui.misc.AspectRatioImageView;
 
 public class GalleryItemView extends CardView {

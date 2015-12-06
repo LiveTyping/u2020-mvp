@@ -3,13 +3,12 @@ package ru.ltst.u2020mvp.ui.bugreport;
 import android.content.Context;
 import android.text.Editable;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import butterknife.ButterKnife;
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.ui.misc.EmptyTextWatcher;
 import ru.ltst.u2020mvp.util.Strings;
@@ -39,12 +38,9 @@ public final class BugReportView extends LinearLayout {
         super.onFinishInflate();
         ButterKnife.bind(this);
 
-        titleView.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    titleView.setError(Strings.isBlank(titleView.getText()) ? "Cannot be empty." : null);
-                }
+        titleView.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                titleView.setError(Strings.isBlank(titleView.getText()) ? "Cannot be empty." : null);
             }
         });
         titleView.addTextChangedListener(new EmptyTextWatcher() {
