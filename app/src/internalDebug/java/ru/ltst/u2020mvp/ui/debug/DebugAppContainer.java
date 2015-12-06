@@ -4,29 +4,31 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.PowerManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.f2prateek.rx.preferences.Preference;
 import com.jakewharton.madge.MadgeFrameLayout;
 import com.jakewharton.scalpel.ScalpelFrameLayout;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.Bind;
+import butterknife.ButterKnife;
+import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.data.PixelGridEnabled;
 import ru.ltst.u2020mvp.data.PixelRatioEnabled;
 import ru.ltst.u2020mvp.data.ScalpelEnabled;
 import ru.ltst.u2020mvp.data.ScalpelWireframeEnabled;
+import ru.ltst.u2020mvp.data.SeenDebugDrawer;
 import ru.ltst.u2020mvp.ui.ActivityHierarchyServer;
 import ru.ltst.u2020mvp.ui.AppContainer;
-import ru.ltst.u2020mvp.ApplicationScope;
-import rx.Observable;
-import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 import static android.content.Context.POWER_SERVICE;
@@ -37,10 +39,11 @@ import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
 
 @ApplicationScope
 public final class DebugAppContainer implements AppContainer {
-    private final Observable<Boolean> pixelGridEnabled;
-    private final Observable<Boolean> pixelRatioEnabled;
-    private final Observable<Boolean> scalpelEnabled;
-    private final Observable<Boolean> scalpelWireframeEnabled;
+    private final Preference<Boolean> seenDebugDrawer;
+    private final Preference<Boolean> pixelGridEnabled;
+    private final Preference<Boolean> pixelRatioEnabled;
+    private final Preference<Boolean> scalpelEnabled;
+    private final Preference<Boolean> scalpelWireframeEnabled;
 
     static class ViewHolder {
         @Bind(R.id.debug_drawer_layout) DrawerLayout drawerLayout;
@@ -50,10 +53,12 @@ public final class DebugAppContainer implements AppContainer {
     }
 
     @Inject
-    public DebugAppContainer(@PixelGridEnabled Observable<Boolean> pixelGridEnabled,
-                             @PixelRatioEnabled Observable<Boolean> pixelRatioEnabled,
-                             @ScalpelEnabled Observable<Boolean> scalpelEnabled,
-                             @ScalpelWireframeEnabled Observable<Boolean> scalpelWireframeEnabled) {
+    public DebugAppContainer(@SeenDebugDrawer Preference<Boolean> seenDebugDrawer,
+                             @PixelGridEnabled Preference<Boolean> pixelGridEnabled,
+                             @PixelRatioEnabled Preference<Boolean> pixelRatioEnabled,
+                             @ScalpelEnabled Preference<Boolean> scalpelEnabled,
+                             @ScalpelWireframeEnabled Preference<Boolean> scalpelWireframeEnabled) {
+        this.seenDebugDrawer = seenDebugDrawer;
         this.pixelGridEnabled = pixelGridEnabled;
         this.pixelRatioEnabled = pixelRatioEnabled;
         this.scalpelEnabled = scalpelEnabled;
@@ -88,6 +93,15 @@ public final class DebugAppContainer implements AppContainer {
             }
         });
 
+        // If you have not seen the debug drawer before, show it with a message
+        if (!seenDebugDrawer.get()) {
+            viewHolder.drawerLayout.postDelayed(() -> {
+                viewHolder.drawerLayout.openDrawer(GravityCompat.END);
+                Toast.makeText(drawerContext, R.string.debug_drawer_welcome, Toast.LENGTH_LONG).show();
+            }, 1000);
+            seenDebugDrawer.set(true);
+        }
+
         final CompositeSubscription subscriptions = new CompositeSubscription();
         setupMadge(viewHolder, subscriptions);
         setupScalpel(viewHolder, subscriptions);
@@ -108,28 +122,20 @@ public final class DebugAppContainer implements AppContainer {
     }
 
     private void setupMadge(final ViewHolder viewHolder, CompositeSubscription subscriptions) {
-        subscriptions.add(pixelGridEnabled.subscribe(new Action1<Boolean>() {
-            @Override public void call(Boolean enabled) {
-                viewHolder.madgeFrameLayout.setOverlayEnabled(enabled);
-            }
+        subscriptions.add(pixelGridEnabled.asObservable().subscribe(enabled -> {
+            viewHolder.madgeFrameLayout.setOverlayEnabled(enabled);
         }));
-        subscriptions.add(pixelRatioEnabled.subscribe(new Action1<Boolean>() {
-            @Override public void call(Boolean enabled) {
-                viewHolder.madgeFrameLayout.setOverlayRatioEnabled(enabled);
-            }
+        subscriptions.add(pixelRatioEnabled.asObservable().subscribe(enabled -> {
+            viewHolder.madgeFrameLayout.setOverlayRatioEnabled(enabled);
         }));
     }
 
     private void setupScalpel(final ViewHolder viewHolder, CompositeSubscription subscriptions) {
-        subscriptions.add(scalpelEnabled.subscribe(new Action1<Boolean>() {
-            @Override public void call(Boolean enabled) {
-                viewHolder.content.setLayerInteractionEnabled(enabled);
-            }
+        subscriptions.add(scalpelEnabled.asObservable().subscribe(enabled -> {
+            viewHolder.content.setLayerInteractionEnabled(enabled);
         }));
-        subscriptions.add(scalpelWireframeEnabled.subscribe(new Action1<Boolean>() {
-            @Override public void call(Boolean enabled) {
-                viewHolder.content.setDrawViews(!enabled);
-            }
+        subscriptions.add(scalpelWireframeEnabled.asObservable().subscribe(enabled -> {
+            viewHolder.content.setDrawViews(!enabled);
         }));
     }
 

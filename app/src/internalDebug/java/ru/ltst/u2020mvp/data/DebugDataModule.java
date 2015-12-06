@@ -4,10 +4,13 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
+import com.f2prateek.rx.preferences.Preference;
+import com.f2prateek.rx.preferences.RxSharedPreferences;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
+import java.net.InetSocketAddress;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
@@ -22,13 +25,7 @@ import retrofit.mock.NetworkBehavior;
 import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.IsInstrumentationTest;
 import ru.ltst.u2020mvp.data.api.DebugApiModule;
-import ru.ltst.u2020mvp.data.prefs.BooleanPreference;
-import ru.ltst.u2020mvp.data.prefs.IntPreference;
-import ru.ltst.u2020mvp.data.prefs.LongPreference;
-import ru.ltst.u2020mvp.data.prefs.NetworkProxyPreference;
-import ru.ltst.u2020mvp.data.prefs.RxSharedPreferences;
-import ru.ltst.u2020mvp.data.prefs.StringPreference;
-import rx.Observable;
+import ru.ltst.u2020mvp.data.prefs.InetSocketAddressPreferenceAdapter;
 import timber.log.Timber;
 
 @Module(includes = {DataModule.class, DebugApiModule.class})
@@ -51,31 +48,31 @@ public final class DebugDataModule {
     @Provides
     @ApplicationScope
     IntentFactory provideIntentFactory(@IsMockMode boolean isMockMode,
-                                       @CaptureIntents BooleanPreference captureIntents) {
+                                       @CaptureIntents Preference<Boolean> captureIntents) {
         return new DebugIntentFactory(IntentFactory.REAL, isMockMode, captureIntents);
     }
 
     @Provides
     @ApplicationScope
     OkHttpClient provideOkHttpClient(Application app,
-                                     NetworkProxyPreference networkProxy) {
+                                     Preference<InetSocketAddress> networkProxyAddress) {
         OkHttpClient client = DataModule.createOkHttpClient(app);
         client.setSslSocketFactory(createBadSslSocketFactory());
-        client.setProxy(networkProxy.getProxy());
+        client.setProxy(InetSocketAddressPreferenceAdapter.createProxy(networkProxyAddress.get()));
         return client;
     }
 
     @Provides
     @ApplicationScope
     @ApiEndpoint
-    StringPreference provideEndpointPreference(SharedPreferences preferences) {
-        return new StringPreference(preferences, "debug_endpoint", ApiEndpoints.MOCK_MODE.url);
+    Preference<String> provideEndpointPreference(RxSharedPreferences prefs) {
+        return prefs.getString("debug_endpoint", ApiEndpoints.MOCK_MODE.url);
     }
 
     @Provides
     @ApplicationScope
     @IsMockMode
-    boolean provideIsMockMode(@ApiEndpoint StringPreference endpoint,
+    boolean provideIsMockMode(@ApiEndpoint Preference<String> endpoint,
                               @IsInstrumentationTest boolean isInstrumentationTest) {
         // Running in an instrumentation forces mock mode.
         return isInstrumentationTest || ApiEndpoints.isMockMode(endpoint.get());
@@ -84,119 +81,84 @@ public final class DebugDataModule {
     @Provides
     @ApplicationScope
     @NetworkDelay
-    LongPreference provideNetworkDelay(
-            SharedPreferences preferences) {
-        return new LongPreference(preferences, "debug_network_delay", 2000);
+    Preference<Long> provideNetworkDelay(RxSharedPreferences prefs) {
+        return prefs.getLong("debug_network_delay", 2000L);
     }
 
     @Provides
     @ApplicationScope
     @NetworkFailurePercent
-    IntPreference provideNetworkFailurePercent(
-            SharedPreferences preferences) {
-        return new IntPreference(preferences, "debug_network_failure_percent", 3);
+    Preference<Integer> provideNetworkFailurePercent(RxSharedPreferences prefs) {
+        return prefs.getInteger("debug_network_failure_percent", 3);
     }
 
     @Provides
     @ApplicationScope
     @NetworkVariancePercent
-    IntPreference provideNetworkVariancePercent(
-            SharedPreferences preferences) {
-        return new IntPreference(preferences, "debug_network_variance_percent", 40);
+    Preference<Integer> provideNetworkVariancePercent(RxSharedPreferences prefs) {
+        return prefs.getInteger("debug_network_variance_percent", 40);
     }
 
     @Provides
     @ApplicationScope
-    NetworkProxyPreference provideNetworkProxy(SharedPreferences preferences) {
-        return new NetworkProxyPreference(preferences, "debug_network_proxy");
+    Preference<InetSocketAddress> provideNetworkProxyAddress(RxSharedPreferences preferences) {
+        return preferences.getObject("debug_network_proxy", InetSocketAddressPreferenceAdapter.INSTANCE);
     }
 
     @Provides
     @ApplicationScope
     @CaptureIntents
-    BooleanPreference provideCaptureIntentsPreference(SharedPreferences preferences) {
-        return new BooleanPreference(preferences, "debug_capture_intents", DEFAULT_CAPTURE_INTENTS);
+    Preference<Boolean> provideCaptureIntentsPreference(RxSharedPreferences prefs) {
+        return prefs.getBoolean("debug_capture_intents", DEFAULT_CAPTURE_INTENTS);
     }
 
     @Provides
     @ApplicationScope
     @AnimationSpeed
-    IntPreference provideAnimationSpeed(SharedPreferences preferences) {
-        return new IntPreference(preferences, "debug_animation_speed", DEFAULT_ANIMATION_SPEED);
+    Preference<Integer> provideAnimationSpeed(RxSharedPreferences prefs) {
+        return prefs.getInteger("debug_animation_speed", DEFAULT_ANIMATION_SPEED);
     }
 
     @Provides
     @ApplicationScope
     @PicassoDebugging
-    BooleanPreference providePicassoDebugging(SharedPreferences preferences) {
-        return new BooleanPreference(preferences, "debug_picasso_debugging", DEFAULT_PICASSO_DEBUGGING);
+    Preference<Boolean> providePicassoDebugging(RxSharedPreferences prefs) {
+        return prefs.getBoolean("debug_picasso_debugging", DEFAULT_PICASSO_DEBUGGING);
     }
 
     @Provides
     @ApplicationScope
     @PixelGridEnabled
-    BooleanPreference providePixelGridEnabled(SharedPreferences preferences) {
-        return new BooleanPreference(preferences, "debug_pixel_grid_enabled",
-                DEFAULT_PIXEL_GRID_ENABLED);
-    }
-
-    @Provides
-    @ApplicationScope
-    @PixelGridEnabled
-    Observable<Boolean> provideObservablePixelGridEnabled(RxSharedPreferences preferences) {
-        return preferences.getBoolean("debug_pixel_grid_enabled", DEFAULT_PIXEL_GRID_ENABLED);
+    Preference<Boolean> providePixelGridEnabled(RxSharedPreferences prefs) {
+        return prefs.getBoolean("debug_pixel_grid_enabled", DEFAULT_PIXEL_GRID_ENABLED);
     }
 
     @Provides
     @ApplicationScope
     @PixelRatioEnabled
-    BooleanPreference providePixelRatioEnabled(SharedPreferences preferences) {
-        return new BooleanPreference(preferences, "debug_pixel_ratio_enabled",
-                DEFAULT_PIXEL_RATIO_ENABLED);
-    }
-
-    @Provides
-    @ApplicationScope
-    @PixelRatioEnabled
-    Observable<Boolean> provideObservablePixelRatioEnabled(RxSharedPreferences preferences) {
-        return preferences.getBoolean("debug_pixel_ratio_enabled", DEFAULT_PIXEL_RATIO_ENABLED);
+    Preference<Boolean> providePixelRatioEnabled(RxSharedPreferences prefs) {
+        return prefs.getBoolean("debug_pixel_ratio_enabled", DEFAULT_PIXEL_RATIO_ENABLED);
     }
 
     @Provides
     @ApplicationScope
     @SeenDebugDrawer
-    BooleanPreference provideSeenDebugDrawer(SharedPreferences preferences) {
-        return new BooleanPreference(preferences, "debug_seen_debug_drawer", DEFAULT_SEEN_DEBUG_DRAWER);
+    Preference<Boolean> provideSeenDebugDrawer(RxSharedPreferences prefs) {
+        return prefs.getBoolean("debug_seen_debug_drawer", DEFAULT_SEEN_DEBUG_DRAWER);
     }
 
     @Provides
     @ApplicationScope
     @ScalpelEnabled
-    BooleanPreference provideScalpelEnabled(SharedPreferences preferences) {
-        return new BooleanPreference(preferences, "debug_scalpel_enabled", DEFAULT_SCALPEL_ENABLED);
-    }
-
-    @Provides
-    @ApplicationScope
-    @ScalpelEnabled
-    Observable<Boolean> provideObservableScalpelEnabled(RxSharedPreferences preferences) {
-        return preferences.getBoolean("debug_scalpel_enabled", DEFAULT_SCALPEL_ENABLED);
+    Preference<Boolean> provideScalpelEnabled(RxSharedPreferences prefs) {
+        return prefs.getBoolean("debug_scalpel_enabled", DEFAULT_SCALPEL_ENABLED);
     }
 
     @Provides
     @ApplicationScope
     @ScalpelWireframeEnabled
-    BooleanPreference provideScalpelWireframeEnabled(SharedPreferences preferences) {
-        return new BooleanPreference(preferences, "debug_scalpel_wireframe_drawer",
-                DEFAULT_SCALPEL_WIREFRAME_ENABLED);
-    }
-
-    @Provides
-    @ApplicationScope
-    @ScalpelWireframeEnabled
-    Observable<Boolean> provideObservableScalpelWireframeEnabled(RxSharedPreferences preferences) {
-        return preferences.getBoolean("debug_scalpel_wireframe_drawer",
-                DEFAULT_SCALPEL_WIREFRAME_ENABLED);
+    Preference<Boolean> provideScalpelWireframeEnabled(RxSharedPreferences prefs) {
+        return prefs.getBoolean("debug_scalpel_wireframe_drawer", DEFAULT_SCALPEL_WIREFRAME_ENABLED);
     }
 
     @Provides

@@ -1,5 +1,6 @@
 package ru.ltst.u2020mvp.data.api;
 
+import com.f2prateek.rx.preferences.Preference;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
@@ -20,9 +21,6 @@ import ru.ltst.u2020mvp.data.NetworkFailurePercent;
 import ru.ltst.u2020mvp.data.NetworkVariancePercent;
 import ru.ltst.u2020mvp.data.api.mock.MockGalleryService;
 import ru.ltst.u2020mvp.data.api.mock.MockImageService;
-import ru.ltst.u2020mvp.data.prefs.IntPreference;
-import ru.ltst.u2020mvp.data.prefs.LongPreference;
-import ru.ltst.u2020mvp.data.prefs.StringPreference;
 import timber.log.Timber;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -32,7 +30,7 @@ public final class DebugApiModule {
 
     @Provides
     @ApplicationScope
-    HttpUrl provideHttpUrl(@ApiEndpoint StringPreference apiEndpoint) {
+    HttpUrl provideHttpUrl(@ApiEndpoint Preference<String> apiEndpoint) {
         return HttpUrl.parse(apiEndpoint.get());
     }
 
@@ -55,9 +53,9 @@ public final class DebugApiModule {
 
     @Provides
     @ApplicationScope
-    NetworkBehavior provideBehavior(@NetworkDelay LongPreference networkDelay,
-                                    @NetworkFailurePercent IntPreference networkFailurePercent,
-                                    @NetworkVariancePercent IntPreference networkVariancePercent) {
+    NetworkBehavior provideBehavior(@NetworkDelay Preference<Long> networkDelay,
+                                    @NetworkFailurePercent Preference<Integer> networkFailurePercent,
+                                    @NetworkVariancePercent Preference<Integer> networkVariancePercent) {
         NetworkBehavior behavior = NetworkBehavior.create();
         behavior.setDelay(networkDelay.get(), MILLISECONDS);
         behavior.setFailurePercent(networkFailurePercent.get());

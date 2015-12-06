@@ -2,7 +2,8 @@ package ru.ltst.u2020mvp.data;
 
 import android.content.Intent;
 
-import ru.ltst.u2020mvp.data.prefs.BooleanPreference;
+import com.f2prateek.rx.preferences.Preference;
+
 import ru.ltst.u2020mvp.ui.ExternalIntentActivity;
 
 /**
@@ -12,10 +13,10 @@ import ru.ltst.u2020mvp.ui.ExternalIntentActivity;
 public final class DebugIntentFactory implements IntentFactory {
     private final IntentFactory realIntentFactory;
     private final boolean isMockMode;
-    private final BooleanPreference captureIntents;
+    private final Preference<Boolean> captureIntents;
 
     public DebugIntentFactory(IntentFactory realIntentFactory, boolean isMockMode,
-                              BooleanPreference captureIntents) {
+                              Preference<Boolean> captureIntents) {
         this.realIntentFactory = realIntentFactory;
         this.isMockMode = isMockMode;
         this.captureIntents = captureIntents;

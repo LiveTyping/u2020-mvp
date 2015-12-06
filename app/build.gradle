@@ -151,6 +151,8 @@ dependencies {
     compile 'com.jakewharton.threetenabp:threetenabp:1.0.2'
     internalCompile 'com.mattprecious.telescope:telescope:1.5.0@aar'
 
+    compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.0'
+
     // Espresso 2 Dependencies
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
