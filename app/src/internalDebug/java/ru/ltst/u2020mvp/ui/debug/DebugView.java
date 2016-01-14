@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -19,6 +20,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.f2prateek.rx.preferences.Preference;
+import com.squareup.leakcanary.internal.DisplayLeakActivity;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Picasso;
@@ -445,6 +447,12 @@ public final class DebugView extends FrameLayout {
     @OnClick(R.id.debug_logs_show)
     void showLogs() {
         new LogsDialog(new ContextThemeWrapper(getContext(), R.style.Theme_U2020), lumberYard).show();
+    }
+
+    @OnClick(R.id.debug_leaks_show)
+    void showLeaks() {
+        Intent intent = new Intent(getContext(), DisplayLeakActivity.class);
+        getContext().startActivity(intent);
     }
 
     private void setupBuildSection() {
