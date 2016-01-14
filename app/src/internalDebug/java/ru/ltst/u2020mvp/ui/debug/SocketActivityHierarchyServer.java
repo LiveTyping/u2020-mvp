@@ -19,7 +19,6 @@ package ru.ltst.u2020mvp.ui.debug;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewDebug;
 
@@ -42,6 +41,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import ru.ltst.u2020mvp.ui.ActivityHierarchyServer;
+import timber.log.Timber;
 
 /**
  * <p>This class can be used to enable the use of HierarchyViewer inside an
@@ -62,8 +62,6 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
      */
     private static final int VIEW_SERVER_DEFAULT_PORT = 4939;
     private static final int VIEW_SERVER_MAX_CONNECTIONS = 10;
-
-    private static final String LOG_TAG = "ActivityHierarchyServer";
 
     private static final String VALUE_PROTOCOL_VERSION = "4";
     private static final String VALUE_SERVER_VERSION = "4";
@@ -183,7 +181,7 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
         try {
             mServer = new ServerSocket(mPort, VIEW_SERVER_MAX_CONNECTIONS, InetAddress.getLocalHost());
         } catch (Exception e) {
-            Log.w(LOG_TAG, "Starting ServerSocket error: ", e);
+            Timber.w(e, "Starting ServerSocket error: ");
         }
 
         while (mServer != null && Thread.currentThread() == mThread) {
@@ -200,7 +198,7 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
                     }
                 }
             } catch (Exception e) {
-                Log.w(LOG_TAG, "Connection error: ", e);
+                Timber.w(e, "Connection error: ");
             }
         }
     }
@@ -345,10 +343,10 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
                 }
 
                 if (!result) {
-                    Log.w(LOG_TAG, "An error occurred with the command: " + command);
+                    Timber.w("An error occurred with the command: %s", command);
                 }
             } catch (IOException e) {
-                Log.w(LOG_TAG, "Connection error: ", e);
+                Timber.w(e, "Connection error: ");
             } finally {
                 if (in != null) {
                     try {
@@ -406,8 +404,7 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
                     out.flush();
                 }
             } catch (Exception e) {
-                Log.w(LOG_TAG, "Could not send command " + command +
-                        " with parameters " + parameters, e);
+                Timber.w(e, "Could not send command %s with parameters %s", command, parameters);
                 success = false;
             } finally {
                 if (out != null) {
@@ -576,7 +573,7 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
                     }
                 }
             } catch (Exception e) {
-                Log.w(LOG_TAG, "Connection error: ", e);
+                Timber.w(e, "Connection error: ");
             } finally {
                 if (out != null) {
                     try {

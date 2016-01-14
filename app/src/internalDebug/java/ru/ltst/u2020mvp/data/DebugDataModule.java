@@ -172,7 +172,7 @@ public final class DebugDataModule {
         builder.listener(new Picasso.Listener() {
             @Override
             public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                Timber.e(exception, "Error while loading image " + uri);
+                Timber.e(exception, "Error while loading image %s", uri);
             }
         });
         return builder.build();
