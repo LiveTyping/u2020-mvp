@@ -21,14 +21,11 @@ import android.widget.TextView;
 
 import com.f2prateek.rx.preferences.Preference;
 import com.squareup.leakcanary.internal.DisplayLeakActivity;
-import com.squareup.okhttp.Cache;
-import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.StatsSnapshot;
 
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,7 +41,9 @@ import javax.inject.Named;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit.mock.NetworkBehavior;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
+import retrofit2.mock.NetworkBehavior;
 import ru.ltst.u2020mvp.BuildConfig;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.U2020App;
@@ -285,11 +284,14 @@ public final class DebugView extends FrameLayout {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 if (position == ProxyAdapter.NONE) {
-                    Timber.d("Clearing network proxy");
-                    // TODO: Keep the custom proxy around so you can easily switch back and forth.
-                    networkProxyAddress.delete();
-                    client.setProxy(null);
-                    apiClient.setProxy(null);
+                    // Only clear the proxy and restart if one was previously set.
+                    if (currentProxyPosition != ProxyAdapter.NONE) {
+                        Timber.d("Clearing network proxy");
+                        // TODO: Keep the custom proxy around so you can easily switch back and forth.
+                        networkProxyAddress.delete();
+                        // Force a restart to re-initialize the app without a proxy.
+                        ProcessPhoenix.triggerRebirth(getContext());
+                    }
                 } else if (networkProxyAddress.isSet() && position == ProxyAdapter.PROXY) {
                     Timber.d("Ignoring re-selection of network proxy %s", networkProxyAddress.get());
                 } else {
@@ -512,21 +514,21 @@ public final class DebugView extends FrameLayout {
     }
 
     private void setupOkHttpCacheSection() {
-        Cache cache = client.getCache(); // Shares the cache with apiClient, so no need to check both.
-        okHttpCacheMaxSizeView.setText(getSizeString(cache.getMaxSize()));
+        Cache cache = client.cache(); // Shares the cache with apiClient, so no need to check both.
+        okHttpCacheMaxSizeView.setText(getSizeString(cache.maxSize()));
 
         refreshOkHttpCacheStats();
     }
 
     private void refreshOkHttpCacheStats() {
-        Cache cache = client.getCache(); // Shares the cache with apiClient, so no need to check both.
-        int writeTotal = cache.getWriteSuccessCount() + cache.getWriteAbortCount();
-        int percentage = (int) ((1f * cache.getWriteAbortCount() / writeTotal) * 100);
+        Cache cache = client.cache(); // Shares the cache with apiClient, so no need to check both.
+        int writeTotal = cache.writeSuccessCount() + cache.writeAbortCount();
+        int percentage = (int) ((1f * cache.writeAbortCount() / writeTotal) * 100);
         okHttpCacheWriteErrorView.setText(
-                cache.getWriteAbortCount() + " / " + writeTotal + " (" + percentage + "%)");
-        okHttpCacheRequestCountView.setText(String.valueOf(cache.getRequestCount()));
-        okHttpCacheNetworkCountView.setText(String.valueOf(cache.getNetworkCount()));
-        okHttpCacheHitCountView.setText(String.valueOf(cache.getHitCount()));
+                cache.writeAbortCount() + " / " + writeTotal + " (" + percentage + "%)");
+        okHttpCacheRequestCountView.setText(String.valueOf(cache.requestCount()));
+        okHttpCacheNetworkCountView.setText(String.valueOf(cache.networkCount()));
+        okHttpCacheHitCountView.setText(String.valueOf(cache.hitCount()));
     }
 
     private void applyAnimationSpeed(int multiplier) {
@@ -595,13 +597,9 @@ public final class DebugView extends FrameLayout {
                     String in = hostView.getText().toString();
                     InetSocketAddress address = InetSocketAddressPreferenceAdapter.parse(in);
                     if (address != null) {
-                        networkProxyAddress.set(address); // Persist across restarts.
-                        proxyAdapter.notifyDataSetChanged(); // Tell the spinner to update.
-                        networkProxyView.setSelection(ProxyAdapter.PROXY); // And show the proxy.
-
-                        Proxy proxy = InetSocketAddressPreferenceAdapter.createProxy(address);
-                        client.setProxy(proxy);
-                        apiClient.setProxy(proxy);
+                        networkProxyAddress.set(address);
+                        // Force a restart to re-initialize the app with the new proxy.
+                        ProcessPhoenix.triggerRebirth(getContext());
                     } else {
                         networkProxyView.setSelection(originalSelection);
                     }

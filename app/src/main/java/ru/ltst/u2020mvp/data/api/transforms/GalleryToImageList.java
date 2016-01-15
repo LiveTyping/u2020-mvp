@@ -2,7 +2,7 @@ package ru.ltst.u2020mvp.data.api.transforms;
 
 import java.util.List;
 
-import retrofit.Result;
+import retrofit2.Result;
 import ru.ltst.u2020mvp.data.api.model.response.Gallery;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import rx.functions.Func1;

@@ -1,18 +1,17 @@
 package ru.ltst.u2020mvp.data.api;
 
 import com.f2prateek.rx.preferences.Preference;
-import com.squareup.okhttp.HttpUrl;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
 import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.Retrofit;
-import retrofit.mock.MockRetrofit;
-import retrofit.mock.NetworkBehavior;
-import retrofit.mock.RxJavaBehaviorAdapter;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.mock.MockRetrofit;
+import retrofit2.mock.NetworkBehavior;
 import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.data.ApiEndpoint;
 import ru.ltst.u2020mvp.data.IsMockMode;
@@ -45,10 +44,12 @@ public final class DebugApiModule {
     @Provides
     @ApplicationScope
     @Named("Api")
-    OkHttpClient provideApiClient(OkHttpClient client, HttpLoggingInterceptor loggingInterceptor, ApiHeaders apiHeaders) {
-        client = ApiModule.createApiClient(client, apiHeaders);
-        client.interceptors().add(loggingInterceptor);
-        return client;
+    OkHttpClient provideApiClient(OkHttpClient client,
+                                  HttpLoggingInterceptor loggingInterceptor,
+                                  ApiHeaders apiHeaders) {
+        return ApiModule.createApiClient(client, apiHeaders)
+                .addInterceptor(loggingInterceptor)
+                .build();
     }
 
     @Provides
@@ -65,27 +66,25 @@ public final class DebugApiModule {
 
     @Provides
     @ApplicationScope
-    MockRetrofit provideMockRetrofit(NetworkBehavior behavior) {
-        return new MockRetrofit(behavior, RxJavaBehaviorAdapter.create());
+    MockRetrofit provideMockRetrofit(Retrofit retrofit, NetworkBehavior behavior) {
+        return new MockRetrofit.Builder(retrofit)
+                .networkBehavior(behavior)
+                .build();
     }
 
     @Provides
     @ApplicationScope
-    GalleryService provideGalleryService(Retrofit retrofit, MockRetrofit mockRetrofit,
-                                         @IsMockMode boolean isMockMode, MockGalleryService mockGalleryService) {
-        if (isMockMode) {
-            return mockRetrofit.create(GalleryService.class, mockGalleryService);
-        }
-        return retrofit.create(GalleryService.class);
+    GalleryService provideGalleryService(Retrofit retrofit,
+                                         @IsMockMode boolean isMockMode,
+                                         MockGalleryService mockGalleryService) {
+        return isMockMode ? mockGalleryService : retrofit.create(GalleryService.class);
     }
 
     @Provides
     @ApplicationScope
-    ImageService provideImageService(Retrofit retrofit, MockRetrofit mockRetrofit,
-                                     @IsMockMode boolean isMockMode, MockImageService mockImageService) {
-        if (isMockMode) {
-            return mockRetrofit.create(ImageService.class, mockImageService);
-        }
-        return retrofit.create(ImageService.class);
+    ImageService provideImageService(Retrofit retrofit,
+                                     @IsMockMode boolean isMockMode,
+                                     MockImageService mockImageService) {
+        return isMockMode ? mockImageService : retrofit.create(ImageService.class);
     }
 }

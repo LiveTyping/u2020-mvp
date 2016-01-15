@@ -16,7 +16,6 @@ public interface U2020Graph {
     void inject(U2020App app);
     AppContainer appContainer();
     Picasso picasso();
-//    OkHttpClient okHttpClient();
     ActivityScreenSwitcher activityScreenSwitcher();
     GalleryDatabase galleryDatabase();
     GalleryService galleryService();

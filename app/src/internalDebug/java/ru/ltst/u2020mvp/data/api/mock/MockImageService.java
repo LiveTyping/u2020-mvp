@@ -2,9 +2,9 @@ package ru.ltst.u2020mvp.data.api.mock;
 
 import javax.inject.Inject;
 
-import retrofit.Response;
-import retrofit.Result;
-import retrofit.http.Path;
+import retrofit2.Response;
+import retrofit2.Result;
+import retrofit2.http.Path;
 import ru.ltst.u2020mvp.data.api.ImageService;
 import ru.ltst.u2020mvp.data.api.ServerDatabase;
 import ru.ltst.u2020mvp.data.api.model.response.ImageResponse;

@@ -5,9 +5,9 @@ import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
 
-import retrofit.Retrofit;
-import com.squareup.okhttp.HttpUrl;
-import com.squareup.okhttp.OkHttpClient;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
 
 import ru.ltst.u2020mvp.ApplicationScope;
 
@@ -17,15 +17,14 @@ public final class ReleaseApiModule {
     @Provides
     @ApplicationScope
     HttpUrl provideHttpUrl() {
-        return HttpUrl.parse(ApiModule.PRODUCTION_API_URL);
+        return HttpUrl.parse(ApiModule.PRODUCTION_API_URL.toString());
     }
 
     @Provides
     @ApplicationScope
     @Named("Api")
     OkHttpClient provideApiClient(OkHttpClient client, ApiHeaders apiHeaders) {
-        client = ApiModule.createApiClient(client, apiHeaders);
-        return client;
+        return ApiModule.createApiClient(client, apiHeaders).build();
     }
 
     @Provides

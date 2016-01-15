@@ -1,8 +1,8 @@
 package ru.ltst.u2020mvp.data.api;
 
-import retrofit.Result;
-import retrofit.http.GET;
-import retrofit.http.Path;
+import retrofit2.Result;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
 import ru.ltst.u2020mvp.data.api.model.response.ImageResponse;
 import rx.Observable;
 

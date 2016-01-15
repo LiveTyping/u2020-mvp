@@ -8,8 +8,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import retrofit.Response;
-import retrofit.Result;
+import retrofit2.Response;
+import retrofit2.Result;
 import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.data.api.GalleryService;
 import ru.ltst.u2020mvp.data.api.ServerDatabase;

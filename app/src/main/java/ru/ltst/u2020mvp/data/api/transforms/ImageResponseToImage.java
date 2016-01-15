@@ -1,6 +1,6 @@
 package ru.ltst.u2020mvp.data.api.transforms;
 
-import retrofit.Result;
+import retrofit2.Result;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.data.api.model.response.ImageResponse;
 import rx.functions.Func1;

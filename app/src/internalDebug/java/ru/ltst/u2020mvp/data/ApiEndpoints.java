@@ -3,8 +3,8 @@ package ru.ltst.u2020mvp.data;
 import ru.ltst.u2020mvp.data.api.ApiModule;
 
 public enum ApiEndpoints {
-    PRODUCTION("Production", ApiModule.PRODUCTION_API_URL),
-    MOCK_MODE("Mock Mode", "http://localhost/mock"),
+    PRODUCTION("Production", ApiModule.PRODUCTION_API_URL.toString()),
+    MOCK_MODE("Mock Mode", "http://localhost/mock/"),
     CUSTOM("Custom", null);
 
     public final String name;

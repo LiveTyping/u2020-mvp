@@ -2,12 +2,10 @@ package ru.ltst.u2020mvp.data;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.net.Uri;
 
 import com.f2prateek.rx.preferences.Preference;
 import com.f2prateek.rx.preferences.RxSharedPreferences;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.picasso.OkHttpDownloader;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import java.net.InetSocketAddress;
@@ -21,7 +19,8 @@ import javax.net.ssl.X509TrustManager;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.mock.NetworkBehavior;
+import okhttp3.OkHttpClient;
+import retrofit2.mock.NetworkBehavior;
 import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.IsInstrumentationTest;
 import ru.ltst.u2020mvp.data.api.DebugApiModule;
@@ -30,6 +29,7 @@ import timber.log.Timber;
 
 @Module(includes = {DataModule.class, DebugApiModule.class})
 public final class DebugDataModule {
+
     private static final int DEFAULT_ANIMATION_SPEED = 1; // 1x (normal) speed.
     private static final boolean DEFAULT_PICASSO_DEBUGGING = false; // Debug indicators displayed
     private static final boolean DEFAULT_PIXEL_GRID_ENABLED = false; // No pixel grid overlay.
@@ -56,10 +56,10 @@ public final class DebugDataModule {
     @ApplicationScope
     OkHttpClient provideOkHttpClient(Application app,
                                      Preference<InetSocketAddress> networkProxyAddress) {
-        OkHttpClient client = DataModule.createOkHttpClient(app);
-        client.setSslSocketFactory(createBadSslSocketFactory());
-        client.setProxy(InetSocketAddressPreferenceAdapter.createProxy(networkProxyAddress.get()));
-        return client;
+        return DataModule.createOkHttpClient(app)
+                .sslSocketFactory(createBadSslSocketFactory())
+                .proxy(InetSocketAddressPreferenceAdapter.createProxy(networkProxyAddress.get()))
+                .build();
     }
 
     @Provides
@@ -165,16 +165,11 @@ public final class DebugDataModule {
     @ApplicationScope
     Picasso providePicasso(OkHttpClient client, NetworkBehavior behavior,
                            @IsMockMode boolean isMockMode, Application app) {
-        Picasso.Builder builder = new Picasso.Builder(app).downloader(new OkHttpDownloader(client));
+        Picasso.Builder builder = new Picasso.Builder(app).downloader(new OkHttp3Downloader(client));
         if (isMockMode) {
             builder.addRequestHandler(new MockRequestHandler(behavior, app.getAssets()));
         }
-        builder.listener(new Picasso.Listener() {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                Timber.e(exception, "Error while loading image %s", uri);
-            }
-        });
+        builder.listener((picasso, uri, exception) -> Timber.e(exception, "Error while loading image %s", uri));
         return builder.build();
     }
 
