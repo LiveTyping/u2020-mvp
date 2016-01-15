@@ -34,7 +34,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         Registry.add(this, viewId(), presenter());
         final LayoutInflater layoutInflater = getLayoutInflater();
-        ViewGroup container = appContainer.get(this);
+        ViewGroup container = appContainer.bind(this);
         layoutInflater.inflate(layoutId(), container);
     }
 

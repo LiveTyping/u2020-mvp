@@ -66,7 +66,7 @@ public final class DebugAppContainer implements AppContainer {
     }
 
     @Override
-    public ViewGroup get(final Activity activity) {
+    public ViewGroup bind(final Activity activity) {
         activity.setContentView(R.layout.debug_activity_frame);
         final ViewHolder viewHolder = new ViewHolder();
         ButterKnife.bind(viewHolder, activity);
