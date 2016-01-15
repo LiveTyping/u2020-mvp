@@ -22,12 +22,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewDebug;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -40,6 +36,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import okio.BufferedSink;
+import okio.BufferedSource;
+import okio.Okio;
 import ru.ltst.u2020mvp.ui.ActivityHierarchyServer;
 import timber.log.Timber;
 
@@ -125,7 +124,8 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
         String name = activity.getTitle().toString();
         if (TextUtils.isEmpty(name)) {
             name = activity.getClass().getCanonicalName() +
-                    "/0x" + System.identityHashCode(activity);
+                    "/0x" + Integer.toHexString(System.identityHashCode(activity));
+
         } else {
             name += " (" + activity.getClass().getCanonicalName() + ")";
         }
@@ -205,12 +205,11 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
 
     private static boolean writeValue(Socket client, String value) {
         boolean result;
-        BufferedWriter out = null;
+        BufferedSink out = null;
         try {
-            OutputStream clientStream = client.getOutputStream();
-            out = new BufferedWriter(new OutputStreamWriter(clientStream), 8 * 1024);
-            out.write(value);
-            out.write("\n");
+            out = Okio.buffer(Okio.sink(client));
+            out.writeUtf8(value);
+            out.writeByte('\n');
             out.flush();
             result = true;
         } catch (Exception e) {
@@ -309,11 +308,11 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
         }
 
         public void run() {
-            BufferedReader in = null;
+            BufferedSource in = null;
             try {
-                in = new BufferedReader(new InputStreamReader(mClient.getInputStream()), 1024);
+                in = Okio.buffer(Okio.source(mClient));
 
-                final String request = in.readLine();
+                final String request = in.readUtf8Line();
 
                 String command;
                 String parameters;
@@ -367,7 +366,7 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
 
         private boolean windowCommand(Socket client, String command, String parameters) {
             boolean success = true;
-            BufferedWriter out = null;
+            BufferedSink out = null;
 
             try {
                 // Find the hash code of the window
@@ -399,8 +398,8 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
                         new UncloseableOutputStream(client.getOutputStream()));
 
                 if (!client.isOutputShutdown()) {
-                    out = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
-                    out.write("DONE\n");
+                    out = Okio.buffer(Okio.sink(client));
+                    out.writeUtf8("DONE\n");
                     out.flush();
                 }
             } catch (Exception e) {
@@ -447,22 +446,21 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
 
         private boolean listWindows(Socket client) {
             boolean result = true;
-            BufferedWriter out = null;
+            BufferedSink out = null;
 
             try {
                 mWindowsLock.readLock().lock();
 
-                OutputStream clientStream = client.getOutputStream();
-                out = new BufferedWriter(new OutputStreamWriter(clientStream), 8 * 1024);
+                out = Okio.buffer(Okio.sink(client));
 
                 for (Entry<View, String> entry : mWindows.entrySet()) {
-                    out.write(Integer.toHexString(System.identityHashCode(entry.getKey())));
-                    out.write(' ');
-                    out.append(entry.getValue());
-                    out.write('\n');
+                    out.writeHexadecimalUnsignedLong(System.identityHashCode(entry.getKey()));
+                    out.writeByte(' ');
+                    out.writeUtf8(entry.getValue());
+                    out.writeByte('\n');
                 }
 
-                out.write("DONE.\n");
+                out.writeUtf8("DONE.\n");
                 out.flush();
             } catch (Exception e) {
                 result = false;
@@ -485,10 +483,9 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
             boolean result = true;
             String focusName = null;
 
-            BufferedWriter out = null;
+            BufferedSink out = null;
             try {
-                OutputStream clientStream = client.getOutputStream();
-                out = new BufferedWriter(new OutputStreamWriter(clientStream), 8 * 1024);
+                out = Okio.buffer(Okio.sink(client));
 
                 View focusedWindow = null;
 
@@ -507,11 +504,11 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
                         mWindowsLock.readLock().unlock();
                     }
 
-                    out.write(Integer.toHexString(System.identityHashCode(focusedWindow)));
-                    out.write(' ');
-                    out.append(focusName);
+                    out.writeHexadecimalUnsignedLong(System.identityHashCode(focusedWindow));
+                    out.writeByte(' ');
+                    out.writeUtf8(focusName);
                 }
-                out.write('\n');
+                out.writeByte('\n');
                 out.flush();
             } catch (Exception e) {
                 result = false;
@@ -544,9 +541,9 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
 
         private boolean windowManagerAutolistLoop() {
             addWindowListener(this);
-            BufferedWriter out = null;
+            BufferedSink out = null;
             try {
-                out = new BufferedWriter(new OutputStreamWriter(mClient.getOutputStream()));
+                out = Okio.buffer(Okio.sink(mClient));
                 while (!Thread.interrupted()) {
                     boolean needWindowListUpdate = false;
                     boolean needFocusedWindowUpdate = false;
@@ -564,11 +561,11 @@ public class SocketActivityHierarchyServer implements Runnable, ActivityHierarch
                         }
                     }
                     if (needWindowListUpdate) {
-                        out.write("LIST UPDATE\n");
+                        out.writeUtf8("LIST UPDATE\n");
                         out.flush();
                     }
                     if (needFocusedWindowUpdate) {
-                        out.write("FOCUS UPDATE\n");
+                        out.writeUtf8("FOCUS UPDATE\n");
                         out.flush();
                     }
                 }
