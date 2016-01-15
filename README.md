@@ -7,6 +7,8 @@ Port of Jake Wharton's [U2020 sample app][u2020] with use of MVP pattern and [Da
 
 Dagger 2
 -------
+[Watch the corresponding talk][parleys] or [view the slides][slides].
+
 TODO
 
 
@@ -60,7 +62,9 @@ License
     limitations under the License.
 
 [u2020]: https://github.com/JakeWharton/u2020
-[mortar]: https://github.com/square/mortar
 [dagger2]: https://github.com/google/dagger
 [espresso2]: https://code.google.com/p/android-test-kit/wiki/EspressoSetupInstructions
 [activityrule]: https://gist.github.com/JakeWharton/1c2f2cadab2ddd97f9fb
+
+[parleys]: https://parleys.com/play/5471cdd1e4b065ebcfa1d557/
+[slides]: https://speakerdeck.com/jakewharton/dependency-injection-with-dagger-2-devoxx-2014
