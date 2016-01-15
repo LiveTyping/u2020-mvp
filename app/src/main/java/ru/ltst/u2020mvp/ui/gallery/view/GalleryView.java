@@ -28,12 +28,12 @@ import ru.ltst.u2020mvp.base.mvp.BaseView;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.ui.gallery.GalleryActivity;
 import ru.ltst.u2020mvp.ui.gallery.GalleryComponent;
+import ru.ltst.u2020mvp.ui.misc.AndroidSubscriptions;
 import ru.ltst.u2020mvp.ui.misc.BetterViewAnimator;
 import ru.ltst.u2020mvp.ui.misc.GridInsetDecoration;
 import ru.ltst.u2020mvp.util.DrawableUtils;
 import rx.Observable;
 import rx.Subscriber;
-import rx.android.AndroidSubscriptions;
 
 public class GalleryView extends LinearLayout implements BaseView {
     public static final int COLUMNS_COUNT = 2;
@@ -124,4 +124,5 @@ public class GalleryView extends LinearLayout implements BaseView {
     public interface Injector {
         void inject(GalleryView view);
     }
+
 }
