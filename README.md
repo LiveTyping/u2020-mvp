@@ -3,7 +3,7 @@ U+2020-mvp
 
 Port of Jake Wharton's [U2020 sample app][u2020] with use of MVP pattern and [Dagger 2][dagger2].
 
-
+![Debug drawer](u2020-mvp.gif)
 
 Dagger 2
 -------
@@ -28,12 +28,16 @@ Libraries
  * Dagger 2 - https://github.com/google/dagger
  * ButterKnife - http://jakewharton.github.io/butterknife
  * Retrofit - http://square.github.io/retrofit
+ * Moshi - https://github.com/square/moshi
  * Picasso - http://square.github.io/picasso
  * OkHttp - http://square.github.io/okhttp
  * RxJava - https://github.com/ReactiveX/RxJava
  * RxAndroid - https://github.com/ReactiveX/RxAndroid
+ * Madge - http://github.com/JakeWharton/madge
  * Timber - http://github.com/JakeWharton/timber
+ * ProcessPhoenix - https://github.com/JakeWharton/ProcessPhoenix
  * Telescope - https://github.com/mattprecious/telescope
+ * LeakCanary - http://github.com/square/leakcanary
  * Espresso 2 - https://code.google.com/p/android-test-kit/
 
 
