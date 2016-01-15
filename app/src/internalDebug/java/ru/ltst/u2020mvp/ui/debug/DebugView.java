@@ -24,16 +24,16 @@ import com.squareup.leakcanary.internal.DisplayLeakActivity;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.StatsSnapshot;
 
+import org.threeten.bp.Instant;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.temporal.TemporalAccessor;
+
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
-import java.util.TimeZone;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -74,13 +74,13 @@ import static butterknife.ButterKnife.findById;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public final class DebugView extends FrameLayout {
-    private static final DateFormat DATE_DISPLAY_FORMAT =
-            new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.US);
+    private static final DateTimeFormatter DATE_DISPLAY_FORMAT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a", Locale.US).withZone(ZoneId.systemDefault());
+
     @Bind(R.id.debug_contextual_title) View contextualTitleView;
-
     @Bind(R.id.debug_contextual_list) LinearLayout contextualListView;
-    @Bind(R.id.debug_network_endpoint) Spinner endpointView;
 
+    @Bind(R.id.debug_network_endpoint) Spinner endpointView;
     @Bind(R.id.debug_network_endpoint_edit) View endpointEditView;
     @Bind(R.id.debug_network_delay) Spinner networkDelayView;
     @Bind(R.id.debug_network_variance) Spinner networkVarianceView;
@@ -462,15 +462,8 @@ public final class DebugView extends FrameLayout {
         buildCodeView.setText(String.valueOf(BuildConfig.VERSION_CODE));
         buildShaView.setText(BuildConfig.GIT_SHA);
 
-        try {
-            // Parse ISO8601-format time into local time.
-            DateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'", Locale.US);
-            inFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-            Date buildTime = inFormat.parse(BuildConfig.BUILD_TIME);
-            buildDateView.setText(DATE_DISPLAY_FORMAT.format(buildTime));
-        } catch (ParseException e) {
-            throw new RuntimeException("Unable to decode build time: " + BuildConfig.BUILD_TIME, e);
-        }
+        TemporalAccessor buildTime = Instant.ofEpochSecond(BuildConfig.GIT_TIMESTAMP);
+        buildDateView.setText(DATE_DISPLAY_FORMAT.format(buildTime));
     }
 
     private void setupDeviceSection() {
@@ -489,9 +482,9 @@ public final class DebugView extends FrameLayout {
         picasso.setIndicatorsEnabled(picassoDebuggingValue);
         picassoIndicatorView.setChecked(picassoDebuggingValue);
         picassoIndicatorView.setOnCheckedChangeListener((button, isChecked) -> {
-          Timber.d("Setting Picasso debugging to %b", isChecked);
-          picasso.setIndicatorsEnabled(isChecked);
-          picassoDebugging.set(isChecked);
+            Timber.d("Setting Picasso debugging to %b", isChecked);
+            picasso.setIndicatorsEnabled(isChecked);
+            picassoDebugging.set(isChecked);
         });
 
         refreshPicassoStats();
@@ -577,7 +570,7 @@ public final class DebugView extends FrameLayout {
         View view = LayoutInflater.from(app).inflate(R.layout.debug_drawer_network_proxy, null);
         final EditText hostView = findById(view, R.id.debug_drawer_network_proxy_host);
 
-        if(networkProxyAddress.isSet()) {
+        if (networkProxyAddress.isSet()) {
             String host = networkProxyAddress.get().getHostName();
             hostView.setText(host); // Set the current host.
             hostView.setSelection(0, host.length()); // Pre-select it for editing.
@@ -615,22 +608,22 @@ public final class DebugView extends FrameLayout {
         url.setSelection(url.length());
 
         new AlertDialog.Builder(getContext()) //
-            .setTitle("Set Network Endpoint")
-            .setView(view)
-            .setNegativeButton("Cancel", (dialog, i) -> {
-                endpointView.setSelection(originalSelection);
-                dialog.cancel();
-            })
-            .setPositiveButton("Use", (dialog, i) -> {
-                String theUrl = url.getText().toString();
-                if (!Strings.isBlank(theUrl)) {
-                    setEndpointAndRelaunch(theUrl);
-                } else {
+                .setTitle("Set Network Endpoint")
+                .setView(view)
+                .setNegativeButton("Cancel", (dialog, i) -> {
                     endpointView.setSelection(originalSelection);
-                }
-            })
-            .setOnCancelListener(dialogInterface -> endpointView.setSelection(originalSelection))
-            .show();
+                    dialog.cancel();
+                })
+                .setPositiveButton("Use", (dialog, i) -> {
+                    String theUrl = url.getText().toString();
+                    if (!Strings.isBlank(theUrl)) {
+                        setEndpointAndRelaunch(theUrl);
+                    } else {
+                        endpointView.setSelection(originalSelection);
+                    }
+                })
+                .setOnCancelListener(dialogInterface -> endpointView.setSelection(originalSelection))
+                .show();
     }
 
     private void setEndpointAndRelaunch(String endpoint) {

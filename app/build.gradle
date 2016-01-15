@@ -24,9 +24,7 @@ repositories {
 }
 
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
-def date = new Date()
-def buildTime = date.format("dd.MM.yy", TimeZone.getTimeZone("UTC"))
-def buildTimeInternal = date.format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone("UTC"))
+def gitTimestamp = 'git log -n 1 --format=%at'.execute([], rootDir).text.trim()
 
 def packagename = "ru.ltst.u2020mvp"
 
@@ -42,8 +40,8 @@ android {
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
-        buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
-        buildConfigField "String", "BUILD_TIME", "\"${buildTimeInternal}\""
+        buildConfigField 'String', 'GIT_SHA', "\"${gitSha}\""
+        buildConfigField 'long', 'GIT_TIMESTAMP', "${gitTimestamp}"
 
         testApplicationId "${packagename}.tests"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
