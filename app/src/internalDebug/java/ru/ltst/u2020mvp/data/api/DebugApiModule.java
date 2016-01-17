@@ -35,6 +35,12 @@ public final class DebugApiModule {
 
     @Provides
     @ApplicationScope
+    CurlLoggingInterceptor provideCurlLoggingInterceptor() {
+        return new CurlLoggingInterceptor(message -> Timber.tag("Curl").v(message));
+    }
+
+    @Provides
+    @ApplicationScope
     HttpLoggingInterceptor provideLoggingInterceptor() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(message -> Timber.tag("OkHttp").v(message));
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
@@ -46,9 +52,11 @@ public final class DebugApiModule {
     @Named("Api")
     OkHttpClient provideApiClient(OkHttpClient client,
                                   HttpLoggingInterceptor loggingInterceptor,
+                                  CurlLoggingInterceptor curlLoggingInterceptor,
                                   ApiHeaders apiHeaders) {
         return ApiModule.createApiClient(client, apiHeaders)
                 .addInterceptor(loggingInterceptor)
+                .addInterceptor(curlLoggingInterceptor)
                 .build();
     }
 
