@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -14,7 +14,7 @@ import ru.ltst.u2020mvp.U2020App;
 import ru.ltst.u2020mvp.U2020Component;
 import ru.ltst.u2020mvp.ui.AppContainer;
 
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     @Inject
     AppContainer appContainer;
@@ -34,7 +34,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         }
         Registry.add(this, viewId(), presenter());
         final LayoutInflater layoutInflater = getLayoutInflater();
-        ViewGroup container = appContainer.get(this);
+        ViewGroup container = appContainer.bind(this);
         layoutInflater.inflate(layoutId(), container);
     }
 

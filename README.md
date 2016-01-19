@@ -3,10 +3,12 @@ U+2020-mvp
 
 Port of Jake Wharton's [U2020 sample app][u2020] with use of MVP pattern and [Dagger 2][dagger2].
 
-
+![Debug drawer](u2020-mvp.gif)
 
 Dagger 2
 -------
+[Watch the corresponding talk][parleys] or [view the slides][slides].
+
 TODO
 
 
@@ -28,12 +30,16 @@ Libraries
  * Dagger 2 - https://github.com/google/dagger
  * ButterKnife - http://jakewharton.github.io/butterknife
  * Retrofit - http://square.github.io/retrofit
+ * Moshi - https://github.com/square/moshi
  * Picasso - http://square.github.io/picasso
  * OkHttp - http://square.github.io/okhttp
  * RxJava - https://github.com/ReactiveX/RxJava
  * RxAndroid - https://github.com/ReactiveX/RxAndroid
+ * Madge - http://github.com/JakeWharton/madge
  * Timber - http://github.com/JakeWharton/timber
+ * ProcessPhoenix - https://github.com/JakeWharton/ProcessPhoenix
  * Telescope - https://github.com/mattprecious/telescope
+ * LeakCanary - http://github.com/square/leakcanary
  * Espresso 2 - https://code.google.com/p/android-test-kit/
 
 
@@ -56,7 +62,9 @@ License
     limitations under the License.
 
 [u2020]: https://github.com/JakeWharton/u2020
-[mortar]: https://github.com/square/mortar
 [dagger2]: https://github.com/google/dagger
 [espresso2]: https://code.google.com/p/android-test-kit/wiki/EspressoSetupInstructions
 [activityrule]: https://gist.github.com/JakeWharton/1c2f2cadab2ddd97f9fb
+
+[parleys]: https://parleys.com/play/5471cdd1e4b065ebcfa1d557/
+[slides]: https://speakerdeck.com/jakewharton/dependency-injection-with-dagger-2-devoxx-2014

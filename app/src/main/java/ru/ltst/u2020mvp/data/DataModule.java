@@ -3,18 +3,19 @@ package ru.ltst.u2020mvp.data;
 import android.app.Application;
 import android.content.SharedPreferences;
 
-import com.squareup.okhttp.Cache;
-import com.squareup.okhttp.OkHttpClient;
+import com.squareup.moshi.Moshi;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.ltst.u2020mvp.data.api.ApiModule;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 import ru.ltst.u2020mvp.ApplicationScope;
+import ru.ltst.u2020mvp.data.api.ApiModule;
 
 import static android.content.Context.MODE_PRIVATE;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Module(includes = ApiModule.class)
 public final class DataModule {
@@ -32,17 +33,29 @@ public final class DataModule {
         return Clock.REAL;
     }
 
-    static OkHttpClient createOkHttpClient(Application app) {
-        OkHttpClient client = new OkHttpClient();
-        client.setConnectTimeout(10, SECONDS);
-        client.setReadTimeout(10, SECONDS);
-        client.setWriteTimeout(10, SECONDS);
+    @Provides
+    @ApplicationScope
+    IntentFactory provideIntentFactory() {
+        return IntentFactory.REAL;
+    }
 
+    @Provides
+    @ApplicationScope
+    Moshi provideMoshi() {
+        return new Moshi.Builder()
+                .add(new InstantAdapter())
+                .build();
+    }
+
+    static OkHttpClient.Builder createOkHttpClient(Application app) {
         // Install an HTTP cache in the application cache directory.
         File cacheDir = new File(app.getCacheDir(), "http");
         Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
-        client.setCache(cache);
+        return new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .cache(cache);
 
-        return client;
     }
 }

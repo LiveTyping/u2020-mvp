@@ -1,12 +1,12 @@
 package ru.ltst.u2020mvp.data.api;
 
+import retrofit2.Result;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
 import ru.ltst.u2020mvp.data.api.model.response.ImageResponse;
-
-import retrofit.http.GET;
-import retrofit.http.Path;
 import rx.Observable;
 
 public interface ImageService {
-    @GET("/image/{id}")
-    Observable<ImageResponse> image(@Path("id") String id);
+    @GET("image/{id}")
+    Observable<Result<ImageResponse>> image(@Path("id") String id);
 }

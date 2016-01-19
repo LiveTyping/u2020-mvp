@@ -1,5 +1,6 @@
 package ru.ltst.u2020mvp.data.api;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 
@@ -11,11 +12,14 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.inject.Inject;
 
-import ru.ltst.u2020mvp.data.api.model.MockImageLoader;
+import ru.ltst.u2020mvp.ApplicationScope;
+import ru.ltst.u2020mvp.data.api.mock.MockGalleryResponse;
+import ru.ltst.u2020mvp.data.api.mock.MockImage;
+import ru.ltst.u2020mvp.data.api.mock.MockImageLoader;
 import ru.ltst.u2020mvp.data.api.model.request.Section;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.data.api.model.response.ImageResponse;
-import ru.ltst.u2020mvp.ApplicationScope;
+import ru.ltst.u2020mvp.util.EnumPreferences;
 import timber.log.Timber;
 
 @ApplicationScope
@@ -31,6 +35,7 @@ public final class ServerDatabase {
     }
 
     private final MockImageLoader mockImageLoader;
+    private final SharedPreferences preferences;
 
     // TODO maybe id->image map and section->id multimap so we can re-use images?
     private final Map<Section, List<Image>> imagesBySection = new LinkedHashMap<>();
@@ -39,8 +44,9 @@ public final class ServerDatabase {
     private boolean initialized;
 
     @Inject
-    public ServerDatabase(MockImageLoader mockImageLoader) {
+    public ServerDatabase(MockImageLoader mockImageLoader, SharedPreferences preferences) {
         this.mockImageLoader = mockImageLoader;
+        this.preferences = preferences;
     }
 
     private synchronized void initializeMockData() {
@@ -51,42 +57,15 @@ public final class ServerDatabase {
         List<Image> hotImages = new ArrayList<>();
         imagesBySection.put(Section.HOT, hotImages);
 
-        hotImages.add(mockImageLoader.newImage("0y3uACw.jpg") //
-                .title("Much Dagger") //
-                .views(4000) //
-                .build()); //
-        hotImages.add(mockImageLoader.newImage("9PcLf86.jpg") //
-                .title("Nice Picasso") //
-                .views(854) //
-                .build());
-        hotImages.add(mockImageLoader.newImage("DgKWqio.jpg") //
-                .title("Omg Scalpel") //
-                .build());
-        hotImages.add(mockImageLoader.newImage("e3LxhEC.jpg") //
-                .title("Open Source Amaze") //
-                .build());
-        hotImages.add(mockImageLoader.newImage("p3jUQjI.jpg") //
-                .title("So RxJava") //
-                .views(2000) //
-                .build());
-        hotImages.add(mockImageLoader.newImage("P8hx3pg.jpg") //
-                .title("Madge Amaze") //
-                .build());
-        hotImages.add(mockImageLoader.newImage("vSxLdXJ.jpg") //
-                .title("Very ButterKnife") //
-                .views(3040) //
-                .build());
-        hotImages.add(mockImageLoader.newImage("DOGE-6.jpg") //
-                .title("Good AOSP") //
-                .build());
-        hotImages.add(mockImageLoader.newImage("DOGE-10.jpg") //
-                .title("Many OkHttp") //
-                .views(1500) //
-                .build());
-        hotImages.add(mockImageLoader.newImage("DOGE-16.jpg") //
-                .title("Wow Retrofit") //
-                .views(3000) //
-                .build());
+        final MockGalleryResponse enumValue = EnumPreferences.getEnumValue(
+                preferences, MockGalleryResponse.class,
+                MockGalleryResponse.class.getCanonicalName(), MockGalleryResponse.SUCCESS);
+
+        if (enumValue.response.data != null) {
+            for (MockImage mockImage : enumValue.response.data) {
+                hotImages.add(mockImageLoader.newImage(mockImage));
+            }
+        }
 
         for (Image hotImage : hotImages) {
             imagesById.put(hotImage.id, hotImage);

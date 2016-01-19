@@ -89,7 +89,7 @@ public class Registry {
         if (extras != null) {
             for (String key : extras.keySet()) {
                 Object value = extras.get(key);
-
+                if (value == null) continue;
                 String valueString;
                 if (value.getClass().isArray()) {
                     valueString = Arrays.toString((Object[]) value);

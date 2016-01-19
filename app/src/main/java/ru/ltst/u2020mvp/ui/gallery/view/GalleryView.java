@@ -1,6 +1,7 @@
 package ru.ltst.u2020mvp.ui.gallery.view;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -18,51 +20,38 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import ru.ltst.u2020mvp.R;
+import ru.ltst.u2020mvp.base.ComponentFinder;
 import ru.ltst.u2020mvp.base.mvp.BaseView;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
-import ru.ltst.u2020mvp.base.ComponentFinder;
 import ru.ltst.u2020mvp.ui.gallery.GalleryActivity;
 import ru.ltst.u2020mvp.ui.gallery.GalleryComponent;
+import ru.ltst.u2020mvp.ui.misc.AndroidSubscriptions;
 import ru.ltst.u2020mvp.ui.misc.BetterViewAnimator;
 import ru.ltst.u2020mvp.ui.misc.GridInsetDecoration;
+import ru.ltst.u2020mvp.util.DrawableUtils;
 import rx.Observable;
 import rx.Subscriber;
-import rx.android.AndroidSubscriptions;
-import rx.functions.Action0;
 
 public class GalleryView extends LinearLayout implements BaseView {
     public static final int COLUMNS_COUNT = 2;
 
-    @Bind(R.id.gallery_grid)
-    RecyclerView galleryView;
-    @Bind(R.id.gallery_animator)
-    BetterViewAnimator animator;
-    @Bind(R.id.gallery_toolbar)
-    Toolbar toolbar;
-    @Bind(R.id.gallery_swipe_refresh)
-    SwipeRefreshLayout swipeRefreshLayout;
+    @Bind(R.id.gallery_grid) RecyclerView galleryView;
+    @Bind(R.id.gallery_animator) BetterViewAnimator animator;
+    @Bind(R.id.gallery_toolbar) Toolbar toolbar;
+    @Bind(R.id.gallery_swipe_refresh) SwipeRefreshLayout swipeRefreshLayout;
+    @Bind(R.id.trending_loading_message) TextView loadingMessageView;
 
-    @Inject
-    Picasso picasso;
-    @Inject
-    GalleryActivity.Presenter presenter;
+    @Inject Picasso picasso;
+    @Inject GalleryActivity.Presenter presenter;
 
     private final GalleryAdapter adapter;
     private final List<Subscriber<? super Pair<Image, ImageView>>> clickSubscribers = new ArrayList<>();
-    private final Observable.OnSubscribe<Pair<Image, ImageView>> clickOnSubscribe = new Observable.OnSubscribe<Pair<Image, ImageView>>() {
-        @Override
-        public void call(final Subscriber<? super Pair<Image, ImageView>> subscriber) {
-            clickSubscribers.add(subscriber);
-            subscriber.add(AndroidSubscriptions.unsubscribeInUiThread(new Action0() {
-                @Override
-                public void call() {
-                    clickSubscribers.remove(subscriber);
-                }
-            }));
-        }
+    private final Observable.OnSubscribe<Pair<Image, ImageView>> clickOnSubscribe = subscriber -> {
+        clickSubscribers.add(subscriber);
+        subscriber.add(AndroidSubscriptions.unsubscribeInUiThread(() -> clickSubscribers.remove(subscriber)));
     };
 
     public GalleryView(Context context, AttributeSet attrs) {
@@ -90,12 +79,13 @@ public class GalleryView extends LinearLayout implements BaseView {
         galleryView.setItemAnimator(new DefaultItemAnimator());
         galleryView.addItemDecoration(new GridInsetDecoration(getContext(), R.dimen.grid_inset));
         galleryView.setAdapter(adapter);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                presenter.refresh();
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(() -> presenter.refresh());
+
+        AnimationDrawable ellipsis =
+                (AnimationDrawable) DrawableUtils.getDrawable(getContext(), R.drawable.dancing_ellipsis);
+        loadingMessageView.setCompoundDrawablesWithIntrinsicBounds(null, null, ellipsis, null);
+        ellipsis.start();
+
     }
 
     public GalleryAdapter getAdapter() {
@@ -106,9 +96,14 @@ public class GalleryView extends LinearLayout implements BaseView {
         return Observable.create(clickOnSubscribe);
     }
 
+    public void setRefreshed() {
+        if (swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
+    }
+
     @Override
     public void showLoading() {
-        animator.setDisplayedChildId(R.id.gallery_progress);
+        animator.setDisplayedChildId(R.id.trending_loading);
     }
 
     @Override
@@ -116,17 +111,18 @@ public class GalleryView extends LinearLayout implements BaseView {
         animator.setDisplayedChildId(R.id.gallery_swipe_refresh);
     }
 
-    public void setRefreshed() {
-        if (swipeRefreshLayout.isRefreshing())
-            swipeRefreshLayout.setRefreshing(false);
+    @Override
+    public void showError(Throwable throwable) {
+        animator.setDisplayedChildId(R.id.trending_error);
     }
 
     @Override
-    public void showError(Throwable throwable) {
-        animator.setDisplayedChildId(R.id.gallery_error_view);
+    public void showEmpty() {
+        animator.setDisplayedChildId(R.id.trending_empty);
     }
 
     public interface Injector {
         void inject(GalleryView view);
     }
+
 }

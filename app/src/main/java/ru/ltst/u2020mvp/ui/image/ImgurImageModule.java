@@ -21,9 +21,9 @@ public class ImgurImageModule {
 
     @Provides
     Observable<Image> provideImageObservable(ImageService imageService) {
-        return imageService.image(imageId).
-                map(new ImageResponseToImage()).
-                subscribeOn(Schedulers.io()).
-                observeOn(AndroidSchedulers.mainThread());
+        return imageService.image(imageId)
+                .map(new ImageResponseToImage())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }
