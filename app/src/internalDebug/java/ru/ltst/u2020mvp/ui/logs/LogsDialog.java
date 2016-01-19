@@ -2,12 +2,10 @@ package ru.ltst.u2020mvp.ui.logs;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.ListView;
 import android.widget.Toast;
-
 
 import java.io.File;
 
@@ -36,17 +34,11 @@ public final class LogsDialog extends AlertDialog {
 
         setTitle("Logs");
         setView(listView);
-        setButton(BUTTON_NEGATIVE, "Close", new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // NO-OP.
-            }
+        setButton(BUTTON_NEGATIVE, "Close", (dialog, which) -> {
+            // NO-OP.
         });
-        setButton(BUTTON_POSITIVE, "Share", new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                share();
-            }
+        setButton(BUTTON_POSITIVE, "Share", (dialog, which) -> {
+            share();
         });
     }
 
@@ -89,7 +81,7 @@ public final class LogsDialog extends AlertDialog {
                     Intent sendIntent = new Intent(Intent.ACTION_SEND);
                     sendIntent.setType("text/plain");
                     sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                    Intents.maybeStartActivity(getContext(), sendIntent);
+                    Intents.maybeStartChooser(getContext(), sendIntent);
                 }
             });
     }

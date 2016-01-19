@@ -1,9 +1,11 @@
 package ru.ltst.u2020mvp.ui.gallery;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.util.Pair;
-import android.widget.ImageView;
+import android.view.Window;
 
 import java.util.List;
 
@@ -22,11 +24,9 @@ import ru.ltst.u2020mvp.data.GalleryDatabase;
 import ru.ltst.u2020mvp.data.api.model.request.Section;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.data.rx.EndlessObserver;
-import ru.ltst.u2020mvp.ui.gallery.view.GalleryItemView;
 import ru.ltst.u2020mvp.ui.gallery.view.GalleryView;
 import ru.ltst.u2020mvp.ui.image.ImgurImageActivity;
 import rx.Subscription;
-import rx.functions.Action1;
 import timber.log.Timber;
 
 public class GalleryActivity extends BaseActivity implements HasComponent<GalleryComponent> {
@@ -40,6 +40,10 @@ public class GalleryActivity extends BaseActivity implements HasComponent<Galler
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(R.string.gallery_activity_title);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Remove the status bar color. The DrawerLayout is responsible for drawing it from now on.
+            setStatusBarColor(getWindow());
+        }
     }
 
     @Override
@@ -76,6 +80,11 @@ public class GalleryActivity extends BaseActivity implements HasComponent<Galler
         return galleryComponent;
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private static void setStatusBarColor(Window window) {
+        window.setStatusBarColor(Color.TRANSPARENT);
+    }
+
     @GalleryScope
     public static class Presenter extends BasePresenter<GalleryView> {
 
@@ -99,8 +108,12 @@ public class GalleryActivity extends BaseActivity implements HasComponent<Galler
             request = galleryDatabase.loadGallery(section, new EndlessObserver<List<Image>>() {
                 @Override
                 public void onNext(List<Image> images) {
-                    getView().getAdapter().replaceWith(images);
-                    getView().showContent();
+                    if (images.size() == 0) {
+                        getView().showEmpty();
+                    } else {
+                        getView().getAdapter().replaceWith(images);
+                        getView().showContent();
+                    }
                 }
 
                 @Override
@@ -110,15 +123,12 @@ public class GalleryActivity extends BaseActivity implements HasComponent<Galler
                 }
             });
             clicks = getView().observeImageClicks().subscribe(
-                new Action1<Pair<Image, ImageView>>() {
-                    @Override
-                    public void call(Pair<Image, ImageView> image) {
+                    image -> {
                         Timber.d("Image clicked with id = %s", image.first.id);
                         ActivityScreen screen = new ImgurImageActivity.Screen(image.first.id);
                         screen.attachTransitionView(image.second);
                         screenSwitcher.open(screen);
                     }
-                }
             );
         }
 

@@ -6,18 +6,18 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.data.api.GalleryService;
+import ru.ltst.u2020mvp.data.api.Results;
 import ru.ltst.u2020mvp.data.api.model.request.Section;
 import ru.ltst.u2020mvp.data.api.model.request.Sort;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.data.api.transforms.GalleryToImageList;
 import ru.ltst.u2020mvp.data.rx.EndObserver;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
@@ -69,18 +69,11 @@ public class GalleryDatabase {
 
         // Warning: Gross shit follows! Where you at Java 8?
         galleryService.listGallery(section, Sort.VIRAL, 1)
+                .filter(Results.isSuccess())
                 .map(new GalleryToImageList())
-                .flatMap(new Func1<List<Image>, Observable<Image>>() {
-                    @Override
-                    public Observable<Image> call(List<Image> images) {
-                        return Observable.from(images);
-                    }
-                })
-                .filter(new Func1<Image, Boolean>() {
-                    @Override
-                    public Boolean call(Image image) {
-                        return !image.is_album; // No albums.
-                    }
+                .flatMap(Observable::from)
+                .filter(image -> {
+                    return !image.is_album; // No albums.
                 })
                 .toList()
                 .subscribeOn(Schedulers.io())
@@ -89,4 +82,6 @@ public class GalleryDatabase {
 
         return subscription;
     }
+
+
 }

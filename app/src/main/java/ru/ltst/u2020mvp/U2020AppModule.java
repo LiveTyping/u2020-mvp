@@ -4,7 +4,6 @@ import android.app.Application;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.ltst.u2020mvp.ui.ApplicationScope;
 
 @Module
 public final class U2020AppModule {

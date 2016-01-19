@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Used for sharing logs. -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -10,22 +12,20 @@
 
     <application>
         <activity
-            android:name="ru.ltst.u2020mvp.ui.DebugActivity"
-            android:label="U+2020 MVP Dev Settings"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme.U2020.Debug"
-            android:screenOrientation="portrait"
-            android:icon="@drawable/dev_app_icon"
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity
             android:name="ru.ltst.u2020mvp.ui.debug.ProcessPhoenix"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:process=":phoenix"
             />
+
+        <activity
+            android:name="com.squareup.leakcanary.internal.DisplayLeakActivity"
+            android:enabled="false"
+            android:label="@string/__leak_canary_display_activity_label"
+            android:taskAffinity="com.squareup.leakcanary"
+            android:theme="@style/__LeakCanary.Base"
+            >
+            <intent-filter tools:node="removeAll"/>
+        </activity>
+
     </application>
 </manifest>

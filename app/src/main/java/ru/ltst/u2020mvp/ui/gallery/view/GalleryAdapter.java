@@ -4,16 +4,15 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
-import ru.ltst.u2020mvp.R;
-import ru.ltst.u2020mvp.data.api.model.response.Image;
-import ru.ltst.u2020mvp.ui.misc.BindableAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
 import java.util.List;
+
+import ru.ltst.u2020mvp.R;
+import ru.ltst.u2020mvp.data.api.model.response.Image;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
     private List<Image> images = Collections.emptyList();
@@ -47,12 +46,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.bindTo(images.get(position), picasso);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onClickListener != null) {
-                    onClickListener.onImageClicked(images.get(position), (GalleryItemView) holder.itemView);
-                }
+        holder.itemView.setOnClickListener(v -> {
+            if (onClickListener != null) {
+                onClickListener.onImageClicked(images.get(position), (GalleryItemView) holder.itemView);
             }
         });
     }

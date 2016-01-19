@@ -4,24 +4,20 @@ import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ru.ltst.u2020mvp.ui.misc.AspectRatioImageView;
 
 public class GalleryItemView extends CardView {
-    @InjectView(R.id.gallery_image_image)
+    @Bind(R.id.gallery_image_image)
     AspectRatioImageView image;
-    @InjectView(R.id.gallery_image_title)
+    @Bind(R.id.gallery_image_title)
     TextView title;
 
     public GalleryItemView(Context context, AttributeSet attrs) {
@@ -31,7 +27,7 @@ public class GalleryItemView extends CardView {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
     public void bindTo(final Image item, final Picasso picasso) {

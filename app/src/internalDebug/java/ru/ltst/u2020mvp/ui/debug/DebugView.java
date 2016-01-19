@@ -2,16 +2,15 @@ package ru.ltst.u2020mvp.ui.debug;
 
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -19,46 +18,52 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.squareup.okhttp.Cache;
-import com.squareup.okhttp.OkHttpClient;
+import com.f2prateek.rx.preferences.Preference;
+import com.jakewharton.rxbinding.widget.RxAdapterView;
+import com.squareup.leakcanary.internal.DisplayLeakActivity;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.StatsSnapshot;
 
+import org.threeten.bp.Instant;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.temporal.TemporalAccessor;
+
 import java.lang.reflect.Method;
-import java.net.Proxy;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.net.InetSocketAddress;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
-import java.util.TimeZone;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
-import retrofit.MockRestAdapter;
-import retrofit.RestAdapter;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
+import retrofit2.mock.NetworkBehavior;
 import ru.ltst.u2020mvp.BuildConfig;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.U2020App;
 import ru.ltst.u2020mvp.data.AnimationSpeed;
 import ru.ltst.u2020mvp.data.ApiEndpoint;
 import ru.ltst.u2020mvp.data.ApiEndpoints;
+import ru.ltst.u2020mvp.data.CaptureIntents;
 import ru.ltst.u2020mvp.data.IsMockMode;
 import ru.ltst.u2020mvp.data.LumberYard;
+import ru.ltst.u2020mvp.data.NetworkDelay;
+import ru.ltst.u2020mvp.data.NetworkFailurePercent;
+import ru.ltst.u2020mvp.data.NetworkVariancePercent;
 import ru.ltst.u2020mvp.data.PicassoDebugging;
 import ru.ltst.u2020mvp.data.PixelGridEnabled;
 import ru.ltst.u2020mvp.data.PixelRatioEnabled;
 import ru.ltst.u2020mvp.data.ScalpelEnabled;
 import ru.ltst.u2020mvp.data.ScalpelWireframeEnabled;
-import ru.ltst.u2020mvp.data.prefs.BooleanPreference;
-import ru.ltst.u2020mvp.data.prefs.IntPreference;
-import ru.ltst.u2020mvp.data.prefs.NetworkProxyPreference;
-import ru.ltst.u2020mvp.data.prefs.StringPreference;
+import ru.ltst.u2020mvp.data.api.mock.MockGalleryResponse;
+import ru.ltst.u2020mvp.data.api.mock.MockGalleryService;
+import ru.ltst.u2020mvp.data.prefs.InetSocketAddressPreferenceAdapter;
 import ru.ltst.u2020mvp.ui.logs.LogsDialog;
 import ru.ltst.u2020mvp.ui.misc.EnumAdapter;
 import ru.ltst.u2020mvp.util.Keyboards;
@@ -66,125 +71,81 @@ import ru.ltst.u2020mvp.util.Strings;
 import timber.log.Timber;
 
 import static butterknife.ButterKnife.findById;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public final class DebugView extends FrameLayout {
-    private static final DateFormat DATE_DISPLAY_FORMAT =
-            new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.US);
-    @InjectView(R.id.debug_contextual_title)
-    View contextualTitleView;
+    private static final DateTimeFormatter DATE_DISPLAY_FORMAT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a", Locale.US).withZone(ZoneId.systemDefault());
 
-    @InjectView(R.id.debug_contextual_list)
-    LinearLayout contextualListView;
-    @InjectView(R.id.debug_network_endpoint)
-    Spinner endpointView;
+    @Bind(R.id.debug_contextual_title) View contextualTitleView;
+    @Bind(R.id.debug_contextual_list) LinearLayout contextualListView;
 
-    @InjectView(R.id.debug_network_endpoint_edit)
-    View endpointEditView;
-    @InjectView(R.id.debug_network_delay)
-    Spinner networkDelayView;
-    @InjectView(R.id.debug_network_variance)
-    Spinner networkVarianceView;
-    @InjectView(R.id.debug_network_error)
-    Spinner networkErrorView;
-    @InjectView(R.id.debug_network_proxy)
-    Spinner networkProxyView;
-    @InjectView(R.id.debug_network_logging)
-    Spinner networkLoggingView;
+    @Bind(R.id.debug_network_endpoint) Spinner endpointView;
+    @Bind(R.id.debug_network_endpoint_edit) View endpointEditView;
+    @Bind(R.id.debug_network_delay) Spinner networkDelayView;
+    @Bind(R.id.debug_network_variance) Spinner networkVarianceView;
+    @Bind(R.id.debug_network_error) Spinner networkErrorView;
+    @Bind(R.id.debug_network_proxy) Spinner networkProxyView;
+    @Bind(R.id.debug_network_logging) Spinner networkLoggingView;
 
-    @InjectView(R.id.debug_ui_animation_speed)
-    Spinner uiAnimationSpeedView;
+    @Bind(R.id.debug_capture_intents) Switch captureIntentsView;
+    @Bind(R.id.debug_repositories_response) Spinner repositoriesResponseView;
 
-    @InjectView(R.id.debug_ui_pixel_grid)
-    Switch uiPixelGridView;
-    @InjectView(R.id.debug_ui_pixel_ratio)
-    Switch uiPixelRatioView;
-    @InjectView(R.id.debug_ui_scalpel)
-    Switch uiScalpelView;
-    @InjectView(R.id.debug_ui_scalpel_wireframe)
-    Switch uiScalpelWireframeView;
-    @InjectView(R.id.debug_build_name)
-    TextView buildNameView;
+    @Bind(R.id.debug_ui_animation_speed) Spinner uiAnimationSpeedView;
+    @Bind(R.id.debug_ui_pixel_grid) Switch uiPixelGridView;
+    @Bind(R.id.debug_ui_pixel_ratio) Switch uiPixelRatioView;
+    @Bind(R.id.debug_ui_scalpel) Switch uiScalpelView;
+    @Bind(R.id.debug_ui_scalpel_wireframe) Switch uiScalpelWireframeView;
+    @Bind(R.id.debug_build_name) TextView buildNameView;
 
-    @InjectView(R.id.debug_build_code)
-    TextView buildCodeView;
-    @InjectView(R.id.debug_build_sha)
-    TextView buildShaView;
-    @InjectView(R.id.debug_build_date)
-    TextView buildDateView;
-    @InjectView(R.id.debug_device_make)
-    TextView deviceMakeView;
+    @Bind(R.id.debug_build_code) TextView buildCodeView;
+    @Bind(R.id.debug_build_sha) TextView buildShaView;
+    @Bind(R.id.debug_build_date) TextView buildDateView;
+    @Bind(R.id.debug_device_make) TextView deviceMakeView;
 
-    @InjectView(R.id.debug_device_model)
-    TextView deviceModelView;
-    @InjectView(R.id.debug_device_resolution)
-    TextView deviceResolutionView;
-    @InjectView(R.id.debug_device_density)
-    TextView deviceDensityView;
-    @InjectView(R.id.debug_device_release)
-    TextView deviceReleaseView;
-    @InjectView(R.id.debug_device_api)
-    TextView deviceApiView;
-    @InjectView(R.id.debug_picasso_indicators)
-    Switch picassoIndicatorView;
+    @Bind(R.id.debug_device_model) TextView deviceModelView;
+    @Bind(R.id.debug_device_resolution) TextView deviceResolutionView;
+    @Bind(R.id.debug_device_density) TextView deviceDensityView;
+    @Bind(R.id.debug_device_release) TextView deviceReleaseView;
+    @Bind(R.id.debug_device_api) TextView deviceApiView;
+    @Bind(R.id.debug_picasso_indicators) Switch picassoIndicatorView;
 
-    @InjectView(R.id.debug_picasso_cache_size)
-    TextView picassoCacheSizeView;
-    @InjectView(R.id.debug_picasso_cache_hit)
-    TextView picassoCacheHitView;
-    @InjectView(R.id.debug_picasso_cache_miss)
-    TextView picassoCacheMissView;
-    @InjectView(R.id.debug_picasso_decoded)
-    TextView picassoDecodedView;
-    @InjectView(R.id.debug_picasso_decoded_total)
-    TextView picassoDecodedTotalView;
-    @InjectView(R.id.debug_picasso_decoded_avg)
-    TextView picassoDecodedAvgView;
-    @InjectView(R.id.debug_picasso_transformed)
-    TextView picassoTransformedView;
-    @InjectView(R.id.debug_picasso_transformed_total)
-    TextView picassoTransformedTotalView;
-    @InjectView(R.id.debug_picasso_transformed_avg)
-    TextView picassoTransformedAvgView;
-    @InjectView(R.id.debug_okhttp_cache_max_size)
-    TextView okHttpCacheMaxSizeView;
+    @Bind(R.id.debug_picasso_cache_size) TextView picassoCacheSizeView;
+    @Bind(R.id.debug_picasso_cache_hit) TextView picassoCacheHitView;
+    @Bind(R.id.debug_picasso_cache_miss) TextView picassoCacheMissView;
+    @Bind(R.id.debug_picasso_decoded) TextView picassoDecodedView;
+    @Bind(R.id.debug_picasso_decoded_total) TextView picassoDecodedTotalView;
+    @Bind(R.id.debug_picasso_decoded_avg) TextView picassoDecodedAvgView;
+    @Bind(R.id.debug_picasso_transformed) TextView picassoTransformedView;
+    @Bind(R.id.debug_picasso_transformed_total) TextView picassoTransformedTotalView;
+    @Bind(R.id.debug_picasso_transformed_avg) TextView picassoTransformedAvgView;
+    @Bind(R.id.debug_okhttp_cache_max_size) TextView okHttpCacheMaxSizeView;
 
-    @InjectView(R.id.debug_okhttp_cache_write_error)
-    TextView okHttpCacheWriteErrorView;
-    @InjectView(R.id.debug_okhttp_cache_request_count)
-    TextView okHttpCacheRequestCountView;
-    @InjectView(R.id.debug_okhttp_cache_network_count)
-    TextView okHttpCacheNetworkCountView;
-    @InjectView(R.id.debug_okhttp_cache_hit_count)
-    TextView okHttpCacheHitCountView;
-    @Inject
-    OkHttpClient client;
+    @Bind(R.id.debug_okhttp_cache_write_error) TextView okHttpCacheWriteErrorView;
+    @Bind(R.id.debug_okhttp_cache_request_count) TextView okHttpCacheRequestCountView;
+    @Bind(R.id.debug_okhttp_cache_network_count) TextView okHttpCacheNetworkCountView;
+    @Bind(R.id.debug_okhttp_cache_hit_count) TextView okHttpCacheHitCountView;
 
-    @Inject
-    Picasso picasso;
-    @Inject
-    LumberYard lumberYard;
-    @Inject
-    @IsMockMode
-    boolean isMockMode;
-    @Inject
-    @ApiEndpoint
-    StringPreference networkEndpoint;
-    @Inject NetworkProxyPreference networkProxy;
-    @Inject @AnimationSpeed IntPreference animationSpeed;
-    @Inject @PicassoDebugging
-    BooleanPreference picassoDebugging;
-    @Inject @PixelGridEnabled
-    BooleanPreference pixelGridEnabled;
-    @Inject @PixelRatioEnabled
-    BooleanPreference pixelRatioEnabled;
-    @Inject @ScalpelEnabled
-    BooleanPreference scalpelEnabled;
-    @Inject @ScalpelWireframeEnabled
-    BooleanPreference scalpelWireframeEnabled;
-    @Inject
-    RestAdapter restAdapter;
-    @Inject
-    MockRestAdapter mockRestAdapter;
+    @Inject OkHttpClient client;
+    @Inject @Named("Api") OkHttpClient apiClient;
+    @Inject Picasso picasso;
+    @Inject LumberYard lumberYard;
+    @Inject @IsMockMode boolean isMockMode;
+    @Inject @ApiEndpoint Preference<String> networkEndpoint;
+    @Inject Preference<InetSocketAddress> networkProxyAddress;
+    @Inject @CaptureIntents Preference<Boolean> captureIntents;
+    @Inject @AnimationSpeed Preference<Integer> animationSpeed;
+    @Inject @PicassoDebugging Preference<Boolean> picassoDebugging;
+    @Inject @PixelGridEnabled Preference<Boolean> pixelGridEnabled;
+    @Inject @PixelRatioEnabled Preference<Boolean> pixelRatioEnabled;
+    @Inject @ScalpelEnabled Preference<Boolean> scalpelEnabled;
+    @Inject @ScalpelWireframeEnabled Preference<Boolean> scalpelWireframeEnabled;
+    @Inject NetworkBehavior behavior;
+    @Inject @NetworkDelay Preference<Long> networkDelay;
+    @Inject @NetworkFailurePercent Preference<Integer> networkFailurePercent;
+    @Inject @NetworkVariancePercent Preference<Integer> networkVariancePercent;
+    @Inject MockGalleryService mockGalleryService;
+    @Inject Application app;
 
     private final ContextualDebugActions contextualDebugActions;
 
@@ -198,12 +159,13 @@ public final class DebugView extends FrameLayout {
 
         // Inflate all of the controls and inject them.
         LayoutInflater.from(context).inflate(R.layout.debug_view_content, this);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         Set<ContextualDebugActions.DebugAction<?>> debugActions = Collections.emptySet();
         contextualDebugActions = new ContextualDebugActions(this, debugActions);
 
         setupNetworkSection();
+        setupMockBehaviorSection();
         setupUserInterfaceSection();
         setupBuildSection();
         setupDeviceSection();
@@ -226,114 +188,79 @@ public final class DebugView extends FrameLayout {
                 new EnumAdapter<>(getContext(), ApiEndpoints.class);
         endpointView.setAdapter(endpointAdapter);
         endpointView.setSelection(currentEndpoint.ordinal());
-        endpointView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                ApiEndpoints selected = endpointAdapter.getItem(position);
-                if (selected != currentEndpoint) {
-                    if (selected == ApiEndpoints.CUSTOM) {
-                        Timber.d("Custom network endpoint selected. Prompting for URL.");
-                        showCustomEndpointDialog(currentEndpoint.ordinal(), "http://");
-                    } else {
-                        setEndpointAndRelaunch(selected.url);
-                    }
-                } else {
-                    Timber.d("Ignoring re-selection of network endpoint %s", selected);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
+        RxAdapterView.itemSelections(endpointView)
+                .map(endpointAdapter::getItem)
+                .filter(item -> item != currentEndpoint)
+                .subscribe(selected -> {
+                        if (selected == ApiEndpoints.CUSTOM) {
+                            Timber.d("Custom network endpoint selected. Prompting for URL.");
+                            showCustomEndpointDialog(currentEndpoint.ordinal(), "http://");
+                        } else {
+                            setEndpointAndRelaunch(selected.url);
+                        }
+                });
 
         final NetworkDelayAdapter delayAdapter = new NetworkDelayAdapter(getContext());
         networkDelayView.setAdapter(delayAdapter);
-        networkDelayView.setSelection(
-                NetworkDelayAdapter.getPositionForValue(mockRestAdapter.getDelay()));
-        networkDelayView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                long selected = delayAdapter.getItem(position);
-                if (selected != mockRestAdapter.getDelay()) {
+        networkDelayView.setSelection(NetworkDelayAdapter.getPositionForValue(behavior.delay(MILLISECONDS)));
+        RxAdapterView.itemSelections(networkDelayView)
+                .map(delayAdapter::getItem)
+                .filter(item -> item != behavior.delay(MILLISECONDS))
+                .subscribe(selected -> {
                     Timber.d("Setting network delay to %sms", selected);
-                    mockRestAdapter.setDelay(selected);
-                } else {
-                    Timber.d("Ignoring re-selection of network delay %sms", selected);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
+                    behavior.setDelay(selected, MILLISECONDS);
+                    networkDelay.set(selected);
+                });
 
         final NetworkVarianceAdapter varianceAdapter = new NetworkVarianceAdapter(getContext());
         networkVarianceView.setAdapter(varianceAdapter);
-        networkVarianceView.setSelection(
-                NetworkVarianceAdapter.getPositionForValue(mockRestAdapter.getVariancePercentage()));
-        networkVarianceView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                int selected = varianceAdapter.getItem(position);
-                if (selected != mockRestAdapter.getVariancePercentage()) {
-                    Timber.d("Setting network variance to %s%%", selected);
-                    mockRestAdapter.setVariancePercentage(selected);
-                } else {
-                    Timber.d("Ignoring re-selection of network variance %s%%", selected);
-                }
-            }
+        networkVarianceView.setSelection(NetworkVarianceAdapter.getPositionForValue(behavior.variancePercent()));
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
+        RxAdapterView.itemSelections(networkVarianceView)
+                .map(varianceAdapter::getItem)
+                .filter(item -> item != behavior.variancePercent())
+                .subscribe(selected -> {
+                    Timber.d("Setting network variance to %s%%", selected);
+                    behavior.setVariancePercent(selected);
+                    networkVariancePercent.set(selected);
+                });
 
         final NetworkErrorAdapter errorAdapter = new NetworkErrorAdapter(getContext());
         networkErrorView.setAdapter(errorAdapter);
-        networkErrorView.setSelection(
-                NetworkErrorAdapter.getPositionForValue(mockRestAdapter.getErrorPercentage()));
-        networkErrorView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                int selected = errorAdapter.getItem(position);
-                if (selected != mockRestAdapter.getErrorPercentage()) {
+        networkErrorView.setSelection(NetworkErrorAdapter.getPositionForValue(behavior.failurePercent()));
+        RxAdapterView.itemSelections(networkErrorView)
+                .map(errorAdapter::getItem)
+                .filter(item -> item != behavior.failurePercent())
+                .subscribe(selected -> {
                     Timber.d("Setting network error to %s%%", selected);
-                    mockRestAdapter.setErrorPercentage(selected);
-                } else {
-                    Timber.d("Ignoring re-selection of network error %s%%", selected);
-                }
-            }
+                    behavior.setFailurePercent(selected);
+                    networkFailurePercent.set(selected);
+                });
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
-
-        int currentProxyPosition = networkProxy.isSet() ? ProxyAdapter.PROXY : ProxyAdapter.NONE;
-        final ProxyAdapter proxyAdapter = new ProxyAdapter(getContext(), networkProxy);
+        int currentProxyPosition = networkProxyAddress.isSet() ? ProxyAdapter.PROXY : ProxyAdapter.NONE;
+        final ProxyAdapter proxyAdapter = new ProxyAdapter(getContext(), networkProxyAddress);
         networkProxyView.setAdapter(proxyAdapter);
         networkProxyView.setSelection(currentProxyPosition);
-        networkProxyView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                if (position == ProxyAdapter.NONE) {
-                    Timber.d("Clearing network proxy");
-                    // TODO: Keep the custom proxy around so you can easily switch back and forth.
-                    networkProxy.delete();
-                    client.setProxy(null);
-                } else if (networkProxy.isSet() && position == ProxyAdapter.PROXY) {
-                    Timber.d("Ignoring re-selection of network proxy %s", networkProxy.get());
-                } else {
-                    Timber.d("New network proxy selected. Prompting for host.");
-                    showNewNetworkProxyDialog(proxyAdapter);
-                }
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
+        RxAdapterView.itemSelections(networkProxyView)
+                .filter(position -> !networkProxyAddress.isSet() || position != ProxyAdapter.PROXY)
+                .subscribe(position -> {
+                    if (position == ProxyAdapter.NONE) {
+                        // Only clear the proxy and restart if one was previously set.
+                        if (currentProxyPosition != ProxyAdapter.NONE) {
+                            Timber.d("Clearing network proxy");
+                            // TODO: Keep the custom proxy around so you can easily switch back and forth.
+                            networkProxyAddress.delete();
+                            // Force a restart to re-initialize the app without a proxy.
+                            ProcessPhoenix.triggerRebirth(getContext());
+                        }
+                    } else if (networkProxyAddress.isSet() && position == ProxyAdapter.PROXY) {
+                        Timber.d("Ignoring re-selection of network proxy %s", networkProxyAddress.get());
+                    } else {
+                        Timber.d("New network proxy selected. Prompting for host.");
+                        showNewNetworkProxyDialog(proxyAdapter);
+                    }
+                });
 
         // Only show the endpoint editor when a custom endpoint is in use.
         endpointEditView.setVisibility(currentEndpoint == ApiEndpoints.CUSTOM ? VISIBLE : GONE);
@@ -350,26 +277,26 @@ public final class DebugView extends FrameLayout {
         }
 
         // We use the JSON rest adapter as the source of truth for the log level.
-        final EnumAdapter<RestAdapter.LogLevel> loggingAdapter =
-                new EnumAdapter<>(getContext(), RestAdapter.LogLevel.class);
-        networkLoggingView.setAdapter(loggingAdapter);
-        networkLoggingView.setSelection(restAdapter.getLogLevel().ordinal());
-        networkLoggingView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                RestAdapter.LogLevel selected = loggingAdapter.getItem(position);
-                if (selected != restAdapter.getLogLevel()) {
-                    Timber.d("Setting logging level to %s", selected);
-                    restAdapter.setLogLevel(selected);
-                } else {
-                    Timber.d("Ignoring re-selection of logging level " + selected);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
+//        final EnumAdapter<RestAdapter.LogLevel> loggingAdapter =
+//                new EnumAdapter<>(getContext(), RestAdapter.LogLevel.class);
+//        networkLoggingView.setAdapter(loggingAdapter);
+//        networkLoggingView.setSelection(restAdapter.getLogLevel().ordinal());
+//        networkLoggingView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+//                RestAdapter.LogLevel selected = loggingAdapter.getItem(position);
+//                if (selected != restAdapter.getLogLevel()) {
+//                    Timber.d("Setting logging level to %s", selected);
+//                    restAdapter.setLogLevel(selected);
+//                } else {
+//                    Timber.d("Ignoring re-selection of logging level " + selected);
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//            }
+//        });
     }
 
     @OnClick(R.id.debug_network_endpoint_edit)
@@ -379,76 +306,84 @@ public final class DebugView extends FrameLayout {
         showCustomEndpointDialog(endpointView.getSelectedItemPosition(), networkEndpoint.get());
     }
 
+    private void setupMockBehaviorSection() {
+        captureIntentsView.setEnabled(isMockMode);
+        captureIntentsView.setChecked(captureIntents.get());
+        captureIntentsView.setOnCheckedChangeListener((compoundButton, b) -> {
+            Timber.d("Capture intents set to %s", b);
+            captureIntents.set(b);
+        });
+
+        configureResponseSpinner(repositoriesResponseView, MockGalleryResponse.class);
+    }
+
+    /**
+     * Populates a {@code Spinner} with the values of an {@code enum} and binds it to the value set
+     * in
+     * the mock service.
+     */
+    private <T extends Enum<T>> void configureResponseSpinner(Spinner spinner,
+                                                              final Class<T> responseClass) {
+        final EnumAdapter<T> adapter = new EnumAdapter<>(getContext(), responseClass);
+        spinner.setEnabled(isMockMode);
+        spinner.setAdapter(adapter);
+        spinner.setSelection(mockGalleryService.getResponse(responseClass).ordinal());
+
+        RxAdapterView.itemSelections(spinner)
+                .map(adapter::getItem)
+                .filter(item -> item != mockGalleryService.getResponse(responseClass))
+                .subscribe(selected -> {
+                    Timber.d("Setting %s to %s", responseClass.getSimpleName(), selected);
+                    mockGalleryService.setResponse(responseClass, selected);
+                    ProcessPhoenix.triggerRebirth(getContext());
+                });
+    }
+
     private void setupUserInterfaceSection() {
         final AnimationSpeedAdapter speedAdapter = new AnimationSpeedAdapter(getContext());
         uiAnimationSpeedView.setAdapter(speedAdapter);
         final int animationSpeedValue = animationSpeed.get();
-        uiAnimationSpeedView.setSelection(
-                AnimationSpeedAdapter.getPositionForValue(animationSpeedValue));
-        uiAnimationSpeedView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                int selected = speedAdapter.getItem(position);
-                if (selected != animationSpeed.get()) {
+        uiAnimationSpeedView.setSelection(AnimationSpeedAdapter.getPositionForValue(animationSpeedValue));
+
+        RxAdapterView.itemSelections(uiAnimationSpeedView)
+                .map(speedAdapter::getItem)
+                .filter(item -> item != animationSpeed.get())
+                .subscribe(selected -> {
                     Timber.d("Setting animation speed to %sx", selected);
                     animationSpeed.set(selected);
                     applyAnimationSpeed(selected);
-                } else {
-                    Timber.d("Ignoring re-selection of animation speed %sx", selected);
-                }
-            }
+                });
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
         // Ensure the animation speed value is always applied across app restarts.
-        post(new Runnable() {
-            @Override
-            public void run() {
-                applyAnimationSpeed(animationSpeedValue);
-            }
-        });
+        post(() -> applyAnimationSpeed(animationSpeedValue));
 
         boolean gridEnabled = pixelGridEnabled.get();
         uiPixelGridView.setChecked(gridEnabled);
         uiPixelRatioView.setEnabled(gridEnabled);
-        uiPixelGridView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Timber.d("Setting pixel grid overlay enabled to " + isChecked);
-                pixelGridEnabled.set(isChecked);
-                uiPixelRatioView.setEnabled(isChecked);
-            }
+        uiPixelGridView.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Timber.d("Setting pixel grid overlay enabled to %b", isChecked);
+            pixelGridEnabled.set(isChecked);
+            uiPixelRatioView.setEnabled(isChecked);
         });
 
         uiPixelRatioView.setChecked(pixelRatioEnabled.get());
-        uiPixelRatioView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Timber.d("Setting pixel scale overlay enabled to " + isChecked);
-                pixelRatioEnabled.set(isChecked);
-            }
+        uiPixelRatioView.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Timber.d("Setting pixel scale overlay enabled to %b", isChecked);
+            pixelRatioEnabled.set(isChecked);
         });
 
         uiScalpelView.setChecked(scalpelEnabled.get());
         uiScalpelWireframeView.setEnabled(scalpelEnabled.get());
-        uiScalpelView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Timber.d("Setting scalpel interaction enabled to " + isChecked);
-                scalpelEnabled.set(isChecked);
-                uiScalpelWireframeView.setEnabled(isChecked);
-            }
+        uiScalpelView.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Timber.d("Setting scalpel interaction enabled to %b", isChecked);
+            scalpelEnabled.set(isChecked);
+            uiScalpelWireframeView.setEnabled(isChecked);
         });
 
         uiScalpelWireframeView.setChecked(scalpelWireframeEnabled.get());
-        uiScalpelWireframeView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Timber.d("Setting scalpel wireframe enabled to " + isChecked);
-                scalpelWireframeEnabled.set(isChecked);
-            }
+        uiScalpelWireframeView.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Timber.d("Setting scalpel wireframe enabled to %b", isChecked);
+            scalpelWireframeEnabled.set(isChecked);
         });
     }
 
@@ -457,20 +392,19 @@ public final class DebugView extends FrameLayout {
         new LogsDialog(new ContextThemeWrapper(getContext(), R.style.Theme_U2020), lumberYard).show();
     }
 
+    @OnClick(R.id.debug_leaks_show)
+    void showLeaks() {
+        Intent intent = new Intent(getContext(), DisplayLeakActivity.class);
+        getContext().startActivity(intent);
+    }
+
     private void setupBuildSection() {
         buildNameView.setText(BuildConfig.VERSION_NAME);
         buildCodeView.setText(String.valueOf(BuildConfig.VERSION_CODE));
         buildShaView.setText(BuildConfig.GIT_SHA);
 
-        try {
-            // Parse ISO8601-format time into local time.
-            DateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'", Locale.US);
-            inFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-            Date buildTime = inFormat.parse(BuildConfig.BUILD_TIME);
-            buildDateView.setText(DATE_DISPLAY_FORMAT.format(buildTime));
-        } catch (ParseException e) {
-            throw new RuntimeException("Unable to decode build time: " + BuildConfig.BUILD_TIME, e);
-        }
+        TemporalAccessor buildTime = Instant.ofEpochSecond(BuildConfig.GIT_TIMESTAMP);
+        buildDateView.setText(DATE_DISPLAY_FORMAT.format(buildTime));
     }
 
     private void setupDeviceSection() {
@@ -488,12 +422,10 @@ public final class DebugView extends FrameLayout {
         boolean picassoDebuggingValue = picassoDebugging.get();
         picasso.setIndicatorsEnabled(picassoDebuggingValue);
         picassoIndicatorView.setChecked(picassoDebuggingValue);
-        picassoIndicatorView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-          @Override public void onCheckedChanged(CompoundButton button, boolean isChecked) {
-            Timber.d("Setting Picasso debugging to " + isChecked);
+        picassoIndicatorView.setOnCheckedChangeListener((button, isChecked) -> {
+            Timber.d("Setting Picasso debugging to %b", isChecked);
             picasso.setIndicatorsEnabled(isChecked);
             picassoDebugging.set(isChecked);
-          }
         });
 
         refreshPicassoStats();
@@ -516,21 +448,21 @@ public final class DebugView extends FrameLayout {
     }
 
     private void setupOkHttpCacheSection() {
-        Cache cache = client.getCache(); // Shares the cache with apiClient, so no need to check both.
-        okHttpCacheMaxSizeView.setText(getSizeString(cache.getMaxSize()));
+        Cache cache = client.cache(); // Shares the cache with apiClient, so no need to check both.
+        okHttpCacheMaxSizeView.setText(getSizeString(cache.maxSize()));
 
         refreshOkHttpCacheStats();
     }
 
     private void refreshOkHttpCacheStats() {
-        Cache cache = client.getCache(); // Shares the cache with apiClient, so no need to check both.
-        int writeTotal = cache.getWriteSuccessCount() + cache.getWriteAbortCount();
-        int percentage = (int) ((1f * cache.getWriteAbortCount() / writeTotal) * 100);
+        Cache cache = client.cache(); // Shares the cache with apiClient, so no need to check both.
+        int writeTotal = cache.writeSuccessCount() + cache.writeAbortCount();
+        int percentage = (int) ((1f * cache.writeAbortCount() / writeTotal) * 100);
         okHttpCacheWriteErrorView.setText(
-                cache.getWriteAbortCount() + " / " + writeTotal + " (" + percentage + "%)");
-        okHttpCacheRequestCountView.setText(String.valueOf(cache.getRequestCount()));
-        okHttpCacheNetworkCountView.setText(String.valueOf(cache.getNetworkCount()));
-        okHttpCacheHitCountView.setText(String.valueOf(cache.getHitCount()));
+                cache.writeAbortCount() + " / " + writeTotal + " (" + percentage + "%)");
+        okHttpCacheRequestCountView.setText(String.valueOf(cache.requestCount()));
+        okHttpCacheNetworkCountView.setText(String.valueOf(cache.networkCount()));
+        okHttpCacheHitCountView.setText(String.valueOf(cache.hitCount()));
     }
 
     private void applyAnimationSpeed(int multiplier) {
@@ -573,59 +505,41 @@ public final class DebugView extends FrameLayout {
         return bytes + units[unit];
     }
 
-  private void showNewNetworkProxyDialog(final ProxyAdapter proxyAdapter) {
-    final int originalSelection = networkProxy.isSet() ? ProxyAdapter.PROXY : ProxyAdapter.NONE;
+    private void showNewNetworkProxyDialog(final ProxyAdapter proxyAdapter) {
+        final int originalSelection = networkProxyAddress.isSet() ? ProxyAdapter.PROXY : ProxyAdapter.NONE;
 
-      View view = LayoutInflater.from(getContext()).inflate(R.layout.debug_drawer_network_proxy, null);
-      final EditText hostView = findById(view, R.id.debug_drawer_network_proxy_host);
+        View view = LayoutInflater.from(app).inflate(R.layout.debug_drawer_network_proxy, null);
+        final EditText hostView = findById(view, R.id.debug_drawer_network_proxy_host);
 
-      String host = networkProxy.get();
-      if (!Strings.isBlank(host)) {
-          hostView.setText(host); // Set the current host.
-          hostView.setSelection(0, host.length()); // Pre-select it for editing.
+        if (networkProxyAddress.isSet()) {
+            String host = networkProxyAddress.get().getHostName();
+            hostView.setText(host); // Set the current host.
+            hostView.setSelection(0, host.length()); // Pre-select it for editing.
 
-          // Show the keyboard. Post this to the next frame when the dialog has been attached.
-          hostView.post(new Runnable() {
-              @Override
-              public void run() {
-                  Keyboards.showKeyboard(hostView);
-              }
-          });
-      }
+            // Show the keyboard. Post this to the next frame when the dialog has been attached.
+            hostView.post(() -> Keyboards.showKeyboard(hostView));
+        }
 
-      new AlertDialog.Builder(getContext()) //
-              .setTitle("Set Network Proxy")
-              .setView(view)
-              .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                  @Override
-                  public void onClick(DialogInterface dialog, int i) {
-                      networkProxyView.setSelection(originalSelection);
-                      dialog.cancel();
-                  }
-              })
-              .setPositiveButton("Use", new DialogInterface.OnClickListener() {
-                  @Override
-                  public void onClick(DialogInterface dialog, int i) {
-                      String theHost = hostView.getText().toString();
-                      if (!Strings.isBlank(theHost)) {
-                          networkProxy.set(theHost); // Persist across restarts.
-                          proxyAdapter.notifyDataSetChanged(); // Tell the spinner to update.
-                          networkProxyView.setSelection(ProxyAdapter.PROXY); // And show the proxy.
-
-                          Proxy proxy = networkProxy.getProxy();
-                          client.setProxy(proxy);
-                      } else {
-                          networkProxyView.setSelection(originalSelection);
-                      }
-                  }
-              })
-              .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                  @Override
-                  public void onCancel(DialogInterface dialogInterface) {
-                      networkProxyView.setSelection(originalSelection);
-                  }
-              })
-              .show();
+        new android.support.v7.app.AlertDialog.Builder(getContext()) //
+                .setTitle("Set Network Proxy")
+                .setView(view)
+                .setNegativeButton("Cancel", (dialog, i) -> {
+                    networkProxyView.setSelection(originalSelection);
+                    dialog.cancel();
+                })
+                .setPositiveButton("Use", (dialog, i) -> {
+                    String in = hostView.getText().toString();
+                    InetSocketAddress address = InetSocketAddressPreferenceAdapter.parse(in);
+                    if (address != null) {
+                        networkProxyAddress.set(address);
+                        // Force a restart to re-initialize the app with the new proxy.
+                        ProcessPhoenix.triggerRebirth(getContext());
+                    } else {
+                        networkProxyView.setSelection(originalSelection);
+                    }
+                })
+                .setOnCancelListener(dialogInterface -> networkProxyView.setSelection(originalSelection))
+                .show();
     }
 
     private void showCustomEndpointDialog(final int originalSelection, String defaultUrl) {
@@ -635,33 +549,22 @@ public final class DebugView extends FrameLayout {
         url.setSelection(url.length());
 
         new AlertDialog.Builder(getContext()) //
-            .setTitle("Set Network Endpoint")
-            .setView(view)
-            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int i) {
+                .setTitle("Set Network Endpoint")
+                .setView(view)
+                .setNegativeButton("Cancel", (dialog, i) -> {
                     endpointView.setSelection(originalSelection);
                     dialog.cancel();
-                }
-            })
-            .setPositiveButton("Use", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int i) {
+                })
+                .setPositiveButton("Use", (dialog, i) -> {
                     String theUrl = url.getText().toString();
                     if (!Strings.isBlank(theUrl)) {
                         setEndpointAndRelaunch(theUrl);
                     } else {
                         endpointView.setSelection(originalSelection);
                     }
-                }
-            })
-            .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialogInterface) {
-                    endpointView.setSelection(originalSelection);
-                }
-            })
-            .show();
+                })
+                .setOnCancelListener(dialogInterface -> endpointView.setSelection(originalSelection))
+                .show();
     }
 
     private void setEndpointAndRelaunch(String endpoint) {
