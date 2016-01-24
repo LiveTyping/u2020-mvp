@@ -25,6 +25,12 @@ Testing
 
 
 
+Android Studio Template
+-----------------------
+Also we've created a [u2020-mvp Android Studio Template][u2020-mvp-template]
+to quickly generate the u2020-mvp classes.
+
+
 Libraries
 -------
  * Dagger 2 - https://github.com/google/dagger
@@ -65,6 +71,6 @@ License
 [dagger2]: https://github.com/google/dagger
 [espresso2]: https://code.google.com/p/android-test-kit/wiki/EspressoSetupInstructions
 [activityrule]: https://gist.github.com/JakeWharton/1c2f2cadab2ddd97f9fb
-
 [parleys]: https://parleys.com/play/5471cdd1e4b065ebcfa1d557/
 [slides]: https://speakerdeck.com/jakewharton/dependency-injection-with-dagger-2-devoxx-2014
+[u2020-mvp-template]: https://github.com/LiveTyping/u2020-mvp-android-studio-template
