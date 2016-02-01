@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import java.util.UUID;
+
 import javax.inject.Inject;
 
 import ru.ltst.u2020mvp.U2020App;
@@ -16,8 +18,11 @@ import ru.ltst.u2020mvp.ui.AppContainer;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    @Inject
-    AppContainer appContainer;
+    private static final String BF_UNIQUE_KEY = BaseActivity.class.getName() + ".unique.key";
+
+    @Inject AppContainer appContainer;
+
+    private String uniqueKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +30,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (params != null) {
             onExtractParams(params);
         }
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(BF_UNIQUE_KEY)) {
+            uniqueKey = savedInstanceState.getString(BF_UNIQUE_KEY);
+        } else {
+            uniqueKey = UUID.randomUUID().toString();
+        }
+
         super.onCreate(savedInstanceState);
 
         U2020App app = U2020App.get(this);
@@ -38,14 +50,31 @@ public abstract class BaseActivity extends AppCompatActivity {
         layoutInflater.inflate(layoutId(), container);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(BF_UNIQUE_KEY, uniqueKey);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        uniqueKey = savedInstanceState.getString(BF_UNIQUE_KEY);
+    }
+
     protected void onExtractParams(@NonNull Bundle params) {
-        // default no implemetation
+        // default no implementation
+    }
+
+    public String uniqueKey() {
+        return uniqueKey;
     }
 
     /**
      * Must be implemented by derived activities. Injection must be performed here.
      * Otherwise IllegalStateException will be thrown. Derived activity is
      * responsible to create and store it's component.
+     *
      * @param u2020Component application level component
      */
     protected abstract void onCreateComponent(U2020Component u2020Component);
