@@ -8,12 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import java.util.UUID;
+
 import javax.inject.Inject;
 
 import ru.ltst.u2020mvp.U2020App;
 import ru.ltst.u2020mvp.U2020Component;
 import ru.ltst.u2020mvp.ui.AppContainer;
-import ru.ltst.u2020mvp.util.Strings;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -33,7 +34,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (savedInstanceState != null && savedInstanceState.containsKey(BF_UNIQUE_KEY)) {
             uniqueKey = savedInstanceState.getString(BF_UNIQUE_KEY);
         } else {
-            uniqueKey = Strings.getRandomString(8);
+            uniqueKey = UUID.randomUUID().toString();
         }
 
         super.onCreate(savedInstanceState);
