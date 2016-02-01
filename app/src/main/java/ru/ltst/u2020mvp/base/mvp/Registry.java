@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import ru.ltst.u2020mvp.ui.ActivityHierarchyServer;
+import ru.ltst.u2020mvp.util.Strings;
 import timber.log.Timber;
 
 import static ru.ltst.u2020mvp.util.Strings.COLON;
@@ -77,29 +78,36 @@ public class Registry {
     private static String getKey(Activity activity) {
         StringBuilder builder = new StringBuilder();
         builder.append(activity.getClass().getName());
-        final String action = activity.getIntent().getAction();
-        if (action != null) {
-            builder.append(DOT).append(action);
-        }
-        final Uri data = activity.getIntent().getData();
-        if (data != null) {
-            builder.append(DOT).append(data.toString());
-        }
-        final Bundle extras = activity.getIntent().getExtras();
-        if (extras != null) {
-            for (String key : extras.keySet()) {
-                Object value = extras.get(key);
-                if (value == null) continue;
-                String valueString;
-                if (value.getClass().isArray()) {
-                    valueString = Arrays.toString((Object[]) value);
-                } else {
-                    valueString = value.toString();
-                }
+        if (activity instanceof BaseActivity) {
+            final String uniqueKey = ((BaseActivity) activity).uniqueKey();
+            if (!uniqueKey.isEmpty()) {
+                builder.append(Strings.DOT).append(uniqueKey);
+            }
+        } else {
+            final String action = activity.getIntent().getAction();
+            if (action != null) {
+                builder.append(DOT).append(action);
+            }
+            final Uri data = activity.getIntent().getData();
+            if (data != null) {
+                builder.append(DOT).append(data.toString());
+            }
+            final Bundle extras = activity.getIntent().getExtras();
+            if (extras != null) {
+                for (String key : extras.keySet()) {
+                    Object value = extras.get(key);
+                    if (value == null) continue;
+                    String valueString;
+                    if (value.getClass().isArray()) {
+                        valueString = Arrays.toString((Object[]) value);
+                    } else {
+                        valueString = value.toString();
+                    }
 
-                builder.append(DOT);
-                builder.append(key).append(COLON);
-                builder.append(valueString);
+                    builder.append(DOT);
+                    builder.append(key).append(COLON);
+                    builder.append(valueString);
+                }
             }
         }
         return builder.toString();
