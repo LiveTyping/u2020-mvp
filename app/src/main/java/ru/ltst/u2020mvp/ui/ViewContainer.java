@@ -8,14 +8,14 @@ import static butterknife.ButterKnife.findById;
 /**
  * An indirection which allows controlling the root container used for each activity.
  */
-public interface AppContainer {
+public interface ViewContainer {
     /**
      * The root {@link android.view.ViewGroup} into which the activity should place its contents.
      */
-    ViewGroup bind(Activity activity);
+    ViewGroup forActivity(Activity activity);
 
     /**
-     * An {@link AppContainer} which returns the normal activity content view.
+     * An {@link ViewContainer} which returns the normal activity content view.
      */
-    AppContainer DEFAULT = activity -> findById(activity, android.R.id.content);
+    ViewContainer DEFAULT = activity -> findById(activity, android.R.id.content);
 }

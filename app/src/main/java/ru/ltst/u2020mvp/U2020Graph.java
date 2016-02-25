@@ -7,14 +7,14 @@ import ru.ltst.u2020mvp.data.GalleryDatabase;
 import ru.ltst.u2020mvp.data.api.GalleryService;
 import ru.ltst.u2020mvp.data.api.ImageService;
 import ru.ltst.u2020mvp.ui.ActivityHierarchyServer;
-import ru.ltst.u2020mvp.ui.AppContainer;
+import ru.ltst.u2020mvp.ui.ViewContainer;
 
 /**
  * A common interface implemented by both the Release and Debug flavored components.
  */
 public interface U2020Graph {
     void inject(U2020App app);
-    AppContainer appContainer();
+    ViewContainer viewContainer();
     Picasso picasso();
     ActivityScreenSwitcher activityScreenSwitcher();
     GalleryDatabase galleryDatabase();

@@ -10,8 +10,8 @@ import ru.ltst.u2020mvp.ui.annotation.ActivityScreenSwitcherServer;
 public class ReleaseUiModule {
     @Provides
     @ApplicationScope
-    AppContainer provideAppContainer() {
-        return AppContainer.DEFAULT;
+    ViewContainer provideViewContainer() {
+        return ViewContainer.DEFAULT;
     }
 
     @Provides

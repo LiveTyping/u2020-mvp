@@ -27,7 +27,7 @@ import ru.ltst.u2020mvp.data.ScalpelEnabled;
 import ru.ltst.u2020mvp.data.ScalpelWireframeEnabled;
 import ru.ltst.u2020mvp.data.SeenDebugDrawer;
 import ru.ltst.u2020mvp.ui.ActivityHierarchyServer;
-import ru.ltst.u2020mvp.ui.AppContainer;
+import ru.ltst.u2020mvp.ui.ViewContainer;
 import rx.subscriptions.CompositeSubscription;
 
 import static android.content.Context.POWER_SERVICE;
@@ -36,8 +36,12 @@ import static android.os.PowerManager.FULL_WAKE_LOCK;
 import static android.os.PowerManager.ON_AFTER_RELEASE;
 import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
 
+/**
+ * An {@link ViewContainer} for debug builds which wraps a sliding drawer on the right that holds
+ * all of the debug information and settings.
+ */
 @ApplicationScope
-public final class DebugAppContainer implements AppContainer {
+public final class DebugViewContainer implements ViewContainer {
     private final Preference<Boolean> seenDebugDrawer;
     private final Preference<Boolean> pixelGridEnabled;
     private final Preference<Boolean> pixelRatioEnabled;
@@ -52,11 +56,11 @@ public final class DebugAppContainer implements AppContainer {
     }
 
     @Inject
-    public DebugAppContainer(@SeenDebugDrawer Preference<Boolean> seenDebugDrawer,
-                             @PixelGridEnabled Preference<Boolean> pixelGridEnabled,
-                             @PixelRatioEnabled Preference<Boolean> pixelRatioEnabled,
-                             @ScalpelEnabled Preference<Boolean> scalpelEnabled,
-                             @ScalpelWireframeEnabled Preference<Boolean> scalpelWireframeEnabled) {
+    public DebugViewContainer(@SeenDebugDrawer Preference<Boolean> seenDebugDrawer,
+                              @PixelGridEnabled Preference<Boolean> pixelGridEnabled,
+                              @PixelRatioEnabled Preference<Boolean> pixelRatioEnabled,
+                              @ScalpelEnabled Preference<Boolean> scalpelEnabled,
+                              @ScalpelWireframeEnabled Preference<Boolean> scalpelWireframeEnabled) {
         this.seenDebugDrawer = seenDebugDrawer;
         this.pixelGridEnabled = pixelGridEnabled;
         this.pixelRatioEnabled = pixelRatioEnabled;
@@ -65,7 +69,7 @@ public final class DebugAppContainer implements AppContainer {
     }
 
     @Override
-    public ViewGroup bind(final Activity activity) {
+    public ViewGroup forActivity(final Activity activity) {
         activity.setContentView(R.layout.debug_activity_frame);
         final ViewHolder viewHolder = new ViewHolder();
         ButterKnife.bind(viewHolder, activity);

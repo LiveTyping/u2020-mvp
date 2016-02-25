@@ -4,7 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.base.mvp.Registry;
-import ru.ltst.u2020mvp.ui.debug.DebugAppContainer;
+import ru.ltst.u2020mvp.ui.debug.DebugViewContainer;
 import ru.ltst.u2020mvp.ui.annotation.ActivityScreenSwitcherServer;
 import ru.ltst.u2020mvp.ui.debug.SocketActivityHierarchyServer;
 
@@ -12,7 +12,7 @@ import ru.ltst.u2020mvp.ui.debug.SocketActivityHierarchyServer;
 public class DebugUiModule {
     @Provides
     @ApplicationScope
-    AppContainer provideAppContainer(DebugAppContainer appContainer) {
+    ViewContainer provideAppContainer(DebugViewContainer appContainer) {
         return appContainer;
     }
 

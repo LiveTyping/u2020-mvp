@@ -14,13 +14,13 @@ import javax.inject.Inject;
 
 import ru.ltst.u2020mvp.U2020App;
 import ru.ltst.u2020mvp.U2020Component;
-import ru.ltst.u2020mvp.ui.AppContainer;
+import ru.ltst.u2020mvp.ui.ViewContainer;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     private static final String BF_UNIQUE_KEY = BaseActivity.class.getName() + ".unique.key";
 
-    @Inject AppContainer appContainer;
+    @Inject ViewContainer viewContainer;
 
     private String uniqueKey;
 
@@ -41,12 +41,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         U2020App app = U2020App.get(this);
         onCreateComponent(app.component());
-        if (appContainer == null) {
+        if (viewContainer == null) {
             throw new IllegalStateException("No injection happened. Add component.inject(this) in onCreateComponent() implementation.");
         }
         Registry.add(this, viewId(), presenter());
         final LayoutInflater layoutInflater = getLayoutInflater();
-        ViewGroup container = appContainer.bind(this);
+        ViewGroup container = viewContainer.forActivity(this);
         layoutInflater.inflate(layoutId(), container);
     }
 

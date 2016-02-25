@@ -10,8 +10,8 @@ import ru.ltst.u2020mvp.ui.annotation.ActivityScreenSwitcherServer;
 public final class InternalReleaseUiModule {
     @Provides
     @ApplicationScope
-    AppContainer provideAppContainer(TelescopeAppContainer telescopeAppContainer) {
-        return telescopeAppContainer;
+    ViewContainer provideViewContainer(TelescopeViewContainer telescopeViewContainer) {
+        return telescopeViewContainer;
     }
 
     @Provides
