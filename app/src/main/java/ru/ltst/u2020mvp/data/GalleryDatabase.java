@@ -67,7 +67,6 @@ public class GalleryDatabase {
             }
         });
 
-        // Warning: Gross shit follows! Where you at Java 8?
         galleryService.listGallery(section, Sort.VIRAL, 1)
                 .filter(Results.isSuccess())
                 .map(new GalleryToImageList())
