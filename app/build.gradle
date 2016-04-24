@@ -157,6 +157,8 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
     androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.0') {
         exclude module: 'support-annotations'
+        exclude module: 'support-v4'
+        exclude module: 'recyclerview-v7'
     }
 }
 
