@@ -71,6 +71,7 @@ android {
         }
         release {
             minifyEnabled false
+            debuggable true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), file('proguard-rules.pro')
             signingConfig signingConfigs.release
         }
@@ -90,7 +91,6 @@ android {
         textReport true
         textOutput 'stdout'
         warning 'InvalidPackage'
-        warning 'ResourceType' //TODO remove eventually with ButterKnife 8.0 release
     }
 
     compileOptions {
@@ -115,49 +115,62 @@ configurations.all {
 }
 
 dependencies {
+    //support
     compile "com.android.support:support-v4:${SUPPORT_V4_VERSION}"
     compile "com.android.support:support-annotations:${SUPPORT_V7_VERSION}"
     compile "com.android.support:appcompat-v7:${SUPPORT_V7_VERSION}"
     compile "com.android.support:recyclerview-v7:${SUPPORT_V7_VERSION}"
     compile "com.android.support:cardview-v7:${SUPPORT_V7_VERSION}"
-
+    compile 'com.android.support:design:23.1.0'
+    //dagger
     compile 'com.google.dagger:dagger:2.0.1'
     apt 'com.google.dagger:dagger-compiler:2.0.1'
     provided 'org.glassfish:javax.annotation:10.0-b28'
-
+    //okhttp
     compile 'com.squareup.okhttp3:okhttp:3.1.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.1.1'
+    //picasso
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.1'
+    //retrofit2
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
     compile 'com.squareup.retrofit2:converter-moshi:2.0.0-beta4'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
     internalDebugCompile 'com.squareup.retrofit2:retrofit-mock:2.0.0-beta4'
-
-    compile 'com.jakewharton:butterknife:7.0.1'
+    //butterknife
+    compile 'com.jakewharton:butterknife:8.4.0'
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    //timber
     compile 'com.jakewharton.timber:timber:4.0.1'
+    //byteunits
     compile 'com.jakewharton.byteunits:byteunits:0.9.1'
+    //rx
     compile 'com.jakewharton.rxbinding:rxbinding:0.3.0'
+    compile 'io.reactivex:rxjava:1.1.0'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    //threetenabp
+    compile 'com.jakewharton.threetenabp:threetenabp:1.0.2'
+    //rx-preferences
+    compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.0'
+
+    //-----flawors-----
+    //--internal debug--
     internalDebugCompile 'com.jakewharton.madge:madge:1.1.3'
     internalDebugCompile 'com.jakewharton.scalpel:scalpel:1.1.2'
     internalDebugCompile 'com.jakewharton:process-phoenix:1.0.2'
+    //--internal--
     internalCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
+    internalCompile 'com.mattprecious.telescope:telescope:1.5.0@aar'
+    //--production--
     productionCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
 
-    compile 'io.reactivex:rxjava:1.1.0'
-    compile 'io.reactivex:rxandroid:1.1.0'
-
-    compile 'com.jakewharton.threetenabp:threetenabp:1.0.2'
-    internalCompile 'com.mattprecious.telescope:telescope:1.5.0@aar'
-
-    compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.0'
-
+    //-----tests-----
     // Espresso 2 Dependencies
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
-    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.0') {
-        exclude module: 'support-annotations'
-    }
+//    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.0') {
+//        exclude module: 'support-annotations'
+//    }
 }
 
 // change apk name

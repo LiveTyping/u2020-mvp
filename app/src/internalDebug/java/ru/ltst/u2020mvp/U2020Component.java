@@ -1,16 +1,16 @@
 package ru.ltst.u2020mvp;
 
 import dagger.Component;
-import ru.ltst.u2020mvp.data.DebugDataDependencies;
 import ru.ltst.u2020mvp.data.DebugDataModule;
 import ru.ltst.u2020mvp.ui.DebugUiModule;
 
 /**
-* The core debug component for u2020 applications
-*/
+ * The core debug component for u2020 applications
+ */
 @ApplicationScope
-@Component(modules = { U2020AppModule.class, DebugUiModule.class, DebugDataModule.class, DebugU2020Module.class })
-public interface U2020Component extends DebugInternalU2020Graph, DebugDataDependencies {
+@Component(modules = {U2020AppModule.class, DebugUiModule.class, DebugDataModule.class,
+        DebugU2020Module.class, DebugActionsModule.class})
+public interface U2020Component extends DebugInternalU2020Graph {
     /**
      * An initializer that creates the graph from an application.
      */
@@ -20,7 +20,9 @@ public interface U2020Component extends DebugInternalU2020Graph, DebugDataDepend
                     .u2020AppModule(new U2020AppModule(app))
                     .build();
         }
-        private Initializer() {} // No instances.
+
+        private Initializer() {
+        } // No instances.
     }
 }
 

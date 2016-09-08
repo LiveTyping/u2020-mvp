@@ -14,13 +14,13 @@ import javax.inject.Inject;
 
 import ru.ltst.u2020mvp.U2020App;
 import ru.ltst.u2020mvp.U2020Component;
-import ru.ltst.u2020mvp.ui.ViewContainer;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     private static final String BF_UNIQUE_KEY = BaseActivity.class.getName() + ".unique.key";
 
-    @Inject ViewContainer viewContainer;
+    @Inject
+    ViewContainer viewContainer;
 
     private String uniqueKey;
 
@@ -78,7 +78,14 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param u2020Component application level component
      */
     protected abstract void onCreateComponent(U2020Component u2020Component);
-    protected abstract @LayoutRes int layoutId();
+
+    protected abstract
+    @LayoutRes
+    int layoutId();
+
     protected abstract BasePresenter<? extends BaseView> presenter();
-    protected abstract @IdRes int viewId();
+
+    protected abstract
+    @IdRes
+    int viewId();
 }

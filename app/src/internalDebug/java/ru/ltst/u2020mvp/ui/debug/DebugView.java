@@ -38,7 +38,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.Cache;
@@ -61,8 +61,8 @@ import ru.ltst.u2020mvp.data.PixelGridEnabled;
 import ru.ltst.u2020mvp.data.PixelRatioEnabled;
 import ru.ltst.u2020mvp.data.ScalpelEnabled;
 import ru.ltst.u2020mvp.data.ScalpelWireframeEnabled;
-import ru.ltst.u2020mvp.data.api.mock.MockGalleryResponse;
-import ru.ltst.u2020mvp.data.api.mock.MockGalleryService;
+import ru.ltst.u2020mvp.data.api.mock.MockGithubService;
+import ru.ltst.u2020mvp.data.api.mock.MockRepositoriesResponse;
 import ru.ltst.u2020mvp.data.prefs.InetSocketAddressPreferenceAdapter;
 import ru.ltst.u2020mvp.ui.logs.LogsDialog;
 import ru.ltst.u2020mvp.ui.misc.EnumAdapter;
@@ -77,75 +77,149 @@ public final class DebugView extends FrameLayout {
     private static final DateTimeFormatter DATE_DISPLAY_FORMAT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a", Locale.US).withZone(ZoneId.systemDefault());
 
-    @Bind(R.id.debug_contextual_title) View contextualTitleView;
-    @Bind(R.id.debug_contextual_list) LinearLayout contextualListView;
+    @BindView(R.id.debug_contextual_title)
+    View contextualTitleView;
+    @BindView(R.id.debug_contextual_list)
+    LinearLayout contextualListView;
 
-    @Bind(R.id.debug_network_endpoint) Spinner endpointView;
-    @Bind(R.id.debug_network_endpoint_edit) View endpointEditView;
-    @Bind(R.id.debug_network_delay) Spinner networkDelayView;
-    @Bind(R.id.debug_network_variance) Spinner networkVarianceView;
-    @Bind(R.id.debug_network_error) Spinner networkErrorView;
-    @Bind(R.id.debug_network_proxy) Spinner networkProxyView;
-    @Bind(R.id.debug_network_logging) Spinner networkLoggingView;
+    @BindView(R.id.debug_network_endpoint)
+    Spinner endpointView;
+    @BindView(R.id.debug_network_endpoint_edit)
+    View endpointEditView;
+    @BindView(R.id.debug_network_delay)
+    Spinner networkDelayView;
+    @BindView(R.id.debug_network_variance)
+    Spinner networkVarianceView;
+    @BindView(R.id.debug_network_error)
+    Spinner networkErrorView;
+    @BindView(R.id.debug_network_proxy)
+    Spinner networkProxyView;
+    @BindView(R.id.debug_network_logging)
+    Spinner networkLoggingView;
 
-    @Bind(R.id.debug_capture_intents) Switch captureIntentsView;
-    @Bind(R.id.debug_repositories_response) Spinner repositoriesResponseView;
+    @BindView(R.id.debug_capture_intents)
+    Switch captureIntentsView;
+    @BindView(R.id.debug_repositories_response)
+    Spinner repositoriesResponseView;
 
-    @Bind(R.id.debug_ui_animation_speed) Spinner uiAnimationSpeedView;
-    @Bind(R.id.debug_ui_pixel_grid) Switch uiPixelGridView;
-    @Bind(R.id.debug_ui_pixel_ratio) Switch uiPixelRatioView;
-    @Bind(R.id.debug_ui_scalpel) Switch uiScalpelView;
-    @Bind(R.id.debug_ui_scalpel_wireframe) Switch uiScalpelWireframeView;
-    @Bind(R.id.debug_build_name) TextView buildNameView;
+    @BindView(R.id.debug_ui_animation_speed)
+    Spinner uiAnimationSpeedView;
+    @BindView(R.id.debug_ui_pixel_grid)
+    Switch uiPixelGridView;
+    @BindView(R.id.debug_ui_pixel_ratio)
+    Switch uiPixelRatioView;
+    @BindView(R.id.debug_ui_scalpel)
+    Switch uiScalpelView;
+    @BindView(R.id.debug_ui_scalpel_wireframe)
+    Switch uiScalpelWireframeView;
+    @BindView(R.id.debug_build_name)
+    TextView buildNameView;
 
-    @Bind(R.id.debug_build_code) TextView buildCodeView;
-    @Bind(R.id.debug_build_sha) TextView buildShaView;
-    @Bind(R.id.debug_build_date) TextView buildDateView;
-    @Bind(R.id.debug_device_make) TextView deviceMakeView;
+    @BindView(R.id.debug_build_code)
+    TextView buildCodeView;
+    @BindView(R.id.debug_build_sha)
+    TextView buildShaView;
+    @BindView(R.id.debug_build_date)
+    TextView buildDateView;
+    @BindView(R.id.debug_device_make)
+    TextView deviceMakeView;
 
-    @Bind(R.id.debug_device_model) TextView deviceModelView;
-    @Bind(R.id.debug_device_resolution) TextView deviceResolutionView;
-    @Bind(R.id.debug_device_density) TextView deviceDensityView;
-    @Bind(R.id.debug_device_release) TextView deviceReleaseView;
-    @Bind(R.id.debug_device_api) TextView deviceApiView;
-    @Bind(R.id.debug_picasso_indicators) Switch picassoIndicatorView;
+    @BindView(R.id.debug_device_model)
+    TextView deviceModelView;
+    @BindView(R.id.debug_device_resolution)
+    TextView deviceResolutionView;
+    @BindView(R.id.debug_device_density)
+    TextView deviceDensityView;
+    @BindView(R.id.debug_device_release)
+    TextView deviceReleaseView;
+    @BindView(R.id.debug_device_api)
+    TextView deviceApiView;
+    @BindView(R.id.debug_picasso_indicators)
+    Switch picassoIndicatorView;
 
-    @Bind(R.id.debug_picasso_cache_size) TextView picassoCacheSizeView;
-    @Bind(R.id.debug_picasso_cache_hit) TextView picassoCacheHitView;
-    @Bind(R.id.debug_picasso_cache_miss) TextView picassoCacheMissView;
-    @Bind(R.id.debug_picasso_decoded) TextView picassoDecodedView;
-    @Bind(R.id.debug_picasso_decoded_total) TextView picassoDecodedTotalView;
-    @Bind(R.id.debug_picasso_decoded_avg) TextView picassoDecodedAvgView;
-    @Bind(R.id.debug_picasso_transformed) TextView picassoTransformedView;
-    @Bind(R.id.debug_picasso_transformed_total) TextView picassoTransformedTotalView;
-    @Bind(R.id.debug_picasso_transformed_avg) TextView picassoTransformedAvgView;
-    @Bind(R.id.debug_okhttp_cache_max_size) TextView okHttpCacheMaxSizeView;
+    @BindView(R.id.debug_picasso_cache_size)
+    TextView picassoCacheSizeView;
+    @BindView(R.id.debug_picasso_cache_hit)
+    TextView picassoCacheHitView;
+    @BindView(R.id.debug_picasso_cache_miss)
+    TextView picassoCacheMissView;
+    @BindView(R.id.debug_picasso_decoded)
+    TextView picassoDecodedView;
+    @BindView(R.id.debug_picasso_decoded_total)
+    TextView picassoDecodedTotalView;
+    @BindView(R.id.debug_picasso_decoded_avg)
+    TextView picassoDecodedAvgView;
+    @BindView(R.id.debug_picasso_transformed)
+    TextView picassoTransformedView;
+    @BindView(R.id.debug_picasso_transformed_total)
+    TextView picassoTransformedTotalView;
+    @BindView(R.id.debug_picasso_transformed_avg)
+    TextView picassoTransformedAvgView;
+    @BindView(R.id.debug_okhttp_cache_max_size)
+    TextView okHttpCacheMaxSizeView;
 
-    @Bind(R.id.debug_okhttp_cache_write_error) TextView okHttpCacheWriteErrorView;
-    @Bind(R.id.debug_okhttp_cache_request_count) TextView okHttpCacheRequestCountView;
-    @Bind(R.id.debug_okhttp_cache_network_count) TextView okHttpCacheNetworkCountView;
-    @Bind(R.id.debug_okhttp_cache_hit_count) TextView okHttpCacheHitCountView;
+    @BindView(R.id.debug_okhttp_cache_write_error)
+    TextView okHttpCacheWriteErrorView;
+    @BindView(R.id.debug_okhttp_cache_request_count)
+    TextView okHttpCacheRequestCountView;
+    @BindView(R.id.debug_okhttp_cache_network_count)
+    TextView okHttpCacheNetworkCountView;
+    @BindView(R.id.debug_okhttp_cache_hit_count)
+    TextView okHttpCacheHitCountView;
 
-    @Inject OkHttpClient client;
-    @Inject @Named("Api") OkHttpClient apiClient;
-    @Inject Picasso picasso;
-    @Inject LumberYard lumberYard;
-    @Inject @IsMockMode boolean isMockMode;
-    @Inject @ApiEndpoint Preference<String> networkEndpoint;
-    @Inject Preference<InetSocketAddress> networkProxyAddress;
-    @Inject @CaptureIntents Preference<Boolean> captureIntents;
-    @Inject @AnimationSpeed Preference<Integer> animationSpeed;
-    @Inject @PicassoDebugging Preference<Boolean> picassoDebugging;
-    @Inject @PixelGridEnabled Preference<Boolean> pixelGridEnabled;
-    @Inject @PixelRatioEnabled Preference<Boolean> pixelRatioEnabled;
-    @Inject @ScalpelEnabled Preference<Boolean> scalpelEnabled;
-    @Inject @ScalpelWireframeEnabled Preference<Boolean> scalpelWireframeEnabled;
-    @Inject NetworkBehavior behavior;
-    @Inject @NetworkDelay Preference<Long> networkDelay;
-    @Inject @NetworkFailurePercent Preference<Integer> networkFailurePercent;
-    @Inject @NetworkVariancePercent Preference<Integer> networkVariancePercent;
-    @Inject MockGalleryService mockGalleryService;
-    @Inject Application app;
+    @Inject
+    OkHttpClient client;
+    @Inject
+    @Named("Api")
+    OkHttpClient apiClient;
+    @Inject
+    Picasso picasso;
+    @Inject
+    LumberYard lumberYard;
+    @Inject
+    @IsMockMode
+    boolean isMockMode;
+    @Inject
+    @ApiEndpoint
+    Preference<String> networkEndpoint;
+    @Inject
+    Preference<InetSocketAddress> networkProxyAddress;
+    @Inject
+    @CaptureIntents
+    Preference<Boolean> captureIntents;
+    @Inject
+    @AnimationSpeed
+    Preference<Integer> animationSpeed;
+    @Inject
+    @PicassoDebugging
+    Preference<Boolean> picassoDebugging;
+    @Inject
+    @PixelGridEnabled
+    Preference<Boolean> pixelGridEnabled;
+    @Inject
+    @PixelRatioEnabled
+    Preference<Boolean> pixelRatioEnabled;
+    @Inject
+    @ScalpelEnabled
+    Preference<Boolean> scalpelEnabled;
+    @Inject
+    @ScalpelWireframeEnabled
+    Preference<Boolean> scalpelWireframeEnabled;
+    @Inject
+    NetworkBehavior behavior;
+    @Inject
+    @NetworkDelay
+    Preference<Long> networkDelay;
+    @Inject
+    @NetworkFailurePercent
+    Preference<Integer> networkFailurePercent;
+    @Inject
+    @NetworkVariancePercent
+    Preference<Integer> networkVariancePercent;
+    @Inject
+    MockGithubService mockGithubService;
+    @Inject
+    Application app;
 
     private final ContextualDebugActions contextualDebugActions;
 
@@ -192,12 +266,12 @@ public final class DebugView extends FrameLayout {
                 .map(endpointAdapter::getItem)
                 .filter(item -> item != currentEndpoint)
                 .subscribe(selected -> {
-                        if (selected == ApiEndpoints.CUSTOM) {
-                            Timber.d("Custom network endpoint selected. Prompting for URL.");
-                            showCustomEndpointDialog(currentEndpoint.ordinal(), "http://");
-                        } else {
-                            setEndpointAndRelaunch(selected.url);
-                        }
+                    if (selected == ApiEndpoints.CUSTOM) {
+                        Timber.d("Custom network endpoint selected. Prompting for URL.");
+                        showCustomEndpointDialog(currentEndpoint.ordinal(), "http://");
+                    } else {
+                        setEndpointAndRelaunch(selected.url);
+                    }
                 });
 
         final NetworkDelayAdapter delayAdapter = new NetworkDelayAdapter(getContext());
@@ -314,7 +388,7 @@ public final class DebugView extends FrameLayout {
             captureIntents.set(b);
         });
 
-        configureResponseSpinner(repositoriesResponseView, MockGalleryResponse.class);
+        configureResponseSpinner(repositoriesResponseView, MockRepositoriesResponse.class);
     }
 
     /**
@@ -327,14 +401,14 @@ public final class DebugView extends FrameLayout {
         final EnumAdapter<T> adapter = new EnumAdapter<>(getContext(), responseClass);
         spinner.setEnabled(isMockMode);
         spinner.setAdapter(adapter);
-        spinner.setSelection(mockGalleryService.getResponse(responseClass).ordinal());
+        spinner.setSelection(mockGithubService.getResponse(responseClass).ordinal());
 
         RxAdapterView.itemSelections(spinner)
                 .map(adapter::getItem)
-                .filter(item -> item != mockGalleryService.getResponse(responseClass))
+                .filter(item -> item != mockGithubService.getResponse(responseClass))
                 .subscribe(selected -> {
                     Timber.d("Setting %s to %s", responseClass.getSimpleName(), selected);
-                    mockGalleryService.setResponse(responseClass, selected);
+                    mockGithubService.setResponse(responseClass, selected);
                     ProcessPhoenix.triggerRebirth(getContext());
                 });
     }

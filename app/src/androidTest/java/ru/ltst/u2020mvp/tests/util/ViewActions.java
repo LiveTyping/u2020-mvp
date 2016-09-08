@@ -11,7 +11,6 @@ import android.support.test.espresso.util.HumanReadables;
 import android.support.test.espresso.util.TreeIterables;
 import android.view.View;
 
-
 import org.hamcrest.Matcher;
 
 import java.util.concurrent.TimeoutException;

@@ -39,7 +39,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
-import ru.ltst.u2020mvp.ui.ActivityHierarchyServer;
+import ru.ltst.u2020mvp.base.mvp.ActivityHierarchyServer;
 import timber.log.Timber;
 
 /**

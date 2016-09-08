@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import butterknife.ButterKnife;
-import ru.ltst.u2020mvp.ui.ActivityHierarchyServer;
 import ru.ltst.u2020mvp.util.Strings;
 import timber.log.Timber;
 
@@ -24,7 +23,7 @@ public class Registry {
             final String key = getKey(activity);
             final Entry entry = registers.get(key);
             Timber.d("%s onActivityCreated", key);
-            if (entry != null && savedInstanceState != null) {
+            if (entry != null && entry.presenter != null && savedInstanceState != null) {
                 entry.presenter.onRestore(savedInstanceState);
             }
         }
@@ -35,7 +34,7 @@ public class Registry {
             final String key = getKey(activity);
             final Entry entry = registers.get(key);
             Timber.d("%s onActivityStarted", key);
-            if (entry != null) {
+            if (entry != null && entry.presenter != null) {
                 final BaseView view = ButterKnife.findById(activity, entry.viewId);
                 entry.presenter.takeView(view);
             }
@@ -47,7 +46,7 @@ public class Registry {
             final String key = getKey(activity);
             final Entry entry = registers.get(key);
             Timber.d("%s onActivityStopped", key);
-            if (entry != null) {
+            if (entry != null && entry.presenter != null) {
                 final BaseView view = ButterKnife.findById(activity, entry.viewId);
                 entry.presenter.dropView(view);
             }
@@ -58,7 +57,7 @@ public class Registry {
             final String key = getKey(activity);
             final Entry entry = registers.get(key);
             Timber.d("%s onActivitySaveInstanceState", key);
-            if (entry != null) {
+            if (entry != null && entry.presenter != null) {
                 entry.presenter.onSave(outState);
             }
         }

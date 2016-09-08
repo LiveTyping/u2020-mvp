@@ -17,17 +17,17 @@ import com.jakewharton.scalpel.ScalpelFrameLayout;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.R;
+import ru.ltst.u2020mvp.base.mvp.ActivityHierarchyServer;
+import ru.ltst.u2020mvp.base.mvp.ViewContainer;
 import ru.ltst.u2020mvp.data.PixelGridEnabled;
 import ru.ltst.u2020mvp.data.PixelRatioEnabled;
 import ru.ltst.u2020mvp.data.ScalpelEnabled;
 import ru.ltst.u2020mvp.data.ScalpelWireframeEnabled;
 import ru.ltst.u2020mvp.data.SeenDebugDrawer;
-import ru.ltst.u2020mvp.ui.ActivityHierarchyServer;
-import ru.ltst.u2020mvp.ui.ViewContainer;
 import rx.subscriptions.CompositeSubscription;
 
 import static android.content.Context.POWER_SERVICE;
@@ -49,10 +49,14 @@ public final class DebugViewContainer implements ViewContainer {
     private final Preference<Boolean> scalpelWireframeEnabled;
 
     static class ViewHolder {
-        @Bind(R.id.debug_drawer_layout) DrawerLayout drawerLayout;
-        @Bind(R.id.debug_drawer) ViewGroup debugDrawer;
-        @Bind(R.id.madge_container) MadgeFrameLayout madgeFrameLayout;
-        @Bind(R.id.debug_content) ScalpelFrameLayout content;
+        @BindView(R.id.debug_drawer_layout)
+        DebugDrawerLayout drawerLayout;
+        @BindView(R.id.debug_drawer)
+        ViewGroup debugDrawer;
+        @BindView(R.id.madge_container)
+        MadgeFrameLayout madgeFrameLayout;
+        @BindView(R.id.debug_content)
+        ScalpelFrameLayout content;
     }
 
     @Inject
@@ -89,7 +93,7 @@ public final class DebugViewContainer implements ViewContainer {
         viewHolder.content.setOnHierarchyChangeListener(HierarchyTreeChangeListener.wrap(contextualActions));
 
         viewHolder.drawerLayout.setDrawerShadow(R.drawable.debug_drawer_shadow, GravityCompat.END);
-        viewHolder.drawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+        viewHolder.drawerLayout.setDrawerListener(new DebugDrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerOpened(View drawerView) {
                 debugView.onDrawerOpened();

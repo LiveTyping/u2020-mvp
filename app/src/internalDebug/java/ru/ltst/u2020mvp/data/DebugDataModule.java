@@ -1,7 +1,6 @@
 package ru.ltst.u2020mvp.data;
 
 import android.app.Application;
-import android.content.SharedPreferences;
 
 import com.f2prateek.rx.preferences.Preference;
 import com.f2prateek.rx.preferences.RxSharedPreferences;
@@ -24,6 +23,7 @@ import retrofit2.mock.NetworkBehavior;
 import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.IsInstrumentationTest;
 import ru.ltst.u2020mvp.data.api.DebugApiModule;
+import ru.ltst.u2020mvp.data.api.oauth.AccessToken;
 import ru.ltst.u2020mvp.data.prefs.InetSocketAddressPreferenceAdapter;
 import timber.log.Timber;
 
@@ -41,12 +41,6 @@ public final class DebugDataModule {
 
     @Provides
     @ApplicationScope
-    RxSharedPreferences provideRxSharedPreferences(SharedPreferences preferences) {
-        return RxSharedPreferences.create(preferences);
-    }
-
-    @Provides
-    @ApplicationScope
     IntentFactory provideIntentFactory(@IsMockMode boolean isMockMode,
                                        @CaptureIntents Preference<Boolean> captureIntents) {
         return new DebugIntentFactory(IntentFactory.REAL, isMockMode, captureIntents);
@@ -61,6 +55,15 @@ public final class DebugDataModule {
                 .proxy(InetSocketAddressPreferenceAdapter.createProxy(networkProxyAddress.get()))
                 .build();
     }
+
+//    @Provides
+//    @ApplicationScope
+//    @AccessToken
+//    Preference<String> provideAccessToken(RxSharedPreferences prefs,
+//                                          @ApiEndpoint Preference<String> endpoint) {
+//        return prefs.getString("access-token-" + endpoint.get());
+//
+//    }
 
     @Provides
     @ApplicationScope

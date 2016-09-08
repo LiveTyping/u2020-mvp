@@ -4,26 +4,46 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Used for sharing logs. -->
+    <!-- Used for sharing logs and Spoon. -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- Used for instrumentation tests. -->
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application>
         <activity
+            android:name="ru.ltst.u2020mvp.ui.DebugActivity"
+            android:icon="@drawable/dev_app_icon"
+            android:label="U+2020 Dev Settings"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.U2020.Debug">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="ru.ltst.u2020mvp.ui.ExternalIntentActivity"
+            android:theme="@style/Theme.U2020.External">
+            <intent-filter>
+                <action android:name="com.jakewharton.u2020.intent.EXTERNAL_INTENT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name="ru.ltst.u2020mvp.ui.debug.ProcessPhoenix"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:process=":phoenix"
-            />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <activity
             android:name="com.squareup.leakcanary.internal.DisplayLeakActivity"
             android:enabled="false"
             android:label="@string/__leak_canary_display_activity_label"
             android:taskAffinity="com.squareup.leakcanary"
-            android:theme="@style/__LeakCanary.Base"
-            >
+            android:theme="@style/__LeakCanary.Base">
             <intent-filter tools:node="removeAll"/>
         </activity>
 

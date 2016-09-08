@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v4.widget.DrawerLayout
+<ru.ltst.u2020mvp.ui.debug.DebugDrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/debug_drawer_layout"
@@ -8,31 +8,34 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     >
+
     <com.jakewharton.madge.MadgeFrameLayout
         android:id="@+id/madge_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-      <com.jakewharton.scalpel.ScalpelFrameLayout
-          android:id="@+id/debug_content"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          />
+
+        <com.jakewharton.scalpel.ScalpelFrameLayout
+            android:id="@+id/debug_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
     </com.jakewharton.madge.MadgeFrameLayout>
-  <ru.ltst.u2020mvp.ui.misc.ScrimInsetsFrameLayout
-      android:layout_width="290dp"
-      android:layout_height="match_parent"
-      android:layout_gravity="end"
-      android:background="#e222"
-      android:fitsSystemWindows="true"
-      app:insetForeground="#4000"
-      >
-    <ScrollView
-        android:id="@+id/debug_drawer"
-        android:layout_width="match_parent"
+
+    <ru.ltst.u2020mvp.ui.debug.NonConsumingScrimInsetsFrameLayout
+        android:layout_width="290dp"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        android:clipToPadding="false"
-        />
-  </ru.ltst.u2020mvp.ui.misc.ScrimInsetsFrameLayout>
-</android.support.v4.widget.DrawerLayout>
+        android:layout_gravity="end"
+        android:background="#e222"
+        android:fitsSystemWindows="true">
+        <!--app:insetForeground="#4000">-->
+
+        <ScrollView
+            android:id="@+id/debug_drawer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:fitsSystemWindows="true"
+            />
+    </ru.ltst.u2020mvp.ui.debug.NonConsumingScrimInsetsFrameLayout>
+</ru.ltst.u2020mvp.ui.debug.DebugDrawerLayout>

@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ru.ltst.u2020mvp">
+          package="ru.ltst.u2020mvp">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+        android:name=".U2020App"
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
         android:label="@string/application_name"
-        android:theme="@style/Theme.U2020"
-        android:name=".U2020App"
-        >
+        android:theme="@style/Theme.U2020">
         <activity
-            android:name=".ui.gallery.GalleryActivity"
-            android:label="@string/application_name">
+            android:name=".ui.screen.main.MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <data android:scheme="u2020"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.image.ImgurImageActivity"
-            android:label="@string/image_activity_title"/>
+
+        <service
+            android:name=".data.api.oauth.OauthService"
+            android:exported="false"
+            />
     </application>
 </manifest>

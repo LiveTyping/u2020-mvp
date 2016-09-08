@@ -7,20 +7,20 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.ui.misc.EmptyTextWatcher;
 import ru.ltst.u2020mvp.util.Strings;
 
 public final class BugReportView extends LinearLayout {
-    @Bind(R.id.title)
+    @BindView(R.id.title)
     EditText titleView;
-    @Bind(R.id.description)
+    @BindView(R.id.description)
     EditText descriptionView;
-    @Bind(R.id.screenshot)
+    @BindView(R.id.screenshot)
     CheckBox screenshotView;
-    @Bind(R.id.logs)
+    @BindView(R.id.logs)
     CheckBox logsView;
 
     public interface ReportDetailsListener {

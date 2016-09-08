@@ -3,6 +3,8 @@ package ru.ltst.u2020mvp.data;
 import android.app.Application;
 import android.content.SharedPreferences;
 
+import com.f2prateek.rx.preferences.Preference;
+import com.f2prateek.rx.preferences.RxSharedPreferences;
 import com.squareup.moshi.Moshi;
 
 import java.io.File;
@@ -14,6 +16,7 @@ import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.data.api.ApiModule;
+import ru.ltst.u2020mvp.data.api.oauth.AccessToken;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -33,10 +36,23 @@ public final class DataModule {
         return Clock.REAL;
     }
 
+//    @Provides
+//    @ApplicationScope
+//    IntentFactory provideIntentFactory() {
+//        return IntentFactory.REAL;
+//    }
+
     @Provides
     @ApplicationScope
-    IntentFactory provideIntentFactory() {
-        return IntentFactory.REAL;
+    RxSharedPreferences provideRxSharedPreferences(SharedPreferences prefs) {
+        return RxSharedPreferences.create(prefs);
+    }
+
+    @Provides
+    @ApplicationScope
+    @AccessToken
+    Preference<String> provideAccessToken(RxSharedPreferences prefs) {
+        return prefs.getString("access-token");
     }
 
     @Provides

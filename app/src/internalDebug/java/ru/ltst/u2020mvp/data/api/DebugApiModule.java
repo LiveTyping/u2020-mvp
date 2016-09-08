@@ -18,25 +18,18 @@ import ru.ltst.u2020mvp.data.IsMockMode;
 import ru.ltst.u2020mvp.data.NetworkDelay;
 import ru.ltst.u2020mvp.data.NetworkFailurePercent;
 import ru.ltst.u2020mvp.data.NetworkVariancePercent;
-import ru.ltst.u2020mvp.data.api.mock.MockGalleryService;
-import ru.ltst.u2020mvp.data.api.mock.MockImageService;
+import ru.ltst.u2020mvp.data.api.mock.MockGithubService;
+import ru.ltst.u2020mvp.data.api.oauth.OauthInterceptor;
 import timber.log.Timber;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-@Module(includes = ApiModule.class)
+@Module
 public final class DebugApiModule {
-
     @Provides
     @ApplicationScope
     HttpUrl provideHttpUrl(@ApiEndpoint Preference<String> apiEndpoint) {
         return HttpUrl.parse(apiEndpoint.get());
-    }
-
-    @Provides
-    @ApplicationScope
-    CurlLoggingInterceptor provideCurlLoggingInterceptor() {
-        return new CurlLoggingInterceptor(message -> Timber.tag("Curl").v(message));
     }
 
     @Provides
@@ -51,12 +44,9 @@ public final class DebugApiModule {
     @ApplicationScope
     @Named("Api")
     OkHttpClient provideApiClient(OkHttpClient client,
-                                  HttpLoggingInterceptor loggingInterceptor,
-                                  CurlLoggingInterceptor curlLoggingInterceptor,
-                                  ApiHeaders apiHeaders) {
-        return ApiModule.createApiClient(client, apiHeaders)
+                                  OauthInterceptor oauthInterceptor, HttpLoggingInterceptor loggingInterceptor) {
+        return ApiModule.createApiClient(client, oauthInterceptor)
                 .addInterceptor(loggingInterceptor)
-                .addInterceptor(curlLoggingInterceptor)
                 .build();
     }
 
@@ -74,7 +64,8 @@ public final class DebugApiModule {
 
     @Provides
     @ApplicationScope
-    MockRetrofit provideMockRetrofit(Retrofit retrofit, NetworkBehavior behavior) {
+    MockRetrofit provideMockRetrofit(Retrofit retrofit,
+                                     NetworkBehavior behavior) {
         return new MockRetrofit.Builder(retrofit)
                 .networkBehavior(behavior)
                 .build();
@@ -82,17 +73,8 @@ public final class DebugApiModule {
 
     @Provides
     @ApplicationScope
-    GalleryService provideGalleryService(Retrofit retrofit,
-                                         @IsMockMode boolean isMockMode,
-                                         MockGalleryService mockGalleryService) {
-        return isMockMode ? mockGalleryService : retrofit.create(GalleryService.class);
-    }
-
-    @Provides
-    @ApplicationScope
-    ImageService provideImageService(Retrofit retrofit,
-                                     @IsMockMode boolean isMockMode,
-                                     MockImageService mockImageService) {
-        return isMockMode ? mockImageService : retrofit.create(ImageService.class);
+    GithubService provideGithubService(Retrofit retrofit,
+                                       @IsMockMode boolean isMockMode, MockGithubService mockService) {
+        return isMockMode ? mockService : retrofit.create(GithubService.class);
     }
 }
