@@ -5,7 +5,8 @@ buildscript {
     }
     dependencies {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'me.tatarka:gradle-retrolambda:3.2.3'
+        classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
+        classpath 'com.ofg:uptodate-gradle-plugin:+'
     }
 }
 
@@ -18,6 +19,7 @@ def versionBuild = 0 // bump for dogfood builds, public betas, etc.
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.ofg.uptodate'
 
 repositories {
     mavenCentral()
@@ -121,17 +123,17 @@ dependencies {
     compile "com.android.support:appcompat-v7:${SUPPORT_V7_VERSION}"
     compile "com.android.support:recyclerview-v7:${SUPPORT_V7_VERSION}"
     compile "com.android.support:cardview-v7:${SUPPORT_V7_VERSION}"
-    compile 'com.android.support:design:23.1.0'
+    compile 'com.android.support:design:24.1.1'
     //dagger
-    compile 'com.google.dagger:dagger:2.0.1'
-    apt 'com.google.dagger:dagger-compiler:2.0.1'
+    compile 'com.google.dagger:dagger:2.6.1'
+    apt 'com.google.dagger:dagger-compiler:2.6.1'
     provided 'org.glassfish:javax.annotation:10.0-b28'
     //okhttp
-    compile 'com.squareup.okhttp3:okhttp:3.1.1'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.1.1'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     //picasso
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.1'
+    compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
     //retrofit2
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-moshi:2.1.0'
@@ -140,28 +142,26 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     //timber
-    compile 'com.jakewharton.timber:timber:4.0.1'
+    compile 'com.jakewharton.timber:timber:4.3.0'
     //byteunits
     compile 'com.jakewharton.byteunits:byteunits:0.9.1'
     //rx
-    compile 'com.jakewharton.rxbinding:rxbinding:0.3.0'
-    compile 'io.reactivex:rxjava:1.1.0'
-    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+    compile 'io.reactivex:rxjava:1.1.10'
+    compile 'io.reactivex:rxandroid:1.2.1'
     //threetenabp
-    compile 'com.jakewharton.threetenabp:threetenabp:1.0.2'
+    compile 'com.jakewharton.threetenabp:threetenabp:1.0.4'
     //rx-preferences
-    compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.0'
+    compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
 
-    //-----flawors-----
-    //--internal debug--
-    debugCompile 'com.jakewharton.madge:madge:1.1.3'
+    //--debug--
+    debugCompile 'com.jakewharton.madge:madge:1.1.4'
     debugCompile 'com.jakewharton.scalpel:scalpel:1.1.2'
     debugCompile 'com.jakewharton:process-phoenix:1.0.2'
     debugCompile 'com.squareup.retrofit2:retrofit-mock:2.1.0'
-    //--internal--
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
-    debugCompile 'com.mattprecious.telescope:telescope:1.5.0@aar'
-    //--production--
+    debugCompile 'com.mattprecious.telescope:telescope:2.1.0'
+    //--release--
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
 
     //-----tests-----
