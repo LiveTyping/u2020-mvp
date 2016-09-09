@@ -1,5 +1,6 @@
 package ru.ltst.u2020mvp.base.mvp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
@@ -14,6 +15,7 @@ import javax.inject.Inject;
 
 import ru.ltst.u2020mvp.U2020App;
 import ru.ltst.u2020mvp.U2020Component;
+import ru.ltst.u2020mvp.network.NetworkReceiver;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -23,6 +25,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     ViewContainer viewContainer;
 
     private String uniqueKey;
+
+    private NetworkReceiver mNetworkReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +66,34 @@ public abstract class BaseActivity extends AppCompatActivity {
         uniqueKey = savedInstanceState.getString(BF_UNIQUE_KEY);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        presenter().onActivityResult(requestCode, resultCode, data);
+    }
+
     protected void onExtractParams(@NonNull Bundle params) {
         // default no implementation
     }
 
     public String uniqueKey() {
         return uniqueKey;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mNetworkReceiver = new NetworkReceiver(isConnected -> {
+            presenter().onNetworkConnectionStateChanged(isConnected);
+        });
+        mNetworkReceiver.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        mNetworkReceiver.unregister(this);
+        mNetworkReceiver = null;
+        super.onStop();
     }
 
     /**

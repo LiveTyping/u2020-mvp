@@ -4,6 +4,8 @@
           package="ru.ltst.u2020mvp">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <application
         android:name=".U2020App"
@@ -34,5 +36,16 @@
             android:name=".data.api.oauth.OauthService"
             android:exported="false"
             />
+
+        <!--Network Connectivity-->
+
+        <receiver
+            android:name=".network.InnerNetworkReceiver"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

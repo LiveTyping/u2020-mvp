@@ -9,6 +9,7 @@ import com.squareup.leakcanary.LeakCanary;
 import javax.inject.Inject;
 
 import ru.ltst.u2020mvp.base.mvp.ActivityHierarchyServer;
+import ru.ltst.u2020mvp.network.NetworkReceiver;
 import timber.log.Timber;
 
 import static timber.log.Timber.DebugTree;

@@ -23,4 +23,6 @@ public interface MainViewImpl extends BaseView {
     void setTimespanPosition(int position);
 
     void closeDrawer();
+
+    void onNetworkError();
 }

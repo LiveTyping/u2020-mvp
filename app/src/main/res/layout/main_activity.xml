@@ -122,6 +122,39 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/trending_network_error"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="48dp">
+
+                    <ImageView
+                        android:id="@+id/trending_network_error_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginBottom="32dp"
+                        android:layout_marginTop="32dp"
+                        android:src="@drawable/error"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@id/trending_network_error_image"
+                        android:gravity="center_horizontal"
+                        android:text="@string/network_error_title"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="34sp"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/trending_network_error_image"
+                        android:gravity="center_horizontal"
+                        android:text="@string/network_error_message"/>
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/trending_empty"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

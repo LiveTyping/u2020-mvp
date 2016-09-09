@@ -90,7 +90,7 @@ public class MainPresenter extends BasePresenter<MainViewImpl>
     }
 
     @Override
-    protected void onLoad() {
+    protected void onLoad(OnActivityResult onActivityResult) {
         mainView = getView();
         Observable<Result<RepositoriesResponse>> result = timespanSubject
                 .flatMap(trendingSearch)
@@ -176,6 +176,16 @@ public class MainPresenter extends BasePresenter<MainViewImpl>
     @Override
     protected void onSave(@NonNull Bundle outState) {
         outState.putInt(KEY_LAST_TIMESPAN, lastTimespanPosition);
+    }
+
+    @Override
+    public void onNetworkConnectionStateChanged(boolean isConnected) {
+        if (isConnected) {
+            mainView.setTimespanPosition(lastTimespanPosition);
+            mainView.showContent();
+        } else {
+            mainView.onNetworkError();
+        }
     }
 
     @Override

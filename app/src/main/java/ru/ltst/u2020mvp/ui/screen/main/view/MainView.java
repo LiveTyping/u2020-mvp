@@ -139,6 +139,12 @@ public class MainView extends DrawerLayout implements MainViewImpl {
         animatorView.setDisplayedChildId(R.id.trending_error);
     }
 
+    @Override
+    public void onNetworkError() {
+        swipeRefreshView.setRefreshing(false);
+        animatorView.setDisplayedChildId(R.id.trending_network_error);
+    }
+
     private boolean safeIsRtl() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && isRtl();
     }

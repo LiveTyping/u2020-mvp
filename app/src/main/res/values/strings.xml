@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!-- Cheat by adding a trailing space to make the title and spinner look like one sentence. -->
-  <string name="trending_title">Trending&#160;</string>
+    <!-- Cheat by adding a trailing space to make the title and spinner look like one sentence. -->
+    <string name="trending_title">Trending&#160;</string>
 
   <string name="no_intent_handler">
     There are no applications available to handle this action.
   </string>
-  <string name="nav_trending">Trending</string>
-  <string name="nav_search">Search</string>
-  <string name="error_title">Oops!</string>
+    <string name="nav_trending">Trending</string>
+    <string name="nav_search">Search</string>
+    <string name="error_title">Oops!</string>
   <string name="error_message">
     An error occurred loading the resource.\nPlease try again later.
   </string>
-  <string name="empty_title">Weird…</string>
+    <string name="network_error_title">Oops!</string>
+  <string name="network_error_message">
+    Please check your network connection and try again .
+  </string>
+    <string name="empty_title">Weird…</string>
   <string name="empty_message">
     There doesn\'t seem to be\nanything trending in this timespan.
   </string>
-  <string name="loading_message">loading</string>
+    <string name="loading_message">loading</string>
 </resources>
