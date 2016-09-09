@@ -3,7 +3,9 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <!-- Used for telescope. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <!-- Used for sharing logs and Spoon. -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- Used for instrumentation tests. -->

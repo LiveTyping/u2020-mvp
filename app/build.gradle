@@ -77,15 +77,15 @@ android {
         }
     }
 
-    productFlavors {
-        internal {
-            applicationId "${packagename}.internal"
-
-        }
-        production {
-            applicationId "${packagename}"
-        }
-    }
+//    productFlavors {
+//        internal {
+//            applicationId "${packagename}.internal"
+//
+//        }
+//        production {
+//            applicationId "${packagename}"
+//        }
+//    }
 
     lintOptions {
         textReport true
@@ -133,10 +133,9 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.1'
     //retrofit2
-    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
-    compile 'com.squareup.retrofit2:converter-moshi:2.0.0-beta4'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
-    internalDebugCompile 'com.squareup.retrofit2:retrofit-mock:2.0.0-beta4'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-moshi:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     //butterknife
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
@@ -155,14 +154,15 @@ dependencies {
 
     //-----flawors-----
     //--internal debug--
-    internalDebugCompile 'com.jakewharton.madge:madge:1.1.3'
-    internalDebugCompile 'com.jakewharton.scalpel:scalpel:1.1.2'
-    internalDebugCompile 'com.jakewharton:process-phoenix:1.0.2'
+    debugCompile 'com.jakewharton.madge:madge:1.1.3'
+    debugCompile 'com.jakewharton.scalpel:scalpel:1.1.2'
+    debugCompile 'com.jakewharton:process-phoenix:1.0.2'
+    debugCompile 'com.squareup.retrofit2:retrofit-mock:2.1.0'
     //--internal--
-    internalCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
-    internalCompile 'com.mattprecious.telescope:telescope:1.5.0@aar'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
+    debugCompile 'com.mattprecious.telescope:telescope:1.5.0@aar'
     //--production--
-    productionCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
 
     //-----tests-----
     // Espresso 2 Dependencies

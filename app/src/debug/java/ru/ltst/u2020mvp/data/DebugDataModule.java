@@ -51,7 +51,7 @@ public final class DebugDataModule {
     OkHttpClient provideOkHttpClient(Application app,
                                      Preference<InetSocketAddress> networkProxyAddress) {
         return DataModule.createOkHttpClient(app)
-//                .sslSocketFactory(createBadSslSocketFactory())
+                .sslSocketFactory(createBadSslSocketFactory())
                 .proxy(InetSocketAddressPreferenceAdapter.createProxy(networkProxyAddress.get()))
                 .build();
     }
