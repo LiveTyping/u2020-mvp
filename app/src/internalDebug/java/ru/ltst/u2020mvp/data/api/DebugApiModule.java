@@ -44,7 +44,8 @@ public final class DebugApiModule {
     @ApplicationScope
     @Named("Api")
     OkHttpClient provideApiClient(OkHttpClient client,
-                                  OauthInterceptor oauthInterceptor, HttpLoggingInterceptor loggingInterceptor) {
+                                  OauthInterceptor oauthInterceptor,
+                                  HttpLoggingInterceptor loggingInterceptor) {
         return ApiModule.createApiClient(client, oauthInterceptor)
                 .addInterceptor(loggingInterceptor)
                 .build();

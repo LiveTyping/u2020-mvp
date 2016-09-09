@@ -51,19 +51,10 @@ public final class DebugDataModule {
     OkHttpClient provideOkHttpClient(Application app,
                                      Preference<InetSocketAddress> networkProxyAddress) {
         return DataModule.createOkHttpClient(app)
-                .sslSocketFactory(createBadSslSocketFactory())
+//                .sslSocketFactory(createBadSslSocketFactory())
                 .proxy(InetSocketAddressPreferenceAdapter.createProxy(networkProxyAddress.get()))
                 .build();
     }
-
-//    @Provides
-//    @ApplicationScope
-//    @AccessToken
-//    Preference<String> provideAccessToken(RxSharedPreferences prefs,
-//                                          @ApiEndpoint Preference<String> endpoint) {
-//        return prefs.getString("access-token-" + endpoint.get());
-//
-//    }
 
     @Provides
     @ApplicationScope

@@ -20,5 +20,7 @@ public interface MainViewImpl extends BaseView {
                   SimpleItemSelectedListener onTimespanItemSelectedListener,
                   NavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener);
 
+    void setTimespanPosition(int position);
+
     void closeDrawer();
 }

@@ -69,6 +69,7 @@ public class MainPresenter extends BasePresenter<MainViewImpl>
 
     private MainViewImpl mainView;
     private int lastTimespanPosition = TrendingTimespan.WEEK.ordinal();
+    private boolean isFirstStart = true;
 
     @Inject
     public MainPresenter(GithubService githubService,
@@ -126,7 +127,7 @@ public class MainPresenter extends BasePresenter<MainViewImpl>
                 }
             }
         });
-        onRefresh();
+        mainView.setTimespanPosition(lastTimespanPosition);
     }
 
 
@@ -180,7 +181,7 @@ public class MainPresenter extends BasePresenter<MainViewImpl>
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        subscriptions.unsubscribe();
+        subscriptions.clear();
     }
 
     private final Func1<TrendingTimespan, Observable<Result<RepositoriesResponse>>> trendingSearch =

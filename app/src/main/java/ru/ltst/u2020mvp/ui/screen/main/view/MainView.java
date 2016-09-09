@@ -77,8 +77,6 @@ public class MainView extends DrawerLayout implements MainViewImpl {
         toolbarView.setNavigationIcon(R.drawable.menu_icon);
         toolbarView.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
-        timespanView.setSelection(TrendingTimespan.WEEK.ordinal());
-
         swipeRefreshView.setColorSchemeResources(R.color.accent);
 
         trendingView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -98,6 +96,11 @@ public class MainView extends DrawerLayout implements MainViewImpl {
         swipeRefreshView.setOnRefreshListener(onRefreshListener);
         timespanView.setOnItemSelectedListener(onTimespanItemSelectedListener);
         drawer.setNavigationItemSelectedListener(onNavigationItemSelectedListener);
+    }
+
+    @Override
+    public void setTimespanPosition(int position) {
+        timespanView.setSelection(position);
     }
 
     @Override
