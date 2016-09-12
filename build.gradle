@@ -1,11 +1,14 @@
 buildscript {
+
+    apply from: 'dependencies.gradle'
+
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath gradlePlugins.android
         // Lombok placed here due to https://github.com/evant/android-retrolambda-lombok/issues/10
-        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
+        classpath gradlePlugins.lombok
     }
     // Exclude the lombok version that the android plugin depends on.
     configurations.classpath.exclude group: 'com.android.tools.external.lombok'

@@ -1,0 +1,112 @@
+
+// ======================================================================================================
+// A good sample of dependency gradle file:
+// https://github.com/artem-zinnatullin/qualitymatters/blob/master/dependencies.gradle
+// ======================================================================================================
+
+// Application Dependencies
+ext.versions = [
+            appname                 : 'u2020-mvp',
+            apkname                 : 'u2020-mvp-android',
+            packagename             : 'ru.ltst.u2020mvp',
+
+            versionMajor            : 1,
+            versionMinor            : 0,
+            versionPatch            : 0,
+            versionBuild            : 0, // bump for dogfood builds, public betas, etc.
+
+            minSdk                  : 17,
+            targetSdk               : 24,
+            compileSdk              : 24,
+            buildTools              : '24.0.2',
+
+            androidGradlePlugin     : '2.1.3',
+            aptGradlePlugin         : '1.8',
+            uptodate                : '1.6.0',
+            retrolambdaGradlePlugin : '3.3.0-beta4',
+            lombokGradlePlugin      : '0.2.3.a2',
+
+            supportLibrary          : '24.2.0',
+            retrofit                : '2.1.0',
+            dagger                  : '2.6.1',
+            okhttp                  : '3.4.1',
+            timber                  : '4.3.0',
+            rxjava                  : '1.1.10',
+            rxandroid               : '1.2.1',
+            rxbinding               : '0.4.0',
+            butterknife             : '8.4.0',
+            picasso                 : '2.5.2',
+            picassoDownloader       : '1.0.2',
+            javax                   : '10.0-b28',
+            byteunits               : '0.9.1',
+            threetenabp             : '1.0.4',
+            rxpreferences           : '1.0.2',
+
+            leakCanary              : '1.3.1',
+            madge                   : '1.1.4',
+            scalpel                 : '1.1.2',
+            phoenix                 : '1.0.2',
+            telescope               : '2.1.0',
+            junit                   : '4.12',
+            testRunner              : '0.5',
+            testRules               : '0.5',
+            spoon                   : '1.6.4',
+            espresso                : '2.2.2',
+            mockito                 : '1.10.19',
+            hamcrest                : '1.4-atlassian-1',
+            truth                   : '0.28',
+            testingSupportLib       : '0.1',
+    ]
+
+// Gradle Plugin Dependencies
+ext.gradlePlugins = [
+        android                 : "com.android.tools.build:gradle:$versions.androidGradlePlugin",
+        apt                     : "com.neenbedankt.gradle.plugins:android-apt:$versions.aptGradlePlugin",
+        retrolambda             : "me.tatarka:gradle-retrolambda:$versions.retrolambdaGradlePlugin",
+        lombok                  : "me.tatarka.retrolambda.projectlombok:lombok.ast:$versions.lombokGradlePlugin",
+        uptodate                : "com.ofg:uptodate-gradle-plugin:$versions.uptodate"
+]
+
+// Library Dependencies
+ext.libraries = [
+        design                  : "com.android.support:design:$versions.supportLibrary",
+        recyclerView            : "com.android.support:recyclerview-v7:$versions.supportLibrary",
+        cardView                : "com.android.support:cardview-v7:$versions.supportLibrary",
+        appCompat               : "com.android.support:appcompat-v7:$versions.supportLibrary",
+        supportV4               : "com.android.support:support-v4:$versions.supportLibrary",
+        supportAnnotation       : "com.android.support:support-annotations:$versions.supportLibrary",
+
+        dagger                  : "com.google.dagger:dagger:$versions.dagger",
+        daggerCompiler          : "com.google.dagger:dagger-compiler:$versions.dagger",
+        javax                   : "org.glassfish:javax.annotation:$versions.javax",
+        okhttp                  : "com.squareup.okhttp3:okhttp:$versions.okhttp",
+        okhttpLog               : "com.squareup.okhttp3:logging-interceptor:$versions.okhttp",
+        picasso                 : "com.squareup.picasso:picasso:$versions.picasso",
+        picassoDownloader       : "com.jakewharton.picasso:picasso2-okhttp3-downloader:$versions.picassoDownloader",
+        retrofit                : "com.squareup.retrofit2:retrofit:$versions.retrofit",
+        retrofitMoshi           : "com.squareup.retrofit2:converter-moshi:$versions.retrofit",
+        retrofitRxJava          : "com.squareup.retrofit2:adapter-rxjava:$versions.retrofit",
+        retrofitMock            : "com.squareup.retrofit2:retrofit-mock:$versions.retrofit",
+        butterknife             : "com.jakewharton:butterknife:$versions.butterknife",
+        butterknifeCompiler     : "com.jakewharton:butterknife-compiler:$versions.butterknife",
+        timber                  : "com.jakewharton.timber:timber:$versions.timber",
+        byteunits               : "com.jakewharton.byteunits:byteunits:$versions.byteunits",
+        rxbinding               : "com.jakewharton.rxbinding:rxbinding:$versions.rxbinding",
+        rxjava                  : "io.reactivex:rxjava:$versions.rxjava",
+        rxandroid               : "io.reactivex:rxandroid:$versions.rxandroid",
+        threetenabp             : "com.jakewharton.threetenabp:threetenabp:$versions.threetenabp",
+        rxpreferences           : "com.f2prateek.rx.preferences:rx-preferences:$versions.rxpreferences",
+
+        madge                   : "com.jakewharton.madge:madge:$versions.madge",
+        scalpel                 : "com.jakewharton.scalpel:scalpel:$versions.scalpel",
+        phoenix                 : "com.jakewharton:process-phoenix:$versions.phoenix",
+        leakcanary              : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",
+        leakcanaryNoOp          : "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakCanary",
+        telescope               : "com.mattprecious.telescope:telescope:$versions.telescope",
+
+        testingSupportLib       : "com.android.support.test:testing-support-lib:$versions.testingSupportLib",
+        espressoCore            : "com.android.support.test.espresso:espresso-core:$versions.espresso",
+        junit                   : "junit:junit:$versions.junit",
+        testRunner              : "com.android.support.test:runner:$versions.testRunner",
+        testRules               : "com.android.support.test:rules:$versions.testRules"
+]
