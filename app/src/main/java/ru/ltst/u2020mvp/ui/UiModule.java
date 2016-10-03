@@ -30,7 +30,7 @@ public class UiModule {
 
             @Override
             public void onActivityStopped(Activity activity) {
-                screenSwitcher.detach();
+                screenSwitcher.detach(activity);
             }
         };
     }

@@ -4,33 +4,35 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.WeakHashMap;
 
 public class ActivityConnector<AttachedObject> {
-    private LinkedList<WeakReference<AttachedObject>> linkedList = new LinkedList<>();
     private WeakReference<AttachedObject> attachedObjectRef;
+    private WeakHashMap<AttachedObject, Object> weakHashMap = new WeakHashMap<>();
 
     public final void attach(@NonNull AttachedObject object) {
         final WeakReference<AttachedObject> weakReference = new WeakReference<>(object);
-        if (attachedObjectRef != null) {
-            linkedList.offer(weakReference);
-            return;
-        }
+        weakHashMap.put(object, new Object());
         attachedObjectRef = weakReference;
     }
 
-    public final void detach() {
-        if (linkedList.isEmpty()) {
-            attachedObjectRef = null;
+    public final void detach(@NonNull AttachedObject object) {
+        if (weakHashMap.remove(object) == null) {
+            return;
+        }
+
+        Iterator<AttachedObject> it = weakHashMap.keySet().iterator();
+        if (it.hasNext()) {
+            attachedObjectRef = new WeakReference<>(it.next());
         } else {
-            attachedObjectRef = linkedList.poll();
+            attachedObjectRef = null;
         }
     }
 
     @Nullable
     protected AttachedObject getAttachedObject() {
-        if (!linkedList.isEmpty())
-            return linkedList.getLast().get();
         if (attachedObjectRef == null)
             return null;
         return attachedObjectRef.get();

@@ -54,7 +54,7 @@ public final class MainActivity extends BaseActivity implements HasComponent<Mai
 
     @Override
     protected void onStop() {
-        activityScreenSwitcher.detach();
+        activityScreenSwitcher.detach(this);
         super.onStop();
     }
 

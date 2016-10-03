@@ -12,9 +12,9 @@ buildscript {
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.ofg.uptodate'
 apply from: '../dependencies.gradle'
+apply plugin: 'me.tatarka.retrolambda'
 
 repositories {
     mavenCentral()
@@ -49,8 +49,9 @@ android {
         buildConfigField 'String', 'GIT_SHA', "\"${gitSha}\""
         buildConfigField 'long', 'GIT_TIMESTAMP', "${gitTimestamp}"
 
+
         testApplicationId "${versions.packagename}.tests"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "ru.ltst.u2020mvp.U2020InstrumentationRunner"
     }
 
     signingConfigs {
@@ -83,16 +84,6 @@ android {
         }
     }
 
-//    productFlavors {
-//        internal {
-//            applicationId "${packagename}.internal"
-//
-//        }
-//        production {
-//            applicationId "${packagename}"
-//        }
-//    }
-
     lintOptions {
         textReport true
         textOutput 'stdout'
@@ -116,6 +107,9 @@ configurations {
 
 configurations.all {
     resolutionStrategy {
+        force "com.android.support:support-annotations:${SUPPORT_V7_VERSION}"
+        force "com.android.support:recyclerview-v7:${SUPPORT_V7_VERSION}"
+        force "com.android.support:support-v4:${SUPPORT_V4_VERSION}"
         force libraries.supportAnnotation
     }
 }
@@ -170,14 +164,14 @@ dependencies {
 
     //-----tests-----
     // Espresso 2 Dependencies
-    androidTestCompile libraries.testingSupportLib
     androidTestCompile libraries.junit
     androidTestCompile libraries.testRunner
     androidTestCompile libraries.testRules
     androidTestCompile libraries.espressoCore
-//    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.0') {
-//        exclude module: 'support-annotations'
-//    }
+    androidTestApt libraries.daggerCompiler
+
+    testCompile libraries.mockito
+    testCompile libraries.junit
 }
 
 // change apk name

@@ -23,7 +23,7 @@ public class U2020App extends Application {
     public void onCreate() {
         super.onCreate();
         AndroidThreeTen.init(this);
-        LeakCanary.install(this);
+//        LeakCanary.install(this);
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new DebugTree());

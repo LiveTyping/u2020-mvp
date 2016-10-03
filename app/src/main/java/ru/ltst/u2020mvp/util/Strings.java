@@ -18,6 +18,8 @@ public final class Strings {
     }
 
     public static String truncateAt(String string, int length) {
+        if (isBlank(string) || length < 0)
+            return string;
         return string.length() > length ? string.substring(0, length) : string;
     }
 }

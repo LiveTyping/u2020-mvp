@@ -45,15 +45,14 @@ public abstract class BasePresenter<V extends BaseView> {
         onDestroy();
     }
 
+    public boolean hasView() {
+        return view != null;
+    }
+
     protected final V getView() {
         if (view == null) throw new NullPointerException("getView called when view is null. Ensure takeView(View view) is called first.");
         return view.get();
     }
-
-    protected final boolean hasView(){
-        return view != null;
-    }
-
 
     protected void onLoad(OnActivityResult onActivityResult) {
         if (onActivityResult != null) {

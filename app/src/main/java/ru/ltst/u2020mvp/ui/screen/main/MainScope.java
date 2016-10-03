@@ -20,6 +20,7 @@ public @interface MainScope {
     @Component(dependencies = {U2020Component.class}, modules = {MainActivityModule.class})
     interface MainComponent {
         void inject(MainActivity mainActivity);
+        MainPresenter presenter();
     }
 
     @Module
