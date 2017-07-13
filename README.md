@@ -1,6 +1,8 @@
 U+2020-mvp
 ======
 
+[DEPRECATED] We recomend to try [Moxy framework](https://github.com/Arello-Mobile/Moxy) instead of our solution. 
+
 Port of Jake Wharton's [U2020 sample app][u2020] with use of MVP pattern and [Dagger 2][dagger2].
 
 ![Debug drawer](u2020-mvp.gif)
