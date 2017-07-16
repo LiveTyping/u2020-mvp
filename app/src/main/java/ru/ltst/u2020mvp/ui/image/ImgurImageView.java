@@ -8,8 +8,8 @@ import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Bind;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.base.mvp.BaseView;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
@@ -26,7 +26,7 @@ public class ImgurImageView extends BetterViewAnimator implements BaseView {
         component.inject(this);
     }
 
-    @Bind(R.id.imgur_image_content)
+    @BindView(R.id.imgur_image_content)
     ImageView imageView;
 
     @Override

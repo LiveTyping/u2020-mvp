@@ -8,7 +8,7 @@ import android.view.View;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.U2020Component;
@@ -25,7 +25,7 @@ public class ImgurImageActivity extends BaseActivity implements HasComponent<Img
 
     @Inject Presenter presenter;
 
-    @Bind(R.id.imgur_image_view)
+    @BindView(R.id.imgur_image_view)
     ImgurImageView view;
 
     private String imageId;

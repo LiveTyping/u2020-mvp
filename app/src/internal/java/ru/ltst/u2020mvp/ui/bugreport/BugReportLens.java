@@ -24,7 +24,7 @@ import rx.schedulers.Schedulers;
  * Pops a dialog asking for more information about the bug report and then creates an email with a
  * JIRA-formatted body.
  */
-public final class BugReportLens implements Lens, BugReportDialog.ReportListener {
+public final class BugReportLens extends Lens implements BugReportDialog.ReportListener {
     private final Context context;
     private final LumberYard lumberYard;
 

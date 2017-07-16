@@ -20,7 +20,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.base.ComponentFinder;
@@ -38,11 +38,11 @@ import rx.Subscriber;
 public class GalleryView extends LinearLayout implements BaseView {
     public static final int COLUMNS_COUNT = 2;
 
-    @Bind(R.id.gallery_grid) RecyclerView galleryView;
-    @Bind(R.id.gallery_animator) BetterViewAnimator animator;
-    @Bind(R.id.gallery_toolbar) Toolbar toolbar;
-    @Bind(R.id.gallery_swipe_refresh) SwipeRefreshLayout swipeRefreshLayout;
-    @Bind(R.id.trending_loading_message) TextView loadingMessageView;
+    @BindView(R.id.gallery_grid) RecyclerView galleryView;
+    @BindView(R.id.gallery_animator) BetterViewAnimator animator;
+    @BindView(R.id.gallery_toolbar) Toolbar toolbar;
+    @BindView(R.id.gallery_swipe_refresh) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.trending_loading_message) TextView loadingMessageView;
 
     @Inject Picasso picasso;
     @Inject GalleryActivity.Presenter presenter;

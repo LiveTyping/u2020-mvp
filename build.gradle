@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.2.3'
         // Lombok placed here due to https://github.com/evant/android-retrolambda-lombok/issues/10
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
     }
@@ -15,6 +15,14 @@ allprojects {
     repositories {
         mavenCentral()
     }
+}
+
+ext {
+    butterKnifeVersion = '8.5.1'
+    leakCanaryVersion = '1.5'
+    okhttpVersion = '3.5.0'
+    retrofit2Version = '2.1.0'
+    dagger2Version = '2.8'
 }
 
 task clean(type: Delete) {

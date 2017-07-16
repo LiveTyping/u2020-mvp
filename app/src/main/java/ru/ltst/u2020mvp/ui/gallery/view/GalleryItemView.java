@@ -8,16 +8,16 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.data.api.model.response.Image;
 import ru.ltst.u2020mvp.ui.misc.AspectRatioImageView;
 
 public class GalleryItemView extends CardView {
-    @Bind(R.id.gallery_image_image)
+    @BindView(R.id.gallery_image_image)
     AspectRatioImageView image;
-    @Bind(R.id.gallery_image_title)
+    @BindView(R.id.gallery_image_title)
     TextView title;
 
     public GalleryItemView(Context context, AttributeSet attrs) {

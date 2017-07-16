@@ -17,7 +17,7 @@ import com.jakewharton.scalpel.ScalpelFrameLayout;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.ltst.u2020mvp.ApplicationScope;
 import ru.ltst.u2020mvp.R;
@@ -49,10 +49,10 @@ public final class DebugViewContainer implements ViewContainer {
     private final Preference<Boolean> scalpelWireframeEnabled;
 
     static class ViewHolder {
-        @Bind(R.id.debug_drawer_layout) DrawerLayout drawerLayout;
-        @Bind(R.id.debug_drawer) ViewGroup debugDrawer;
-        @Bind(R.id.madge_container) MadgeFrameLayout madgeFrameLayout;
-        @Bind(R.id.debug_content) ScalpelFrameLayout content;
+        @BindView(R.id.debug_drawer_layout) DrawerLayout drawerLayout;
+        @BindView(R.id.debug_drawer) ViewGroup debugDrawer;
+        @BindView(R.id.madge_container) MadgeFrameLayout madgeFrameLayout;
+        @BindView(R.id.debug_content) ScalpelFrameLayout content;
     }
 
     @Inject

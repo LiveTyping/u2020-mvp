@@ -13,12 +13,12 @@ import android.view.View;
 
 
 import org.hamcrest.Matcher;
+import org.hamcrest.core.IsAnything;
 
 import java.util.concurrent.TimeoutException;
 
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.CoreMatchers.anything;
 
 public class ViewActions {
 
@@ -87,7 +87,7 @@ public class ViewActions {
         return new ViewAction() {
             @Override
             public Matcher<View> getConstraints() {
-                return anything();
+                return new IsAnything<>();
             }
 
             @Override
@@ -123,7 +123,7 @@ public class ViewActions {
         return new ViewAction() {
             @Override
             public Matcher<View> getConstraints() {
-                return anything();
+                return new IsAnything<>();
             }
 
             @Override

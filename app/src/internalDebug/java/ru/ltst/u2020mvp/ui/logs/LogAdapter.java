@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Bind;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.data.LumberYard.Entry;
 import ru.ltst.u2020mvp.ui.misc.BindableAdapter;
@@ -69,11 +69,11 @@ final class LogAdapter extends BindableAdapter<Entry> implements Action1<Entry> 
 
     static final class LogItemViewHolder {
         private final View rootView;
-        @Bind(R.id.debug_log_level)
+        @BindView(R.id.debug_log_level)
         TextView levelView;
-        @Bind(R.id.debug_log_tag)
+        @BindView(R.id.debug_log_tag)
         TextView tagView;
-        @Bind(R.id.debug_log_message)
+        @BindView(R.id.debug_log_message)
         TextView messageView;
 
         public LogItemViewHolder(View rootView) {

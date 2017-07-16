@@ -13,7 +13,7 @@ import android.widget.TextView;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.ltst.u2020mvp.R;
 import ru.ltst.u2020mvp.ui.misc.Truss;
@@ -32,11 +32,11 @@ public final class ExternalIntentActivity extends Activity implements Toolbar.On
     return intent;
   }
 
-  @Bind(R.id.toolbar) Toolbar toolbarView;
-  @Bind(R.id.action) TextView actionView;
-  @Bind(R.id.data) TextView dataView;
-  @Bind(R.id.extras) TextView extrasView;
-  @Bind(R.id.flags) TextView flagsView;
+  @BindView(R.id.toolbar) Toolbar toolbarView;
+  @BindView(R.id.action) TextView actionView;
+  @BindView(R.id.data) TextView dataView;
+  @BindView(R.id.extras) TextView extrasView;
+  @BindView(R.id.flags) TextView flagsView;
 
   private Intent baseIntent;
 
